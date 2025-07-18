@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Distance Study Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            width: 100vw;
+            overflow-x: hidden;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #18191a;
+            color: #eee;
+        }
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 180px;
+            height: 100vh;
+            background: #232526;
+            border-right: 1px solid #444;
+            padding-top: 30px;
+            z-index: 2;
+        }
+        .sidebar a {
+            display: block;
+            color: #eee;
+            padding: 18px 28px;
+            text-decoration: none;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+        .sidebar a:hover {
+            background: #33343a;
+        }
+        .main-bar {
+            margin-left: 180px;
+            width: calc(100vw - 180px);
+            height: 90px;
+            background: #222325;
+            border-bottom: 2px solid #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 0;
+            position: relative;
+            z-index: 1;
+            box-sizing: border-box;
+            overflow: visible;
+        }
+        .portal-title {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.1em;
+            font-weight: bold;
+            color: #fff;
+            background: #232526;
+            padding: 16px 44px;
+            border-radius: 15px;
+            border: 2px solid #fff;
+            box-shadow: 0 0 12px #4446;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+        .nav-group {
+            display: flex;
+            gap: 35px;
+            justify-content: center;
+            align-items: center;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+        }
+        .nav-btn {
+            background: #222;
+            color: #fff;
+            border: 1px solid #b0b0b0;
+            border-radius: 10px;
+            padding: 14px 30px;
+            font-size: 1.05em;
+            transition: background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 16px #aaa2;
+            margin-bottom: 0;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        .nav-btn:hover {
+            background: #333;
+            box-shadow: 0 8px 18px #4445;
+        }
+        .login-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #252728;
+            border: 2px solid #fff;
+            color: #fff;
+            border-radius: 25px;
+            padding: 10px 24px 10px 18px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+            margin-right: 24px;
+            box-shadow: 0 2px 8px #4445;
+            position: relative;
+        }
+        .login-btn:hover {
+            background: #444;
+            color: #61dafb;
+            box-shadow: 0 4px 16px #61dafb66;
+        }
+        .login-btn .user-icon {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #fff;
+            position: relative;
+            display: inline-block;
+            margin-right: 2px;
+        }
+        .login-btn .user-icon::before {
+            content: '';
+            display: block;
+            position: absolute;
+            left: 50%;
+            top: 58%;
+            transform: translate(-50%, 0);
+            width: 13px;
+            height: 7px;
+            border-radius: 0 0 8px 8px;
+            background: #fff;
+            border-top: 2px solid #222325;
+        }
+        .login-btn .user-icon::after {
+            content: '';
+            display: block;
+            position: absolute;
+            left: 50%;
+            top: 2px;
+            transform: translate(-50%, 0);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #222325;
+            border: 1.2px solid #222325;
+        }
+        .notification-bar {
+            position: fixed;
+            left: 180px;
+            width: calc(100vw - 180px);
+            right: 0;
+            bottom: 0;
+            height: 38px;
+            background: #242526;
+            border-top: 1px solid #444;
+            color: #ffd700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1em;
+            letter-spacing: 1px;
+            z-index: 1;
+        }
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 100vw;
+                height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid #444;
+                padding-top: 8px;
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-start;
+            }
+            .sidebar a {
+                padding: 10px 10px;
+                margin: 0 8px 0 0;
+                font-size: 1em;
+            }
+            .main-bar, .notification-bar {
+                margin-left: 0;
+                left: 0;
+                width: 100vw;
+                min-width: 0;
+                max-width: 100vw;
+                box-sizing: border-box;
+            }
+            .main-bar {
+                flex-direction: column;
+                height: auto;
+                padding: 10px 2vw 14px 2vw;
+            }
+            .portal-title {
+                position: static;
+                left: unset;
+                transform: none;
+                margin: 10px auto 15px auto;
+            }
+            .nav-group {
+                margin: 10px auto;
+                gap: 12px;
+            }
+            .login-btn {
+                margin: 15px auto 0 auto;
+                margin-right: 0;
+            }
+            .notification-bar {
+                left: 0;
+                width: 100vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="main.html">Home</a>
+        <a href="documentation.html">Documentation</a>
+    </div>
+
+    <!-- Top horizontal bar -->
+    <div class="main-bar">
+        <div class="portal-title">Distance Study Portal</div>
+        <nav class="nav-group">
+            <a href="main.html" class="nav-btn">Home</a>
+            <a href="book.html" class="nav-btn">Book</a>
+            <a href="assignment.html" class="nav-btn">Assignment</a>
+            <a href="notes.html" class="nav-btn">Notes</a>
+            <a href="projects.html" class="nav-btn">Projects</a>
+        </nav>
+        <button class="login-btn" title="Login">
+            <span class="user-icon"></span>
+            Login
+        </button>
+    </div>
+
+    <!-- Notification Bar at Bottom (Design only, static text) -->
+    <div class="notification-bar">
+        Notifications: Welcome to the portal! | Upcoming: Assignment 2 deadline | New notes uploaded for MCS_101
+    </div>
+</body>
+</html>
