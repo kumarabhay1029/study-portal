@@ -2,11 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" conte    <!-- Login button (positioned absolutely in top-right corner) -->
-    <button class="login-btn" id="main-login-btn" onclick="if(typeof handleLogin === 'function'){handleLogin()}else{document.getElementById('loginModal').classList.add('active')}" title="Login to your account">
-        <span class="btn-icon" data-icon="login">🔑</span>
-        <span class="btn-text">Login</span>
-    </button>idth=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <meta name="format-detection" content="telephone=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Study Portal - Your Academic Resource Hub</title>
@@ -32,7 +28,8 @@
     <script src="js/edge-compatibility.js"></script>
     
     <!-- Icon Fix Script -->
-    <script src="js/icon-fix.js"></script>
+    <script src="js/icon-fix-clean.js"></script>
+    <script src="js/login-button-manager.js"></script>
     
     <!-- Custom Stylesheets -->
     <link rel="stylesheet" href="css/main.css">
