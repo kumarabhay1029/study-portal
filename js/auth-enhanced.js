@@ -356,6 +356,9 @@ class StudyPortalAuth {
                 localStorage.removeItem('rememberLogin');
                 localStorage.removeItem('userEmail');
                 
+                // Close profile modal
+                this.closeProfileModal();
+                
                 console.log('✅ Logout successful');
                 this.showSuccess('You have been logged out successfully.');
             }
@@ -437,13 +440,17 @@ If the issue persists, check FIREBASE_FIX_GUIDE.md for solutions.`;
     
     // Helper functions
     openProfileModal() {
-        if (!this.currentUser) return;
+        if (!this.currentUser) {
+            console.log('⚠️ No current user, cannot open profile modal');
+            return;
+        }
         
         const profileModal = document.getElementById('profileModal');
         if (profileModal) {
             const profileName = document.getElementById('profileName');
             const profileEmail = document.getElementById('profileEmail');
             const profileStatus = document.getElementById('profileStatus');
+            const profileSession = document.getElementById('profileSession');
             
             if (profileName) profileName.textContent = this.currentUser.displayName || 'User';
             if (profileEmail) profileEmail.textContent = this.currentUser.email;
@@ -452,14 +459,37 @@ If the issue persists, check FIREBASE_FIX_GUIDE.md for solutions.`;
                     'Email verified ✅' : 'Email not verified ⚠️';
             }
             
+            // Show session info
+            if (profileSession) {
+                const sessionData = sessionStorage.getItem('currentSession');
+                if (sessionData) {
+                    try {
+                        const session = JSON.parse(sessionData);
+                        const loginTime = new Date(session.loginTime).toLocaleString();
+                        profileSession.textContent = `Logged in: ${loginTime}`;
+                    } catch (e) {
+                        profileSession.textContent = 'Session active';
+                    }
+                } else {
+                    profileSession.textContent = 'Session active';
+                }
+            }
+            
             profileModal.classList.add('active');
+            console.log('✅ Profile modal opened for:', this.currentUser.email);
+        } else {
+            console.error('❌ Profile modal element not found');
         }
     }
     
     closeProfileModal() {
+        console.log('🔐 Closing profile modal...');
         const profileModal = document.getElementById('profileModal');
         if (profileModal) {
             profileModal.classList.remove('active');
+            console.log('✅ Profile modal closed');
+        } else {
+            console.error('❌ Profile modal element not found');
         }
     }
     
@@ -617,9 +647,51 @@ function initializeFallbackAuth() {
 // Initialize the enhanced auth system
 let authSystem;
 
+// Initialize basic fallback functions immediately
+window.logout = function() {
+    console.log('🔐 Logout called (fallback)');
+    if (window.authSystem && typeof window.authSystem.logout === 'function') {
+        window.authSystem.logout();
+    } else if (window.auth) {
+        // Direct Firebase logout if auth system not ready
+        window.auth.signOut().then(() => {
+            console.log('✅ Direct logout successful');
+            alert('You have been logged out successfully.');
+            
+            // Clear session data
+            sessionStorage.removeItem('currentSession');
+            localStorage.removeItem('rememberLogin');
+            localStorage.removeItem('userEmail');
+            
+            // Close profile modal
+            const profileModal = document.getElementById('profileModal');
+            if (profileModal) {
+                profileModal.classList.remove('active');
+            }
+        }).catch((error) => {
+            console.error('❌ Logout error:', error);
+            alert('Logout failed: ' + error.message);
+        });
+    } else {
+        alert('Authentication system not ready. Please refresh the page and try again.');
+    }
+};
+
+window.closeProfileModal = function() {
+    console.log('🔐 Closing profile modal...');
+    const profileModal = document.getElementById('profileModal');
+    if (profileModal) {
+        profileModal.classList.remove('active');
+        console.log('✅ Profile modal closed');
+    }
+};
+
 // Wait for Firebase or initialize fallback
 waitForFirebase(() => {
     authSystem = new StudyPortalAuth();
+    
+    // Store authSystem globally for fallback access
+    window.authSystem = authSystem;
     
     // Attach functions to window for global access
     window.handleLogin = () => authSystem.handleLogin();
