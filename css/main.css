@@ -477,7 +477,7 @@ body::after {
 
 /* CSS-based icons as fallback */
 .login-btn .btn-icon[data-icon="login"]::before {
-    content: "�";
+    content: "🗝️";
     font-size: 1.2em;
 }
 

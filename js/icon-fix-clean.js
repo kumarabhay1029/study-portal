@@ -1,6 +1,22 @@
 /**
  * 🎨 ICON FIX SCRIPT - CLEAN VERSION
- * Fixes emoji encoding issues by providing fallback icons
+ * Fi    // Fix all corrupted btn-icon elements
+    const iconElements = document.querySelectorAll('.btn-icon');
+    iconElements.forEach(element => {
+        const text = element.textContent;
+        if (text.includes('�') || text.includes('◊') || text.charCodeAt(0) === 65533 || text === '' || text === '?') {
+            const dataIcon = element.getAttribute('data-icon');
+            if (dataIcon === 'profile') {
+                element.textContent = '👤';
+                element.setAttribute('data-icon', 'profile');
+                console.log('✅ Fixed profile icon');
+            } else {
+                element.textContent = '🗝️';
+                element.setAttribute('data-icon', 'login');
+                console.log('✅ Fixed login icon');
+            }
+        }
+    });g issues by providing fallback icons
  */
 
 console.log('🎨 Icon Fix Script Loading...');
@@ -20,9 +36,9 @@ function updateLoginButtonIcon(isLoggedIn, userEmail) {
         loginBtn.setAttribute('title', userEmail ? `Logged in as ${userEmail}` : 'Logged in');
         console.log('✅ Icon Fix: Button updated to Profile with user icon');
     } else {
-        // Login button
+        // Login button with key icon
         loginBtn.innerHTML = `
-            <span class="btn-icon" data-icon="login">🔑</span>
+            <span class="btn-icon" data-icon="login">�️</span>
             <span class="btn-text">Login</span>
         `;
         loginBtn.classList.remove('logged-in');
@@ -36,7 +52,7 @@ function initializeLoginButton() {
     const loginBtn = document.querySelector('.login-btn');
     if (loginBtn) {
         loginBtn.innerHTML = `
-            <span class="btn-icon" data-icon="login">🔑</span>
+            <span class="btn-icon" data-icon="login">�️</span>
             <span class="btn-text">Login</span>
         `;
         console.log('✅ Icon Fix: Login button initialized with key icon');

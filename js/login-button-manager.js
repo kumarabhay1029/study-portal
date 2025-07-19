@@ -29,7 +29,7 @@ class LoginButtonManager {
             loginBtn.setAttribute('title', userEmail ? `Logged in as ${userEmail}` : 'Logged in');
         } else {
             loginBtn.innerHTML = `
-                <span class="btn-icon" data-icon="login">🔑</span>
+                <span class="btn-icon" data-icon="login">�️</span>
                 <span class="btn-text">Login</span>
             `;
             loginBtn.classList.remove('logged-in');
@@ -95,7 +95,7 @@ class LoginButtonManager {
         }
         
         const iconText = iconElement.textContent;
-        if (iconText.includes('�') || iconText.charCodeAt(0) === 65533 || iconText === '') {
+        if (iconText.includes('�') || iconText.includes('◊') || iconText.charCodeAt(0) === 65533 || iconText === '' || iconText === '?') {
             console.log('🔧 Corrupted icon detected, fixing...');
             const isLoggedIn = loginBtn.classList.contains('logged-in');
             const userEmail = loginBtn.getAttribute('title') || '';
