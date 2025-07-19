@@ -113,7 +113,7 @@
 }
 
 /* ==========================================================================
-   FORM STYLING
+   ENHANCED FORM STYLING
    ========================================================================== */
 
 /* Input groups */
@@ -150,15 +150,180 @@
     color: rgba(255, 255, 255, 0.5);
 }
 
+/* Password input container with toggle */
+.password-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input-container input {
+    padding-right: 45px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    font-size: 1.2em;
+    padding: 5px;
+    transition: all 0.3s ease;
+}
+
+.password-toggle:hover {
+    color: #4fc3f7;
+    transform: scale(1.1);
+}
+
+/* Input validation messages */
+.input-validation {
+    margin-top: 5px;
+    font-size: 0.85em;
+    min-height: 20px;
+}
+
+.input-validation.success {
+    color: #4caf50;
+}
+
+.input-validation.error {
+    color: #f44336;
+}
+
+.input-validation.warning {
+    color: #ff9800;
+}
+
+/* Password strength indicator */
+.password-strength {
+    margin-top: 8px;
+}
+
+.strength-bar {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.strength-fill {
+    height: 100%;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+}
+
+.strength-fill.weak {
+    width: 25%;
+    background: linear-gradient(90deg, #f44336, #e57373);
+}
+
+.strength-fill.fair {
+    width: 50%;
+    background: linear-gradient(90deg, #ff9800, #ffb74d);
+}
+
+.strength-fill.good {
+    width: 75%;
+    background: linear-gradient(90deg, #2196f3, #64b5f6);
+}
+
+.strength-fill.strong {
+    width: 100%;
+    background: linear-gradient(90deg, #4caf50, #81c784);
+}
+
+.strength-text {
+    font-size: 0.8em;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Checkbox styling */
+.checkbox-group {
+    margin: 15px 0;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.9em;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.checkbox-label input[type="checkbox"] {
+    display: none;
+}
+
+.checkmark {
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(79, 195, 247, 0.3);
+    border-radius: 4px;
+    margin-right: 10px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkmark {
+    background: linear-gradient(45deg, #4fc3f7, #29b6f6);
+    border-color: #4fc3f7;
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkmark::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    font-size: 0.8em;
+}
+
+/* Forgot password specific styles */
+.forgot-info {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.forgot-info h3 {
+    color: #4fc3f7;
+    margin-bottom: 10px;
+}
+
+.forgot-info p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+.auth-help {
+    margin: 15px 0;
+    padding: 15px;
+    background: rgba(79, 195, 247, 0.1);
+    border-radius: 8px;
+    border-left: 4px solid #4fc3f7;
+}
+
+.help-text {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.85em;
+    margin: 0;
+}
+
 /* ==========================================================================
-   AUTHENTICATION BUTTONS
+   ENHANCED AUTHENTICATION BUTTONS
    ========================================================================== */
 
 /* Auth buttons */
 .auth-btn {
     width: 100%;
-    background: linear-gradient(45deg, #4fc3f7, #29b6f6);
-    color: white;
     border: none;
     padding: 15px;
     border-radius: 8px;
@@ -167,11 +332,29 @@
     cursor: pointer;
     transition: all 0.3s ease;
     margin-bottom: 15px;
+    position: relative;
+    overflow: hidden;
 }
 
-.auth-btn:hover {
+.auth-btn.primary {
+    background: linear-gradient(45deg, #4fc3f7, #29b6f6);
+    color: white;
+}
+
+.auth-btn.primary:hover {
+    background: linear-gradient(45deg, #29b6f6, #0288d1);
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(79, 195, 247, 0.4);
+}
+
+.auth-btn.secondary {
+    background: linear-gradient(45deg, #607d8b, #455a64);
+    color: white;
+}
+
+.auth-btn.secondary:hover {
+    background: linear-gradient(45deg, #455a64, #37474f);
+    transform: translateY(-2px);
 }
 
 .auth-btn:disabled {
@@ -180,8 +363,20 @@
     transform: none;
 }
 
-.auth-btn.secondary {
-    background: linear-gradient(45deg, #607d8b, #455a64);
+/* Loading animation for buttons */
+.auth-btn .loading {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 8px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }
 
 /* Auth links */
@@ -194,10 +389,13 @@
     color: #4fc3f7;
     text-decoration: none;
     font-size: 0.9em;
+    transition: all 0.3s ease;
 }
 
 .auth-link a:hover {
     text-decoration: underline;
+    color: #29b6f6;
+}
 }
 
 /* ==========================================================================

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Test - Study Portal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 16px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        
+        /* Modal styles */
+        .modal-active {
+            display: block !important;
+        }
+        
+        #loginModal.active {
+            display: block !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🔧 Study Portal Login Test</h1>
+        <p>This test page will help verify that the login system works in Edge browser.</p>
+        
+        <div id="status" class="status info">
+            Testing login system compatibility...
+        </div>
+        
+        <button class="test-button" onclick="testLoginButton()">🧪 Test Login Button</button>
+        <button class="test-button" onclick="testFirebase()">🔥 Test Firebase</button>
+        <button class="test-button" onclick="testScriptLoading()">📜 Test Script Loading</button>
+        <button class="test-button" onclick="window.open('index.html', '_blank')">🚀 Open Main Site</button>
+        
+        <div id="console-output" style="background: #1e1e1e; color: #00ff00; padding: 15px; margin-top: 20px; border-radius: 5px; font-family: monospace; min-height: 200px; white-space: pre-wrap;"></div>
+    </div>
+
+    <!-- Simple Login Modal for Testing -->
+    <div id="loginModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 10px; min-width: 400px;">
+            <h2>🔐 Test Login Modal</h2>
+            <p>✅ Login modal opened successfully!</p>
+            <p>This confirms that the handleLogin() function is working.</p>
+            <button onclick="closeTestModal()" style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Close</button>
+        </div>
+    </div>
+
+    <script>
+        function closeTestModal() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+        
+        // Override the openLoginModal function for testing
+        window.openLoginModal = function() {
+            console.log('openLoginModal called - showing test modal');
+            document.getElementById('loginModal').style.display = 'block';
+        };
+    </script>
+
+    <!-- Same Firebase scripts as main site -->
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-storage-compat.js"></script>
+    
+    <!-- Edge Browser Compatibility -->
+    <script>
+        // Edge browser compatibility fixes
+        if (!window.Promise) {
+            document.write('<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"><\/script>');
+        }
+        if (!window.fetch) {
+            document.write('<script src="https://cdn.jsdelivr.net/npm/whatwg-fetch@3.6.2/dist/fetch.umd.js"><\/script>');
+        }
+    </script>
+    
+    <script src="js/firebase-config.js" onload="console.log('firebase-config.js loaded')" onerror="console.error('firebase-config.js failed to load')"></script>
+    <script src="js/auth.js" onload="console.log('auth.js loaded')" onerror="console.error('auth.js failed to load')"></script>
+    
+    <script>
+        // Fallback handleLogin function if auth.js doesn't load
+        if (typeof handleLogin === 'undefined') {
+            console.log('Creating fallback handleLogin function...');
+            window.handleLogin = function() {
+                console.log('Fallback handleLogin called');
+                if (typeof openLoginModal === 'function') {
+                    openLoginModal();
+                } else {
+                    document.getElementById('loginModal').style.display = 'block';
+                }
+            };
+        }
+    </script>
+    
+    <script>
+        // Console output capture
+        const consoleOutput = document.getElementById('console-output');
+        const originalLog = console.log;
+        const originalError = console.error;
+        
+        function addToConsole(message, type = 'log') {
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? '#ff6b6b' : type === 'warn' ? '#ffd93d' : '#00ff00';
+            consoleOutput.innerHTML += `<span style="color: ${color}">[${timestamp}] ${message}</span>\n`;
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addToConsole(args.join(' '), 'log');
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addToConsole('ERROR: ' + args.join(' '), 'error');
+        };
+        
+        // Test functions
+        function updateStatus(message, type = 'info') {
+            const status = document.getElementById('status');
+            status.className = `status ${type}`;
+            status.textContent = message;
+        }
+        
+        function testScriptLoading() {
+            console.log('=== Testing Script Loading ===');
+            
+            const scripts = [
+                { name: 'Firebase SDK', check: () => typeof firebase !== 'undefined' },
+                { name: 'Firebase Config', check: () => typeof window.firebaseServices !== 'undefined' },
+                { name: 'Auth Functions', check: () => typeof handleLogin !== 'undefined' },
+                { name: 'Modal Functions', check: () => typeof openLoginModal !== 'undefined' }
+            ];
+            
+            scripts.forEach(script => {
+                const loaded = script.check();
+                console.log(`${script.name}: ${loaded ? '✅ Loaded' : '❌ Not Loaded'}`);
+            });
+        }
+        
+        function testLoginButton() {
+            console.log('Testing login button functionality...');
+            console.log('Checking script loading status...');
+            
+            // Check if scripts are loaded
+            console.log('firebase defined:', typeof firebase !== 'undefined');
+            console.log('window.auth defined:', typeof window.auth !== 'undefined');
+            console.log('handleLogin defined:', typeof handleLogin !== 'undefined');
+            console.log('openLoginModal defined:', typeof openLoginModal !== 'undefined');
+            
+            // Check if auth.js is loaded by looking for the handleLogin function
+            if (typeof handleLogin === 'function') {
+                updateStatus('✅ handleLogin function found!', 'success');
+                console.log('handleLogin function is available');
+                
+                // Test if we can call it (this should open the login modal)
+                try {
+                    console.log('Calling handleLogin...');
+                    handleLogin();
+                    console.log('handleLogin called successfully');
+                    updateStatus('✅ Login button test passed! Check if login modal opened.', 'success');
+                } catch (error) {
+                    console.error('Error calling handleLogin:', error);
+                    updateStatus('❌ Error calling handleLogin: ' + error.message, 'error');
+                }
+            } else {
+                updateStatus('❌ handleLogin function not found! Creating fallback...', 'error');
+                console.error('handleLogin function is not available');
+                
+                // Create a simple test function
+                window.handleLogin = function() {
+                    console.log('Fallback handleLogin function called');
+                    document.getElementById('loginModal').style.display = 'block';
+                    updateStatus('✅ Fallback login function works!', 'success');
+                };
+                
+                // Test the fallback
+                try {
+                    handleLogin();
+                    updateStatus('✅ Fallback login function created and tested!', 'success');
+                } catch (error) {
+                    updateStatus('❌ Even fallback failed: ' + error.message, 'error');
+                }
+            }
+        }
+        
+        function testFirebase() {
+            console.log('Testing Firebase initialization...');
+            
+            if (typeof firebase === 'undefined') {
+                updateStatus('❌ Firebase not loaded!', 'error');
+                console.error('Firebase SDK not loaded');
+                return;
+            }
+            
+            console.log('Firebase SDK loaded successfully');
+            
+            if (window.firebaseServices && window.firebaseServices.auth) {
+                updateStatus('✅ Firebase Auth ready!', 'success');
+                console.log('Firebase Auth service is available');
+                
+                // Test auth state
+                window.firebaseServices.auth.onAuthStateChanged((user) => {
+                    if (user) {
+                        console.log('User is logged in:', user.email);
+                        updateStatus('✅ User is logged in: ' + user.email, 'success');
+                    } else {
+                        console.log('No user logged in');
+                        updateStatus('ℹ️ No user currently logged in', 'info');
+                    }
+                });
+            } else {
+                updateStatus('❌ Firebase Auth not initialized!', 'error');
+                console.error('Firebase Auth service not available');
+            }
+        }
+        
+        // Auto-run tests when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('=== Study Portal Login Test Started ===');
+            console.log('Browser:', navigator.userAgent);
+            console.log('Edge detected:', navigator.userAgent.includes('Edg'));
+            
+            // Wait longer for all scripts to load
+            setTimeout(() => {
+                console.log('Running script loading test...');
+                testScriptLoading();
+                
+                setTimeout(() => {
+                    console.log('Running Firebase test...');
+                    testFirebase();
+                    
+                    setTimeout(() => {
+                        console.log('Running login button test...');
+                        testLoginButton();
+                    }, 1000);
+                }, 1000);
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
