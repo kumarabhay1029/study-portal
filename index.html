@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="viewport" co    <!-- Login button (positioned absolutely in top-right corner) -->
+    <button class="login-btn" id="main-login-btn" onclick="if(typeof handleLogin === 'function'){handleLogin()}else{document.getElementById('loginModal').classList.add('active')}" title="Login to your account">
+        <span class="btn-icon" data-icon="login" data-text="LOGIN"></span>
+        <span class="btn-text">Login</span>
+    </button>="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <meta name="format-detection" content="telephone=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Study Portal - Your Academic Resource Hub</title>

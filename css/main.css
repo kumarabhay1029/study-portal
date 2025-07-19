@@ -467,11 +467,23 @@ body::after {
     font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
 }
 
-/* Fallback for browsers without emoji support */
-.login-btn .btn-icon::before {
-    content: attr(data-fallback);
+/* CSS-based icons as fallback */
+.login-btn .btn-icon[data-icon="login"]::before {
+    content: "🔓";
+    font-size: 1.2em;
+}
+
+.login-btn .btn-icon[data-icon="profile"]::before {
+    content: "👤";
+    font-size: 1.2em;
+}
+
+/* Text fallback for browsers without emoji support */
+.login-btn .btn-icon[data-text]::after {
+    content: attr(data-text);
     font-family: inherit;
     font-weight: bold;
+    font-size: 0.9em;
 }
 
 /* Login button text styling */
