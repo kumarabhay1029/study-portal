@@ -467,15 +467,32 @@ body::after {
     font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
 }
 
+/* Fix corrupted characters by hiding them and showing fallback */
+.login-btn .btn-icon:empty::before,
+.login-btn .btn-icon:contains("�")::before,
+.login-btn .btn-icon[data-icon]::before {
+    font-size: 1.2em;
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
+}
+
 /* CSS-based icons as fallback */
 .login-btn .btn-icon[data-icon="login"]::before {
-    content: "🔓";
+    content: "�";
     font-size: 1.2em;
 }
 
 .login-btn .btn-icon[data-icon="profile"]::before {
     content: "👤";
     font-size: 1.2em;
+}
+
+/* Hide corrupted text when fallback is shown */
+.login-btn .btn-icon[data-icon] {
+    font-size: 0;
+}
+
+.login-btn .btn-icon[data-icon]::before {
+    font-size: 1.2rem;
 }
 
 /* Text fallback for browsers without emoji support */
