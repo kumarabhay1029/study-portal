@@ -347,6 +347,13 @@ class StudyPortalAuth {
     async logout() {
         console.log('🔐 Logout attempt started (main method)');
         
+        // Get logout button and show loading state
+        const logoutBtn = document.getElementById('profileLogoutBtn');
+        if (logoutBtn) {
+            logoutBtn.classList.add('loading');
+            logoutBtn.disabled = true;
+        }
+        
         try {
             // Close profile modal first
             this.closeProfileModal();
@@ -370,7 +377,7 @@ class StudyPortalAuth {
             this.updateUI(null);
             
             console.log('✅ Logout successful');
-            this.showSuccess('You have been logged out successfully.');
+            this.showSuccess('You have been signed out successfully. Come back soon! 👋');
             
         } catch (error) {
             console.error('❌ Logout error:', error);
@@ -385,6 +392,12 @@ class StudyPortalAuth {
             this.closeProfileModal();
             
             this.showError('Logout completed, but there was an issue: ' + error.message);
+        } finally {
+            // Reset button state
+            if (logoutBtn) {
+                logoutBtn.classList.remove('loading');
+                logoutBtn.disabled = false;
+            }
         }
     }
     
@@ -685,6 +698,13 @@ let authSystem;
 window.logout = function() {
     console.log('🔐 Logout called (immediate fallback)');
     
+    // Get logout button and show loading state
+    const logoutBtn = document.getElementById('profileLogoutBtn');
+    if (logoutBtn) {
+        logoutBtn.classList.add('loading');
+        logoutBtn.disabled = true;
+    }
+    
     // Try multiple approaches to ensure logout works
     if (window.authSystem && typeof window.authSystem.logout === 'function') {
         console.log('🔐 Using authSystem logout');
@@ -712,12 +732,38 @@ window.logout = function() {
                 loginBtn.textContent = 'Login';
             }
             
-            // Show success message
-            alert('You have been logged out successfully.');
+            // Show success message with better UX
+            if (window.authSystem && typeof window.authSystem.showSuccess === 'function') {
+                window.authSystem.showSuccess('You have been signed out successfully. Come back soon! 👋');
+            } else {
+                alert('You have been signed out successfully. Come back soon! 👋');
+            }
             
         }).catch((error) => {
             console.error('❌ Logout error:', error);
-            alert('Logout failed: ' + error.message);
+            
+            // Force logout even on error
+            sessionStorage.removeItem('currentSession');
+            localStorage.removeItem('rememberLogin');
+            localStorage.removeItem('userEmail');
+            
+            const profileModal = document.getElementById('profileModal');
+            if (profileModal) {
+                profileModal.classList.remove('active');
+            }
+            
+            const loginBtn = document.querySelector('.login-btn');
+            if (loginBtn) {
+                loginBtn.textContent = 'Login';
+            }
+            
+            alert('Logout completed, but there was an issue: ' + error.message);
+        }).finally(() => {
+            // Reset button state
+            if (logoutBtn) {
+                logoutBtn.classList.remove('loading');
+                logoutBtn.disabled = false;
+            }
         });
     } else {
         console.log('🔐 Using manual logout');
@@ -745,7 +791,13 @@ window.logout = function() {
             window.authSystem.currentUser = null;
         }
         
-        alert('You have been logged out.');
+        // Reset button state
+        if (logoutBtn) {
+            logoutBtn.classList.remove('loading');
+            logoutBtn.disabled = false;
+        }
+        
+        alert('You have been signed out successfully. Come back soon! 👋');
     }
 };
 
@@ -783,13 +835,21 @@ waitForFirebase(() => {
 
 // Debug function to test logout manually
 window.testLogout = function() {
-    console.log('🧪 Testing logout function...');
+    console.log('🧪 Testing enhanced logout function...');
     console.log('Auth system available:', !!window.authSystem);
     console.log('Firebase auth available:', !!window.auth);
     console.log('Current user:', window.authSystem?.currentUser?.email || 'None');
     
+    const logoutBtn = document.getElementById('profileLogoutBtn');
+    if (logoutBtn) {
+        console.log('Logout button found:', logoutBtn);
+        console.log('Button classes:', logoutBtn.className);
+    } else {
+        console.log('⚠️ Logout button not found in DOM');
+    }
+    
     if (typeof window.logout === 'function') {
-        console.log('🔐 Calling logout function...');
+        console.log('🔐 Calling enhanced logout function...');
         window.logout();
     } else {
         console.error('❌ Logout function not available');

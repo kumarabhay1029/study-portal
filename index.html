@@ -630,8 +630,18 @@
                     <small id="profileSession" style="color: #666; margin-top: 10px; display: block;">Session info loading...</small>
                 </div>
                 <div class="profile-actions">
-                    <button class="auth-btn" onclick="logout(); console.log('Logout button clicked!');" id="profileLogoutBtn">🚪 Logout</button>
-                    <button class="auth-btn secondary" onclick="closeProfileModal(); console.log('Close button clicked!');">❌ Close</button>
+                    <button class="auth-btn logout-btn" onclick="logout(); console.log('Logout button clicked!');" id="profileLogoutBtn">
+                        <span class="btn-icon">🚪</span>
+                        <span class="btn-text">Sign Out</span>
+                        <span class="btn-loading" style="display: none;">
+                            <span class="loading-spinner"></span>
+                            Signing out...
+                        </span>
+                    </button>
+                    <button class="auth-btn secondary" onclick="closeProfileModal(); console.log('Close button clicked!');">
+                        <span class="btn-icon">✕</span>
+                        <span class="btn-text">Close</span>
+                    </button>
                 </div>
             </div>
         </div>
