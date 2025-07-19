@@ -15,15 +15,22 @@ const firebaseConfig = {
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+console.log('Firebase initialized with config:', firebaseConfig);
 
 // Firebase services exports for use in other modules
 const auth = firebase.auth();
-const db = firebase.firestore();
 const storage = firebase.storage();
+
+// Test Firebase connection
+auth.onAuthStateChanged((user) => {
+    console.log('Firebase Auth ready, current user:', user);
+});
 
 // Export for use in other files
 window.firebaseServices = {
     auth,
-    db,
     storage
 };
+
+// Make auth globally available
+window.auth = auth;

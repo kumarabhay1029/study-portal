@@ -15,9 +15,11 @@ let auth = null;
 document.addEventListener('DOMContentLoaded', function() {
     try {
         auth = firebase.auth();
+        console.log('Firebase Auth initialized successfully');
         
         // Listen for authentication state changes
         auth.onAuthStateChanged(function(user) {
+            console.log('Auth state changed:', user);
             if (user) {
                 // User is signed in
                 currentUser = user;
@@ -31,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
     } catch (error) {
         console.error('Firebase Auth initialization error:', error);
+        alert('Firebase initialization failed: ' + error.message);
     }
 });
 
@@ -122,14 +125,25 @@ function showAuthTab(tabName) {
  */
 async function loginUser(event) {
     event.preventDefault();
+    console.log('Login attempt started');
     
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
     const loginBtn = document.getElementById('loginBtn');
     
+    console.log('Email:', email);
+    console.log('Password length:', password.length);
+    
+    if (!auth) {
+        alert('Firebase auth not initialized. Please refresh the page.');
+        return;
+    }
+    
     try {
         showLoading(loginBtn, 'Logging in...');
+        console.log('Attempting login with Firebase...');
         const userCredential = await auth.signInWithEmailAndPassword(email, password);
+        console.log('Login successful:', userCredential.user);
         showMessage('loginMessage', 'Login successful! Welcome back!', 'success');
         
         setTimeout(() => {
@@ -137,6 +151,7 @@ async function loginUser(event) {
         }, 1500);
         
     } catch (error) {
+        console.error('Login error:', error);
         hideLoading(loginBtn, '🚀 Login');
         showMessage('loginMessage', getErrorMessage(error.code), 'error');
     }
