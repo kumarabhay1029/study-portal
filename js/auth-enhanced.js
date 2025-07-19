@@ -89,6 +89,14 @@ class StudyPortalAuth {
         // Setup login button with multiple fallbacks
         const loginBtn = document.querySelector('.login-btn');
         if (loginBtn) {
+            // Initialize button with login icon and text
+            if (!loginBtn.querySelector('.btn-icon')) {
+                loginBtn.innerHTML = `
+                    <span class="btn-icon">🔑</span>
+                    <span class="btn-text">Login</span>
+                `;
+            }
+            
             // Remove existing handlers
             loginBtn.replaceWith(loginBtn.cloneNode(true));
             const newLoginBtn = document.querySelector('.login-btn');
@@ -99,7 +107,7 @@ class StudyPortalAuth {
                 this.handleLogin();
             });
             
-            console.log('✅ Login button configured');
+            console.log('✅ Login button configured with icon');
         }
         
         // Setup form submissions
@@ -511,7 +519,23 @@ If the issue persists, check FIREBASE_FIX_GUIDE.md for solutions.`;
     updateUI(user) {
         const loginBtn = document.querySelector('.login-btn');
         if (loginBtn) {
-            loginBtn.textContent = user ? 'Profile' : 'Login';
+            if (user) {
+                // User is logged in - show profile button with icon
+                loginBtn.innerHTML = `
+                    <span class="btn-icon">👤</span>
+                    <span class="btn-text">Profile</span>
+                `;
+                loginBtn.classList.add('logged-in');
+                loginBtn.setAttribute('title', `Logged in as ${user.email}`);
+            } else {
+                // User is not logged in - show login button with icon
+                loginBtn.innerHTML = `
+                    <span class="btn-icon">🔑</span>
+                    <span class="btn-text">Login</span>
+                `;
+                loginBtn.classList.remove('logged-in');
+                loginBtn.setAttribute('title', 'Click to login or register');
+            }
         }
     }
     
@@ -812,7 +836,12 @@ window.logout = function() {
                 // Update UI
                 const loginBtn = document.querySelector('.login-btn');
                 if (loginBtn) {
-                    loginBtn.textContent = 'Login';
+                    loginBtn.innerHTML = `
+                        <span class="btn-icon">🔑</span>
+                        <span class="btn-text">Login</span>
+                    `;
+                    loginBtn.classList.remove('logged-in');
+                    loginBtn.setAttribute('title', 'Click to login or register');
                 }
                 
                 // Show success message with better UX
@@ -837,7 +866,12 @@ window.logout = function() {
                 
                 const loginBtn = document.querySelector('.login-btn');
                 if (loginBtn) {
-                    loginBtn.textContent = 'Login';
+                    loginBtn.innerHTML = `
+                        <span class="btn-icon">🔑</span>
+                        <span class="btn-text">Login</span>
+                    `;
+                    loginBtn.classList.remove('logged-in');
+                    loginBtn.setAttribute('title', 'Click to login or register');
                 }
                 
                 alert('Logout completed, but there was an issue: ' + error.message);
@@ -878,7 +912,12 @@ window.logout = function() {
             // Update UI
             const loginBtn = document.querySelector('.login-btn');
             if (loginBtn) {
-                loginBtn.textContent = 'Login';
+                loginBtn.innerHTML = `
+                    <span class="btn-icon">🔑</span>
+                    <span class="btn-text">Login</span>
+                `;
+                loginBtn.classList.remove('logged-in');
+                loginBtn.setAttribute('title', 'Click to login or register');
             }
             
             // Reset currentUser
@@ -982,7 +1021,12 @@ window.forceLogout = function() {
     // Update button
     const loginBtn = document.querySelector('.login-btn');
     if (loginBtn) {
-        loginBtn.textContent = 'Login';
+        loginBtn.innerHTML = `
+            <span class="btn-icon">🔑</span>
+            <span class="btn-text">Login</span>
+        `;
+        loginBtn.classList.remove('logged-in');
+        loginBtn.setAttribute('title', 'Click to login or register');
     }
     
     // Try Firebase logout if available

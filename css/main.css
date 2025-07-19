@@ -434,7 +434,7 @@ body::after {
 .login-btn {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
     border: 2px solid rgba(255, 255, 255, 0.3);
@@ -451,6 +451,34 @@ body::after {
     right: 20px;
     z-index: 1000;
     overflow: hidden;
+}
+
+/* Login button icon styling */
+.login-btn .btn-icon {
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+}
+
+/* Login button text styling */
+.login-btn .btn-text {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Profile button (when logged in) styling */
+.login-btn.logged-in {
+    background: rgba(76, 175, 80, 0.15);
+    border-color: rgba(76, 175, 80, 0.4);
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.2);
+}
+
+.login-btn.logged-in .btn-icon {
+    color: #4caf50;
+    text-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
 }
 
 /* Login button shine effect */
@@ -470,6 +498,15 @@ body::after {
     background: rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.login-btn:hover .btn-icon {
+    transform: scale(1.1);
+}
+
+.login-btn.logged-in:hover {
+    background: rgba(76, 175, 80, 0.25);
+    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
 }
 
 .login-btn:hover::before {
