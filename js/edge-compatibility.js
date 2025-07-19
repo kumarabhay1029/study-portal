@@ -1,185 +1,161 @@
 /**
- * 🌐 EDGE BROWSER COMPATIBILITY FIXES
- * Automatic scaling and font size adjustments for Microsoft Edge
+ * 🌐 CROSS-BROWSER COMPATIBILITY SYSTEM
+ * Ensures consistent rendering and behavior across Chrome, Edge, and other browsers
  */
 
-console.log('🌐 Edge Compatibility Fixes Loading...');
+console.log('🌐 Cross-Browser Compatibility System Loading...');
 
 // Detect Edge browser
 function isEdgeBrowser() {
     return /Edg/.test(navigator.userAgent) || /Edge/.test(navigator.userAgent);
 }
 
-// Apply Edge-specific fixes
-function applyEdgeFixes() {
-    if (!isEdgeBrowser()) return;
-    
-    console.log('🌐 Microsoft Edge detected, applying compatibility fixes...');
-    
-    // Get device pixel ratio for high DPI displays
-    const devicePixelRatio = window.devicePixelRatio || 1;
-    
-    // Apply scaling based on device pixel ratio
-    if (devicePixelRatio > 1) {
-        // High DPI display detected
-        const scaleFactor = Math.min(devicePixelRatio * 0.8, 1.4);
-        
-        // Apply global font scaling
-        document.documentElement.style.fontSize = `${16 * scaleFactor}px`;
-        
-        // Add Edge-specific CSS class
-        document.body.classList.add('edge-browser', 'edge-high-dpi');
-        
-        console.log(`🌐 Applied Edge high-DPI scaling: ${scaleFactor}x`);
-    } else {
-        // Standard DPI display
-        document.documentElement.style.fontSize = '18px';
-        document.body.classList.add('edge-browser', 'edge-standard-dpi');
-        
-        console.log('🌐 Applied Edge standard DPI scaling');
-    }
-    
-    // Force repaint to apply changes
-    setTimeout(() => {
-        document.body.style.display = 'none';
-        document.body.offsetHeight; // Trigger reflow
-        document.body.style.display = '';
-    }, 100);
+// Detect Chrome browser
+function isChromeBrowser() {
+    return /Chrome/.test(navigator.userAgent) && !/Edg/.test(navigator.userAgent);
 }
 
-// Zoom detection and adjustment
-function handleZoomChanges() {
-    if (!isEdgeBrowser()) return;
+// Apply universal compatibility fixes
+function applyUniversalFixes() {
+    console.log('🌐 Applying universal compatibility fixes...');
     
+    // Ensure consistent base font size across all browsers
+    const baseSize = 16; // Standard 16px base
+    document.documentElement.style.fontSize = `${baseSize}px`;
+    
+    // Add browser-specific classes for targeted CSS if needed
+    if (isEdgeBrowser()) {
+        document.body.classList.add('edge-browser');
+        console.log('🌐 Edge browser detected - applying consistency fixes');
+    } else if (isChromeBrowser()) {
+        document.body.classList.add('chrome-browser');
+        console.log('🌐 Chrome browser detected - ensuring consistency');
+    } else {
+        document.body.classList.add('other-browser');
+        console.log('🌐 Other browser detected - applying universal fixes');
+    }
+    
+    // Ensure consistent viewport behavior
+    const viewport = document.querySelector('meta[name="viewport"]');
+    if (viewport && isEdgeBrowser()) {
+        // Standardize viewport for Edge to match Chrome behavior
+        viewport.setAttribute('content', 
+            'width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes'
+        );
+        console.log('🌐 Viewport standardized for Edge');
+    }
+}
+
+// Monitor for zoom/scale changes and maintain consistency
+function handleBrowserChanges() {
     let lastDevicePixelRatio = window.devicePixelRatio;
     
-    function checkZoom() {
+    function checkForChanges() {
         const currentRatio = window.devicePixelRatio;
         
         if (Math.abs(currentRatio - lastDevicePixelRatio) > 0.1) {
-            console.log('🌐 Edge zoom level changed, readjusting...');
-            applyEdgeFixes();
+            console.log('🌐 Browser zoom/scale changed, maintaining consistency...');
+            applyUniversalFixes();
             lastDevicePixelRatio = currentRatio;
         }
     }
     
-    // Check for zoom changes
-    window.addEventListener('resize', checkZoom);
-    setInterval(checkZoom, 1000);
+    // Monitor for changes
+    window.addEventListener('resize', checkForChanges);
+    setInterval(checkForChanges, 1000);
 }
 
-// Initialize Edge fixes when DOM is ready
-function initializeEdgeFixes() {
+// Initialize compatibility system when DOM is ready
+function initializeCompatibilitySystem() {
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
-            applyEdgeFixes();
-            handleZoomChanges();
+            applyUniversalFixes();
+            handleBrowserChanges();
         });
     } else {
-        applyEdgeFixes();
-        handleZoomChanges();
+        applyUniversalFixes();
+        handleBrowserChanges();
     }
 }
 
-// Add CSS for Edge-specific classes
-function injectEdgeStyles() {
-    if (!isEdgeBrowser()) return;
-    
-    const edgeStyles = `
-        <style id="edge-compatibility-styles">
-            /* Edge Browser Specific Enhancements */
-            .edge-browser {
-                -ms-text-size-adjust: none !important;
-                text-size-adjust: none !important;
-                zoom: 1.1 !important;
+// Add universal CSS for consistent browser behavior
+function injectUniversalStyles() {
+    const universalStyles = `
+        <style id="universal-compatibility-styles">
+            /* Universal Browser Consistency */
+            * {
+                -webkit-text-size-adjust: 100%;
+                -ms-text-size-adjust: 100%;
+                text-size-adjust: 100%;
             }
             
-            .edge-high-dpi {
-                transform: scale(1.1);
-                transform-origin: top left;
+            /* Ensure consistent rendering across browsers */
+            .edge-browser,
+            .chrome-browser,
+            .other-browser {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+                line-height: 1.6;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
             }
             
+            /* Minor Edge-specific adjustments for consistency (not scaling) */
             .edge-browser .main-bar {
-                min-height: 210px !important;
-                font-size: 1.2em !important;
+                min-height: 200px; /* Consistent with Chrome */
             }
             
             .edge-browser .portal-title {
-                font-size: 2.6em !important;
-                padding: 22px 45px !important;
+                font-size: 2.5em; /* Match Chrome exactly */
             }
             
             .edge-browser .login-btn {
-                font-size: 1.2em !important;
-                padding: 14px 28px !important;
+                font-size: 1em; /* Standard button size */
+                padding: 12px 24px; /* Consistent padding */
             }
             
             .edge-browser .resource-card,
             .edge-browser .stat-card {
-                font-size: 1.15em !important;
-                padding: 22px !important;
+                font-size: 1em; /* Standard card text */
+                padding: 20px; /* Consistent padding */
             }
             
             .edge-browser .hero-section h1 {
-                font-size: 3.4em !important;
+                font-size: 3em; /* Match Chrome */
             }
             
             .edge-browser .hero-section p {
-                font-size: 1.3em !important;
+                font-size: 1.2em; /* Consistent subtitle */
             }
             
             .edge-browser .auth-btn {
-                font-size: 1.1em !important;
-                padding: 16px !important;
+                font-size: 1em; /* Standard button size */
+                padding: 14px; /* Consistent padding */
             }
             
             .edge-browser .login-container {
-                padding: 32px !important;
-                max-width: 420px !important;
+                padding: 30px; /* Standard container padding */
+                max-width: 400px; /* Consistent width */
             }
             
-            /* Fix for Edge's aggressive zoom compression */
-            @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-                body {
-                    zoom: 1.15 !important;
-                }
+            /* Chrome-specific fine-tuning if needed */
+            .chrome-browser {
+                /* Already renders correctly, minimal adjustments */
             }
             
-            /* Edge Legacy compatibility */
-            @supports (-ms-ime-align: auto) {
-                body {
-                    font-size: 1.1em !important;
-                }
+            /* Other browsers fallback */
+            .other-browser {
+                font-size: 16px; /* Ensure base font consistency */
             }
         </style>
     `;
     
-    document.head.insertAdjacentHTML('beforeend', edgeStyles);
-    console.log('🌐 Edge-specific styles injected');
+    document.head.insertAdjacentHTML('beforeend', universalStyles);
+    console.log('🌐 Universal browser consistency styles injected');
 }
 
-// Apply viewport meta tag fix for Edge
-function fixEdgeViewport() {
-    if (!isEdgeBrowser()) return;
-    
-    const viewport = document.querySelector('meta[name="viewport"]');
-    if (viewport) {
-        // Update viewport for better Edge compatibility
-        viewport.setAttribute('content', 
-            'width=device-width, initial-scale=1.0, minimum-scale=0.8, maximum-scale=3.0, user-scalable=yes'
-        );
-        console.log('🌐 Viewport meta tag updated for Edge compatibility');
-    }
-}
+// Initialize the universal compatibility system
+console.log('🌐 Initializing Cross-Browser Compatibility System...');
+injectUniversalStyles();
+initializeCompatibilitySystem();
 
-// Initialize all Edge fixes
-if (isEdgeBrowser()) {
-    console.log('🌐 Microsoft Edge browser detected');
-    injectEdgeStyles();
-    fixEdgeViewport();
-    initializeEdgeFixes();
-} else {
-    console.log('🌐 Non-Edge browser detected, skipping Edge-specific fixes');
-}
-
-console.log('🌐 Edge Compatibility Script Loaded');
+console.log('🌐 Cross-Browser Compatibility System Loaded - Ensuring consistent experience across all browsers');

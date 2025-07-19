@@ -1,23 +1,10 @@
 /* ==========================================================================
    AUTHENTICATION SYSTEM STYLES
    Firebase Auth integration with modern glassmorphism design
+   Consistent across all browsers
    ========================================================================== */
 
-/* Edge Browser Compatibility for Auth System */
-@supports (-ms-ime-align: auto) {
-    /* Auth modals */
-    .login-modal .login-container {
-        font-size: 1.1em !important;
-        padding: 35px !important;
-        max-width: 440px !important;
-    }
-    
-    /* Auth buttons */
-    .auth-btn {
-        font-size: 1.1em !important;
-        padding: 18px !important;
-        min-height: 50px !important;
-    }
+/* Universal Auth Styling - No browser-specific scaling */
     
     /* Modal headers */
     .login-header h2 {
@@ -30,16 +17,6 @@
         padding: 15px !important;
     }
     
-    /* Profile modal */
-    .profile-info h3 {
-        font-size: 1.4em !important;
-    }
-    
-    .profile-info p {
-        font-size: 1.1em !important;
-    }
-}
-
 /* ==========================================================================
    LOGIN MODAL STYLES
    ========================================================================== */

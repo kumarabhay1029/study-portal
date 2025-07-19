@@ -21,28 +21,16 @@ html, body {
     scroll-behavior: smooth;
 }
 
-/* Edge Browser Compatibility Fixes */
+/* Universal Browser Compatibility */
 html {
-    font-size: 16px; /* Base font size for consistent scaling */
+    font-size: 16px; /* Consistent base font size across all browsers */
     -ms-text-size-adjust: 100%; /* Prevent text scaling in Edge */
     -webkit-text-size-adjust: 100%; /* Prevent text scaling in WebKit browsers */
     text-size-adjust: 100%; /* Standard property */
-    zoom: 1; /* Reset zoom level for Edge */
 }
 
-/* Edge-specific fixes */
-@supports (-ms-ime-align: auto) {
-    /* This targets Edge specifically */
-    html {
-        font-size: 18px; /* Slightly larger base font for Edge */
-    }
-    
-    body {
-        zoom: 1.1; /* Slight zoom increase for Edge */
-        min-height: 100vh;
-        min-height: 100dvh; /* Dynamic viewport height for better Edge support */
-    }
-}
+/* Removed Edge-specific scaling to ensure consistency */
+/* All browsers now use the same base font size and scaling */
 
 /* Main body styling with animated gradient background */
 body {
@@ -304,25 +292,23 @@ body::after {
     position: relative;
 }
 
-/* Edge Browser Scaling Improvements */
-@supports (-ms-ime-align: auto) {
-    .main-bar {
-        font-size: 1.1em; /* Increase font size for Edge */
-        height: 210px; /* Slightly larger height for Edge */
-        padding: 40px 35px;
-    }
-    
-    .portal-title {
-        font-size: 2.8em !important; /* Force larger title in Edge */
-        padding: 25px 50px !important;
-        min-width: 380px !important;
-    }
-    
-    .login-btn {
-        font-size: 1.3em !important; /* Larger login button text */
-        padding: 12px 30px !important;
-        min-width: 140px !important;
-    }
+/* Consistent styling across all browsers */
+.main-bar {
+    height: 200px; /* Standard height for all browsers */
+    padding: 35px 30px; /* Consistent padding */
+    font-size: 1em; /* Standard font size */
+}
+
+.portal-title {
+    font-size: 2.5em; /* Consistent title size */
+    padding: 20px 40px; /* Standard padding */
+    min-width: 350px; /* Consistent minimum width */
+}
+
+.login-btn {
+    font-size: 1.1em; /* Standard button font size */
+    padding: 12px 24px; /* Consistent button padding */
+    min-width: 120px; /* Standard minimum width */
 }
 
 .main-bar {
