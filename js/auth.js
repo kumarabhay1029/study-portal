@@ -102,33 +102,65 @@ try {
                 loginBtn.disabled = true;
             }
             
-            if (window.auth) {
-                const userCredential = await window.auth.signInWithEmailAndPassword(email, password);
-                const user = userCredential.user;
-                
-                console.log('Login successful:', user);
-                
-                // Store session info if remember me is checked
-                if (rememberMe) {
-                    localStorage.setItem('rememberLogin', 'true');
-                    localStorage.setItem('userEmail', email);
-                }
-                
-                // Store session information
-                const sessionData = {
-                    loginTime: new Date().toISOString(),
-                    rememberMe: rememberMe
-                };
-                sessionStorage.setItem('currentSession', JSON.stringify(sessionData));
-                
-                window.closeLoginModal();
-                alert('Login successful!');
-            } else {
-                throw new Error('Firebase Auth not initialized');
+            // Check if Firebase is properly initialized
+            if (!window.auth) {
+                console.error('Firebase Auth not initialized');
+                alert(`Firebase Authentication Error
+
+The authentication service is not available. This could be due to:
+1. Firebase API key restrictions for GitHub Pages
+2. Network connectivity issues
+3. Firebase project configuration
+
+Please check the FIREBASE_FIX_GUIDE.md for solutions.
+
+For demo purposes, you can explore the interface, but login functionality is disabled.`);
+                return;
             }
+            
+            // Attempt Firebase login
+            const userCredential = await window.auth.signInWithEmailAndPassword(email, password);
+            const user = userCredential.user;
+            
+            console.log('Login successful:', user);
+            
+            // Store session info if remember me is checked
+            if (rememberMe) {
+                localStorage.setItem('rememberLogin', 'true');
+                localStorage.setItem('userEmail', email);
+            }
+            
+            // Store session information
+            const sessionData = {
+                loginTime: new Date().toISOString(),
+                rememberMe: rememberMe
+            };
+            sessionStorage.setItem('currentSession', JSON.stringify(sessionData));
+            
+            window.closeLoginModal();
+            alert('Login successful!');
+            
         } catch (error) {
             console.error('Login error:', error);
-            alert('Login failed: ' + (error.message || 'Unknown error'));
+            
+            // Handle specific Firebase errors
+            if (error.code === 'auth/api-key-not-valid') {
+                alert(`Firebase API Key Error
+
+The Firebase API key is not valid for this domain. 
+
+This is a configuration issue - please check the FIREBASE_FIX_GUIDE.md file for detailed instructions on how to fix this.
+
+The site interface will work in demo mode, but authentication is disabled until Firebase is properly configured.`);
+            } else if (error.code === 'auth/user-not-found') {
+                alert('No account found with this email address. Please create an account first.');
+            } else if (error.code === 'auth/wrong-password') {
+                alert('Incorrect password. Please try again.');
+            } else if (error.code === 'auth/invalid-email') {
+                alert('Please enter a valid email address.');
+            } else {
+                alert('Login failed: ' + (error.message || 'Unknown error. Check FIREBASE_FIX_GUIDE.md for solutions.'));
+            }
         } finally {
             const loginBtn = document.getElementById('loginBtn');
             if (loginBtn) {

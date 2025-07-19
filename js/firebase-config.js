@@ -1,21 +1,61 @@
 /**
  * Firebase Configuration for Study Portal
- * Contains Firebase project configuration and initialization
+ * New project: f1site-b35c6 (Fresh setup for GitHub Pages)
  */
 
-// Your web app's Firebase configuration (free plan)
+// Your web app's Firebase configuration (New Project)
 const firebaseConfig = {
-    apiKey: "AIzaSyBc3DKeE-LQXI2GIaaMpVpjmQ_YmVHgWos",
-    authDomain: "kkgithub-e28e9.firebaseapp.com",
-    projectId: "kkgithub-e28e9",
-    storageBucket: "kkgithub-e28e9.firebasestorage.app",
-    messagingSenderId: "789092710893",
-    appId: "1:789092710893:web:dac6bc1e8d8b3db13b1b46"
+    apiKey: "AIzaSyAMOoKFc6PeWoCaEa0-iZ1o2xer3capkyQ",
+    authDomain: "f1site-b35c6.firebaseapp.com",
+    projectId: "f1site-b35c6",
+    storageBucket: "f1site-b35c6.firebasestorage.app",
+    messagingSenderId: "1077434047400",
+    appId: "1:1077434047400:web:0e30d9b02540355a4b1b9d"
 };
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-console.log('Firebase initialized with config:', firebaseConfig);
+// Initialize Firebase with error handling
+try {
+    firebase.initializeApp(firebaseConfig);
+    console.log('✅ Firebase initialized successfully with new project!');
+    console.log('🔧 Config details:', {
+        projectId: firebaseConfig.projectId,
+        authDomain: firebaseConfig.authDomain,
+        currentDomain: window.location.hostname
+    });
+    
+    // Test Firebase connection
+    firebase.auth().onAuthStateChanged(function(user) {
+        console.log('🔐 Firebase Auth connection working, user state:', user ? 'logged in' : 'logged out');
+    });
+    
+    // Export services for use in other modules
+    window.firebaseServices = {
+        app: firebase.app(),
+        auth: firebase.auth(),
+        storage: firebase.storage()
+    };
+    
+    console.log('🎉 New Firebase project ready for GitHub Pages!');
+    
+} catch (error) {
+    console.error('❌ Firebase initialization error:', error);
+    console.error('🔧 Error details:', {
+        code: error.code,
+        message: error.message,
+        currentDomain: window.location.hostname
+    });
+    
+    // Show user-friendly error
+    if (error.code === 'auth/api-key-not-valid') {
+        alert(`Firebase Configuration Error: 
+        
+The Firebase API key is not valid for this domain (${window.location.hostname}).
+
+Please check your Firebase Console settings.`);
+    } else {
+        console.log('🔧 If you see any errors, check that Authentication is enabled in Firebase Console');
+    }
+}
 
 // Firebase services exports for use in other modules
 const auth = firebase.auth();
