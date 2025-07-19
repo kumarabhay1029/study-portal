@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Debug Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .debug-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .test-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <div class="debug-container">
+        <h1>🔧 Login System Debug</h1>
+        <p>This page will help identify what's causing the login issue.</p>
+        
+        <div id="results"></div>
+        
+        <button class="test-btn" onclick="testFirebaseLoad()">Test Firebase Loading</button>
+        <button class="test-btn" onclick="testAuthJs()">Test auth.js Loading</button>
+        <button class="test-btn" onclick="testFunctions()">Test Functions</button>
+        <button class="test-btn" onclick="testLoginButton()">Test Login Button</button>
+        <button class="test-btn" onclick="runAllTests()">Run All Tests</button>
+        <button class="test-btn" onclick="window.open('index.html', '_blank')">Open Main Site</button>
+    </div>
+
+    <!-- Same scripts as main site -->
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-storage-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+
+    <script>
+        function addResult(message, type) {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}</strong>: ${message}`;
+            results.appendChild(div);
+        }
+
+        function testFirebaseLoad() {
+            addResult('Testing Firebase SDK...', 'info');
+            
+            if (typeof firebase === 'undefined') {
+                addResult('❌ Firebase SDK not loaded', 'error');
+                return false;
+            }
+            
+            addResult('✅ Firebase SDK loaded successfully', 'success');
+            
+            try {
+                if (window.firebaseServices && window.firebaseServices.auth) {
+                    addResult('✅ Firebase services available', 'success');
+                } else {
+                    addResult('⚠️ Firebase services not configured', 'error');
+                }
+            } catch (e) {
+                addResult('❌ Error accessing Firebase services: ' + e.message, 'error');
+            }
+            
+            return true;
+        }
+
+        function testAuthJs() {
+            addResult('Testing auth.js functions...', 'info');
+            
+            const functions = ['handleLogin', 'openLoginModal', 'closeLoginModal', 'loginUser', 'showAuthTab', 'registerUser', 'resetPassword', 'logout'];
+            let allFound = true;
+            
+            functions.forEach(funcName => {
+                const funcType = typeof window[funcName];
+                if (funcType === 'function') {
+                    addResult(`✅ ${funcName} function found (${funcType})`, 'success');
+                } else {
+                    addResult(`❌ ${funcName} function missing (${funcType})`, 'error');
+                    allFound = false;
+                }
+            });
+            
+            // Test if Firebase auth is available
+            if (typeof firebase !== 'undefined' && firebase.auth) {
+                addResult('✅ Firebase Auth SDK available', 'success');
+            } else {
+                addResult('❌ Firebase Auth SDK not available', 'error');
+                allFound = false;
+            }
+            
+            return allFound;
+        }
+
+        function testFunctions() {
+            addResult('Testing function execution...', 'info');
+            
+            try {
+                if (typeof handleLogin === 'function') {
+                    addResult('✅ handleLogin is callable', 'success');
+                } else {
+                    addResult('❌ handleLogin not callable', 'error');
+                    return false;
+                }
+                
+                // Test if we can call it safely
+                if (typeof openLoginModal === 'function') {
+                    addResult('✅ openLoginModal is available', 'success');
+                } else {
+                    addResult('❌ openLoginModal not available', 'error');
+                }
+                
+                // Test console logging from auth.js
+                if (window.console && console.log) {
+                    addResult('✅ Console logging available', 'success');
+                } else {
+                    addResult('❌ Console logging not available', 'error');
+                }
+                
+                // Test Firebase auth state
+                if (window.auth) {
+                    addResult('✅ Auth object available', 'success');
+                } else {
+                    addResult('⚠️ Auth object not yet initialized', 'error');
+                }
+                
+                return true;
+            } catch (e) {
+                addResult('❌ Error testing functions: ' + e.message, 'error');
+                return false;
+            }
+        }
+
+        function testLoginButton() {
+            addResult('Testing login button (will open main site)...', 'info');
+            
+            // Open main site in new tab for testing
+            const newWindow = window.open('index.html', '_blank');
+            
+            setTimeout(() => {
+                addResult('✅ Main site opened. Test the login button there.', 'success');
+            }, 1000);
+            
+            return true;
+        }
+
+        function runAllTests() {
+            document.getElementById('results').innerHTML = '';
+            addResult('🚀 Starting comprehensive tests...', 'info');
+            
+            setTimeout(() => testFirebaseLoad(), 500);
+            setTimeout(() => testAuthJs(), 1000);
+            setTimeout(() => testFunctions(), 1500);
+            setTimeout(() => {
+                addResult('🎯 All tests complete. Check results above.', 'info');
+                
+                // Additional script loading verification
+                addResult('📋 Script Loading Verification:', 'info');
+                const scripts = document.querySelectorAll('script[src]');
+                scripts.forEach(script => {
+                    addResult(`📄 Loaded: ${script.src}`, 'info');
+                });
+                
+                // Check console for any errors
+                addResult('💡 Check browser console (F12) for any additional errors', 'info');
+            }, 2000);
+        }
+
+        // Auto-run basic tests when page loads
+        window.addEventListener('load', function() {
+            setTimeout(runAllTests, 1000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+# Backup files
+*-backup.*
+*-old.*
+*-temp.*
+
+# Test files (optional - you can remove these lines if you want to include test files)
+js/auth-minimal.js
+js/auth-working.js
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Runtime files
+node_modules/
+dist/
+build/

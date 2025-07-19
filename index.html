@@ -93,7 +93,7 @@
     </div>
 
     <!-- Login button (positioned absolutely in top-right corner) -->
-    <button class="login-btn" onclick="handleLogin()" title="Login to your account">
+    <button class="login-btn" title="Login to your account">
         <span class="user-icon"></span>
         Login
     </button>
@@ -666,35 +666,29 @@
     <!-- Firebase Configuration -->
     <script src="js/firebase-config.js"></script>
     
-    <!-- Firebase Configuration -->
-    <script src="js/firebase-config.js"></script>
-    
     <!-- Main Application Scripts -->
     <script src="js/app.js"></script>
     <script src="js/auth.js"></script>
     
-    <!-- Edge Browser Login Fix -->
+    <!-- Enhanced Login System Check -->
     <script>
-        // Ensure login functionality works in Edge
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM loaded, checking login button...');
-            const loginBtn = document.querySelector('.login-btn');
-            if (loginBtn) {
-                console.log('Login button found:', loginBtn);
-                // Ensure click handler is properly attached
-                loginBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    console.log('Login button clicked in Edge');
-                    if (typeof handleLogin === 'function') {
-                        handleLogin();
-                    } else {
-                        console.error('handleLogin function not found');
-                        alert('Login system is loading, please try again in a moment.');
-                    }
-                });
-            } else {
-                console.error('Login button not found');
-            }
+        // Wait for all scripts to load before setting up login
+        window.addEventListener('load', function() {
+            console.log('All scripts loaded, verifying login system...');
+            
+            // Give auth.js time to initialize
+            setTimeout(function() {
+                if (typeof handleLogin !== 'function') {
+                    console.error('Auth system not loaded properly');
+                    // Create a fallback
+                    window.handleLogin = function() {
+                        alert('Authentication system is initializing. Please refresh the page and try again.');
+                        window.location.reload();
+                    };
+                } else {
+                    console.log('✅ Auth system loaded successfully');
+                }
+            }, 1000);
         });
     </script>
 </body>
