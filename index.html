@@ -28,8 +28,8 @@
     <script src="js/edge-compatibility.js"></script>
     
     <!-- Icon Fix Script -->
-    <script src="js/icon-fix-lightweight.js"></script>
-    <script src="js/login-button-manager-optimized.js"></script>
+    <!-- Stable Auth System (prevents reload loops) -->
+    <script src="js/auth-stable.js"></script>
     
     <!-- Custom Stylesheets -->
     <link rel="stylesheet" href="css/main.css">
@@ -687,7 +687,8 @@
     
     <!-- Main Application Scripts -->
     <script src="js/app.js"></script>
-    <script src="js/auth-enhanced.js"></script>
+    <!-- TEMPORARILY DISABLED TO PREVENT CONFLICTS WITH auth-stable.js -->
+    <!-- <script src="js/auth-enhanced.js"></script> -->
     
     <!-- GitHub Pages Compatible Login System Check -->
     <script>
