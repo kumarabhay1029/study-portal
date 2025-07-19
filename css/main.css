@@ -455,18 +455,30 @@ body::after {
 
 /* Login button icon styling */
 .login-btn .btn-icon {
-    font-size: 1.2em;
-    display: flex;
+    font-size: 1.3em;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
     transition: transform 0.3s ease;
+    margin-right: 2px;
+    min-width: 20px;
+    text-align: center;
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
+}
+
+/* Fallback for browsers without emoji support */
+.login-btn .btn-icon::before {
+    content: attr(data-fallback);
+    font-family: inherit;
+    font-weight: bold;
 }
 
 /* Login button text styling */
 .login-btn .btn-text {
     font-weight: 600;
     letter-spacing: 0.5px;
+    white-space: nowrap;
 }
 
 /* Profile button (when logged in) styling */

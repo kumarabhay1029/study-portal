@@ -92,9 +92,10 @@ class StudyPortalAuth {
             // Initialize button with login icon and text
             if (!loginBtn.querySelector('.btn-icon')) {
                 loginBtn.innerHTML = `
-                    <span class="btn-icon">🔑</span>
+                    <span class="btn-icon">�</span>
                     <span class="btn-text">Login</span>
                 `;
+                console.log('✅ Initialized button with lock icon');
             }
             
             // Remove existing handlers
@@ -527,14 +528,16 @@ If the issue persists, check FIREBASE_FIX_GUIDE.md for solutions.`;
                 `;
                 loginBtn.classList.add('logged-in');
                 loginBtn.setAttribute('title', `Logged in as ${user.email}`);
+                console.log('✅ Button updated to Profile with user icon');
             } else {
                 // User is not logged in - show login button with icon
                 loginBtn.innerHTML = `
-                    <span class="btn-icon">🔑</span>
+                    <span class="btn-icon">�</span>
                     <span class="btn-text">Login</span>
                 `;
                 loginBtn.classList.remove('logged-in');
                 loginBtn.setAttribute('title', 'Click to login or register');
+                console.log('✅ Button updated to Login with lock icon');
             }
         }
     }
@@ -837,7 +840,7 @@ window.logout = function() {
                 const loginBtn = document.querySelector('.login-btn');
                 if (loginBtn) {
                     loginBtn.innerHTML = `
-                        <span class="btn-icon">🔑</span>
+                        <span class="btn-icon">�</span>
                         <span class="btn-text">Login</span>
                     `;
                     loginBtn.classList.remove('logged-in');
@@ -867,7 +870,7 @@ window.logout = function() {
                 const loginBtn = document.querySelector('.login-btn');
                 if (loginBtn) {
                     loginBtn.innerHTML = `
-                        <span class="btn-icon">🔑</span>
+                        <span class="btn-icon">�</span>
                         <span class="btn-text">Login</span>
                     `;
                     loginBtn.classList.remove('logged-in');
@@ -913,7 +916,7 @@ window.logout = function() {
             const loginBtn = document.querySelector('.login-btn');
             if (loginBtn) {
                 loginBtn.innerHTML = `
-                    <span class="btn-icon">🔑</span>
+                    <span class="btn-icon">�</span>
                     <span class="btn-text">Login</span>
                 `;
                 loginBtn.classList.remove('logged-in');
@@ -1022,7 +1025,7 @@ window.forceLogout = function() {
     const loginBtn = document.querySelector('.login-btn');
     if (loginBtn) {
         loginBtn.innerHTML = `
-            <span class="btn-icon">🔑</span>
+            <span class="btn-icon">�</span>
             <span class="btn-text">Login</span>
         `;
         loginBtn.classList.remove('logged-in');
