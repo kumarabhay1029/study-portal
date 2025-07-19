@@ -345,26 +345,46 @@ class StudyPortalAuth {
     
     // Logout user
     async logout() {
-        console.log('🔐 Logout attempt started');
+        console.log('🔐 Logout attempt started (main method)');
         
         try {
-            if (window.auth) {
+            // Close profile modal first
+            this.closeProfileModal();
+            
+            if (window.auth && typeof window.auth.signOut === 'function') {
+                console.log('🔐 Signing out from Firebase...');
                 await window.auth.signOut();
-                
-                // Clear session data
-                sessionStorage.removeItem('currentSession');
-                localStorage.removeItem('rememberLogin');
-                localStorage.removeItem('userEmail');
-                
-                // Close profile modal
-                this.closeProfileModal();
-                
-                console.log('✅ Logout successful');
-                this.showSuccess('You have been logged out successfully.');
+                console.log('✅ Firebase signOut successful');
             }
+            
+            // Clear session data
+            console.log('🔧 Clearing session data...');
+            sessionStorage.removeItem('currentSession');
+            localStorage.removeItem('rememberLogin');
+            localStorage.removeItem('userEmail');
+            
+            // Reset internal state
+            this.currentUser = null;
+            
+            // Update UI
+            this.updateUI(null);
+            
+            console.log('✅ Logout successful');
+            this.showSuccess('You have been logged out successfully.');
+            
         } catch (error) {
             console.error('❌ Logout error:', error);
-            this.showError('Logout failed: ' + error.message);
+            
+            // Force logout even if Firebase fails
+            console.log('🔧 Forcing manual logout...');
+            sessionStorage.removeItem('currentSession');
+            localStorage.removeItem('rememberLogin');
+            localStorage.removeItem('userEmail');
+            this.currentUser = null;
+            this.updateUI(null);
+            this.closeProfileModal();
+            
+            this.showError('Logout completed, but there was an issue: ' + error.message);
         }
     }
     
@@ -445,6 +465,8 @@ If the issue persists, check FIREBASE_FIX_GUIDE.md for solutions.`;
             return;
         }
         
+        console.log('🔐 Opening profile modal for:', this.currentUser.email);
+        
         const profileModal = document.getElementById('profileModal');
         if (profileModal) {
             const profileName = document.getElementById('profileName');
@@ -452,8 +474,13 @@ If the issue persists, check FIREBASE_FIX_GUIDE.md for solutions.`;
             const profileStatus = document.getElementById('profileStatus');
             const profileSession = document.getElementById('profileSession');
             
-            if (profileName) profileName.textContent = this.currentUser.displayName || 'User';
-            if (profileEmail) profileEmail.textContent = this.currentUser.email;
+            // Update profile information
+            if (profileName) {
+                profileName.textContent = this.currentUser.displayName || 'Abhay';
+            }
+            if (profileEmail) {
+                profileEmail.textContent = this.currentUser.email;
+            }
             if (profileStatus) {
                 profileStatus.textContent = this.currentUser.emailVerified ? 
                     'Email verified ✅' : 'Email not verified ⚠️';
@@ -465,18 +492,25 @@ If the issue persists, check FIREBASE_FIX_GUIDE.md for solutions.`;
                 if (sessionData) {
                     try {
                         const session = JSON.parse(sessionData);
-                        const loginTime = new Date(session.loginTime).toLocaleString();
-                        profileSession.textContent = `Logged in: ${loginTime}`;
+                        const loginTime = new Date(session.loginTime);
+                        profileSession.textContent = `Logged in: ${loginTime.toLocaleString()}`;
                     } catch (e) {
+                        console.warn('Session data parse error:', e);
                         profileSession.textContent = 'Session active';
                     }
                 } else {
-                    profileSession.textContent = 'Session active';
+                    // Create session data if missing
+                    const newSessionData = {
+                        loginTime: new Date().toISOString(),
+                        rememberMe: false
+                    };
+                    sessionStorage.setItem('currentSession', JSON.stringify(newSessionData));
+                    profileSession.textContent = `Logged in: ${new Date().toLocaleString()}`;
                 }
             }
             
             profileModal.classList.add('active');
-            console.log('✅ Profile modal opened for:', this.currentUser.email);
+            console.log('✅ Profile modal opened successfully');
         } else {
             console.error('❌ Profile modal element not found');
         }
@@ -649,14 +683,17 @@ let authSystem;
 
 // Initialize basic fallback functions immediately
 window.logout = function() {
-    console.log('🔐 Logout called (fallback)');
+    console.log('🔐 Logout called (immediate fallback)');
+    
+    // Try multiple approaches to ensure logout works
     if (window.authSystem && typeof window.authSystem.logout === 'function') {
+        console.log('🔐 Using authSystem logout');
         window.authSystem.logout();
-    } else if (window.auth) {
+    } else if (window.auth && typeof window.auth.signOut === 'function') {
+        console.log('🔐 Using direct Firebase logout');
         // Direct Firebase logout if auth system not ready
         window.auth.signOut().then(() => {
             console.log('✅ Direct logout successful');
-            alert('You have been logged out successfully.');
             
             // Clear session data
             sessionStorage.removeItem('currentSession');
@@ -668,17 +705,52 @@ window.logout = function() {
             if (profileModal) {
                 profileModal.classList.remove('active');
             }
+            
+            // Update UI
+            const loginBtn = document.querySelector('.login-btn');
+            if (loginBtn) {
+                loginBtn.textContent = 'Login';
+            }
+            
+            // Show success message
+            alert('You have been logged out successfully.');
+            
         }).catch((error) => {
             console.error('❌ Logout error:', error);
             alert('Logout failed: ' + error.message);
         });
     } else {
-        alert('Authentication system not ready. Please refresh the page and try again.');
+        console.log('🔐 Using manual logout');
+        // Manual logout as last resort
+        
+        // Clear session data
+        sessionStorage.removeItem('currentSession');
+        localStorage.removeItem('rememberLogin');
+        localStorage.removeItem('userEmail');
+        
+        // Close profile modal
+        const profileModal = document.getElementById('profileModal');
+        if (profileModal) {
+            profileModal.classList.remove('active');
+        }
+        
+        // Update UI
+        const loginBtn = document.querySelector('.login-btn');
+        if (loginBtn) {
+            loginBtn.textContent = 'Login';
+        }
+        
+        // Reset currentUser
+        if (window.authSystem) {
+            window.authSystem.currentUser = null;
+        }
+        
+        alert('You have been logged out.');
     }
 };
 
 window.closeProfileModal = function() {
-    console.log('🔐 Closing profile modal...');
+    console.log('🔐 Closing profile modal (immediate)...');
     const profileModal = document.getElementById('profileModal');
     if (profileModal) {
         profileModal.classList.remove('active');
@@ -708,5 +780,50 @@ waitForFirebase(() => {
     
     console.log('✅ Enhanced Auth System Ready!');
 });
+
+// Debug function to test logout manually
+window.testLogout = function() {
+    console.log('🧪 Testing logout function...');
+    console.log('Auth system available:', !!window.authSystem);
+    console.log('Firebase auth available:', !!window.auth);
+    console.log('Current user:', window.authSystem?.currentUser?.email || 'None');
+    
+    if (typeof window.logout === 'function') {
+        console.log('🔐 Calling logout function...');
+        window.logout();
+    } else {
+        console.error('❌ Logout function not available');
+    }
+};
+
+// Additional immediate logout function for emergency use
+window.forceLogout = function() {
+    console.log('🚨 Force logout initiated');
+    
+    // Clear all session data
+    sessionStorage.clear();
+    localStorage.removeItem('rememberLogin');
+    localStorage.removeItem('userEmail');
+    
+    // Close modal
+    const profileModal = document.getElementById('profileModal');
+    if (profileModal) {
+        profileModal.classList.remove('active');
+    }
+    
+    // Update button
+    const loginBtn = document.querySelector('.login-btn');
+    if (loginBtn) {
+        loginBtn.textContent = 'Login';
+    }
+    
+    // Try Firebase logout if available
+    if (window.auth && typeof window.auth.signOut === 'function') {
+        window.auth.signOut().catch(e => console.log('Firebase signout error:', e));
+    }
+    
+    alert('Force logout completed!');
+    console.log('✅ Force logout completed');
+};
 
 console.log('🔐 Enhanced Auth Script Loaded');
