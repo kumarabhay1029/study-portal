@@ -21,6 +21,29 @@ html, body {
     scroll-behavior: smooth;
 }
 
+/* Edge Browser Compatibility Fixes */
+html {
+    font-size: 16px; /* Base font size for consistent scaling */
+    -ms-text-size-adjust: 100%; /* Prevent text scaling in Edge */
+    -webkit-text-size-adjust: 100%; /* Prevent text scaling in WebKit browsers */
+    text-size-adjust: 100%; /* Standard property */
+    zoom: 1; /* Reset zoom level for Edge */
+}
+
+/* Edge-specific fixes */
+@supports (-ms-ime-align: auto) {
+    /* This targets Edge specifically */
+    html {
+        font-size: 18px; /* Slightly larger base font for Edge */
+    }
+    
+    body {
+        zoom: 1.1; /* Slight zoom increase for Edge */
+        min-height: 100vh;
+        min-height: 100dvh; /* Dynamic viewport height for better Edge support */
+    }
+}
+
 /* Main body styling with animated gradient background */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -32,6 +55,7 @@ body {
     line-height: 1.6;
     min-height: 100vh;
     position: relative;
+    font-size: 1rem; /* Use rem units for consistent scaling */
 }
 
 /* ==========================================================================
@@ -274,6 +298,34 @@ body::after {
     align-items: center;
     justify-content: center;
     padding: 35px 30px; /* Increased top/bottom padding for better spacing */
+    gap: 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    z-index: 900;
+    position: relative;
+}
+
+/* Edge Browser Scaling Improvements */
+@supports (-ms-ime-align: auto) {
+    .main-bar {
+        font-size: 1.1em; /* Increase font size for Edge */
+        height: 210px; /* Slightly larger height for Edge */
+        padding: 40px 35px;
+    }
+    
+    .portal-title {
+        font-size: 2.8em !important; /* Force larger title in Edge */
+        padding: 25px 50px !important;
+        min-width: 380px !important;
+    }
+    
+    .login-btn {
+        font-size: 1.3em !important; /* Larger login button text */
+        padding: 12px 30px !important;
+        min-width: 140px !important;
+    }
+}
+
+.main-bar {
     position: relative;
     z-index: 999;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
@@ -1119,6 +1171,59 @@ body::after {
 /* ==========================================================================
    RESPONSIVE DESIGN - TABLET AND MOBILE
    ========================================================================== */
+
+/* Edge Browser Content Scaling Fixes */
+@supports (-ms-ime-align: auto) {
+    /* Content sections */
+    .content-section {
+        font-size: 1.1em !important;
+        padding: 25px !important;
+    }
+    
+    /* Stats cards */
+    .stats-grid .stat-card {
+        font-size: 1.1em !important;
+        padding: 25px !important;
+    }
+    
+    .stat-card .stat-number {
+        font-size: 3.2em !important;
+    }
+    
+    .stat-card .stat-label {
+        font-size: 1.4em !important;
+    }
+    
+    /* Resource cards */
+    .resource-card {
+        font-size: 1.1em !important;
+        padding: 25px !important;
+    }
+    
+    .resource-card h3 {
+        font-size: 1.4em !important;
+    }
+    
+    .resource-card p {
+        font-size: 1.1em !important;
+        line-height: 1.7 !important;
+    }
+    
+    /* Hero section */
+    .hero-section h1 {
+        font-size: 3.2em !important;
+    }
+    
+    .hero-section p {
+        font-size: 1.4em !important;
+    }
+    
+    /* Navigation links */
+    .nav-links a {
+        font-size: 1.2em !important;
+        padding: 8px 16px !important;
+    }
+}
 
 /* Tablet and smaller desktop styles (768px and below) */
 @media (max-width: 768px) {

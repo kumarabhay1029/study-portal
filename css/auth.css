@@ -3,6 +3,43 @@
    Firebase Auth integration with modern glassmorphism design
    ========================================================================== */
 
+/* Edge Browser Compatibility for Auth System */
+@supports (-ms-ime-align: auto) {
+    /* Auth modals */
+    .login-modal .login-container {
+        font-size: 1.1em !important;
+        padding: 35px !important;
+        max-width: 440px !important;
+    }
+    
+    /* Auth buttons */
+    .auth-btn {
+        font-size: 1.1em !important;
+        padding: 18px !important;
+        min-height: 50px !important;
+    }
+    
+    /* Modal headers */
+    .login-header h2 {
+        font-size: 1.6em !important;
+    }
+    
+    /* Form inputs */
+    .auth-input {
+        font-size: 1.1em !important;
+        padding: 15px !important;
+    }
+    
+    /* Profile modal */
+    .profile-info h3 {
+        font-size: 1.4em !important;
+    }
+    
+    .profile-info p {
+        font-size: 1.1em !important;
+    }
+}
+
 /* ==========================================================================
    LOGIN MODAL STYLES
    ========================================================================== */
