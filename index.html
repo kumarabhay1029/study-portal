@@ -93,7 +93,7 @@
     </div>
 
     <!-- Login button (positioned absolutely in top-right corner) -->
-    <button class="login-btn" title="Login to your account">
+    <button class="login-btn" id="main-login-btn" onclick="if(typeof handleLogin === 'function'){handleLogin()}else{document.getElementById('loginModal').classList.add('active')}" title="Login to your account">
         <span class="user-icon"></span>
         Login
     </button>
@@ -670,25 +670,105 @@
     <script src="js/app.js"></script>
     <script src="js/auth.js"></script>
     
-    <!-- Enhanced Login System Check -->
+    <!-- GitHub Pages Compatible Login System Check -->
     <script>
-        // Wait for all scripts to load before setting up login
-        window.addEventListener('load', function() {
-            console.log('All scripts loaded, verifying login system...');
+        console.log('🔧 GitHub Pages Login System Check Starting...');
+        
+        // Immediate check for function availability
+        function checkAuthSystem() {
+            const requiredFunctions = ['handleLogin', 'openLoginModal', 'loginUser'];
+            const missing = [];
             
-            // Give auth.js time to initialize
-            setTimeout(function() {
-                if (typeof handleLogin !== 'function') {
-                    console.error('Auth system not loaded properly');
-                    // Create a fallback
-                    window.handleLogin = function() {
-                        alert('Authentication system is initializing. Please refresh the page and try again.');
-                        window.location.reload();
-                    };
-                } else {
-                    console.log('✅ Auth system loaded successfully');
+            requiredFunctions.forEach(func => {
+                if (typeof window[func] !== 'function') {
+                    missing.push(func);
                 }
-            }, 1000);
+            });
+            
+            if (missing.length > 0) {
+                console.error('❌ Missing functions:', missing);
+                return false;
+            } else {
+                console.log('✅ All auth functions available');
+                return true;
+            }
+        }
+        
+        // Setup fallback for GitHub Pages
+        function setupFallback() {
+            console.log('🔧 Setting up GitHub Pages fallback...');
+            
+            window.handleLogin = function() {
+                console.log('🔧 Fallback handleLogin called');
+                
+                // Try to load the modal directly
+                const modal = document.getElementById('loginModal');
+                if (modal) {
+                    modal.classList.add('active');
+                    console.log('✅ Modal opened via fallback');
+                } else {
+                    alert('Login system is loading. Please refresh the page and try again.');
+                }
+            };
+            
+            window.openLoginModal = function() {
+                const modal = document.getElementById('loginModal');
+                if (modal) {
+                    modal.classList.add('active');
+                    // Show login tab
+                    const loginTab = document.getElementById('loginTab');
+                    const loginContent = document.getElementById('loginContent');
+                    if (loginTab) loginTab.classList.add('active');
+                    if (loginContent) loginContent.classList.add('active');
+                }
+            };
+            
+            console.log('✅ Fallback functions installed');
+        }
+        
+        // Wait for all scripts to load
+        window.addEventListener('load', function() {
+            console.log('🚀 Page loaded, checking auth system...');
+            
+            // Give scripts time to initialize
+            setTimeout(function() {
+                if (!checkAuthSystem()) {
+                    console.log('⚠️ Auth system not ready, setting up fallback...');
+                    setupFallback();
+                } else {
+                    console.log('✅ Auth system ready!');
+                }
+                
+                // Ensure login button works
+                const loginBtn = document.querySelector('.login-btn');
+                if (loginBtn) {
+                    console.log('🔧 Login button found, ensuring it works...');
+                    
+                    // Remove any existing listeners and add a robust one
+                    const newBtn = loginBtn.cloneNode(true);
+                    loginBtn.parentNode.replaceChild(newBtn, loginBtn);
+                    
+                    newBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        console.log('🔐 Login button clicked (GitHub Pages)');
+                        
+                        if (typeof handleLogin === 'function') {
+                            handleLogin();
+                        } else {
+                            console.log('🔧 Using fallback login');
+                            if (typeof window.handleLogin === 'function') {
+                                window.handleLogin();
+                            } else {
+                                alert('Login system is still loading. Please try again in a moment.');
+                            }
+                        }
+                    });
+                    
+                    console.log('✅ Login button event listener installed');
+                } else {
+                    console.error('❌ Login button not found');
+                }
+            }, 1500); // Increased timeout for GitHub Pages
         });
     </script>
 </body>

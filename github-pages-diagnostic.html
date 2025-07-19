@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GitHub Pages Login Diagnostic</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            background: #f5f5f5;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .diagnostic {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 10px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .result { 
+            margin: 5px 0; 
+            padding: 10px; 
+            border-radius: 5px; 
+            border-left: 4px solid #ccc;
+        }
+        .success { 
+            background: #d4edda; 
+            color: #155724; 
+            border-left-color: #28a745;
+        }
+        .error { 
+            background: #f8d7da; 
+            color: #721c24; 
+            border-left-color: #dc3545;
+        }
+        .warning { 
+            background: #fff3cd; 
+            color: #856404; 
+            border-left-color: #ffc107;
+        }
+        .info { 
+            background: #d1ecf1; 
+            color: #0c5460; 
+            border-left-color: #17a2b8;
+        }
+        button { 
+            padding: 10px 20px; 
+            margin: 5px; 
+            background: #007bff; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+        }
+        button:hover { background: #0056b3; }
+        .test-section { margin: 20px 0; }
+        .console-output {
+            background: #000;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 GitHub Pages Login System Diagnostic</h1>
+    <p>This page will help diagnose login issues specifically on GitHub Pages deployment.</p>
+    
+    <div class="diagnostic">
+        <h2>📊 Live Diagnostic Results</h2>
+        <div id="results"></div>
+    </div>
+    
+    <div class="diagnostic">
+        <h2>🧪 Manual Tests</h2>
+        <div class="test-section">
+            <button onclick="runFullDiagnostic()">🔍 Run Full Diagnostic</button>
+            <button onclick="testFirebaseConnection()">🔥 Test Firebase</button>
+            <button onclick="testAuthFunctions()">🔐 Test Auth Functions</button>
+            <button onclick="testLoginButton()">🔘 Test Login Button</button>
+            <button onclick="window.open('index.html', '_blank')">🏠 Open Main Site</button>
+        </div>
+    </div>
+    
+    <div class="diagnostic">
+        <h2>📱 Console Output</h2>
+        <div id="console-output" class="console-output">Console logs will appear here...</div>
+    </div>
+
+    <!-- Same script loading order as main site -->
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-storage-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+
+    <script>
+        // Capture console logs
+        const originalLog = console.log;
+        const originalError = console.error;
+        const consoleOutput = document.getElementById('console-output');
+        
+        function addToConsole(message, type = 'log') {
+            const time = new Date().toLocaleTimeString();
+            const color = type === 'error' ? '#ff6b6b' : type === 'warn' ? '#feca57' : '#0f0';
+            consoleOutput.innerHTML += `<div style="color: ${color}">[${time}] ${message}</div>`;
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addToConsole(args.join(' '), 'log');
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addToConsole(args.join(' '), 'error');
+        };
+
+        function addResult(message, type) {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}</strong>: ${message}`;
+            results.appendChild(div);
+        }
+
+        function testFirebaseConnection() {
+            addResult('Testing Firebase SDK connection...', 'info');
+            
+            if (typeof firebase === 'undefined') {
+                addResult('❌ Firebase SDK not loaded', 'error');
+                return false;
+            }
+            
+            addResult('✅ Firebase SDK loaded', 'success');
+            
+            try {
+                if (firebase.auth) {
+                    addResult('✅ Firebase Auth module available', 'success');
+                } else {
+                    addResult('❌ Firebase Auth module missing', 'error');
+                }
+                
+                if (window.firebaseServices) {
+                    addResult('✅ Firebase services configured', 'success');
+                } else {
+                    addResult('⚠️ Firebase services not configured', 'warning');
+                }
+                
+                return true;
+            } catch (e) {
+                addResult('❌ Firebase connection error: ' + e.message, 'error');
+                return false;
+            }
+        }
+
+        function testAuthFunctions() {
+            addResult('Testing authentication functions...', 'info');
+            
+            const functions = ['handleLogin', 'openLoginModal', 'closeLoginModal', 'loginUser', 'showAuthTab', 'registerUser', 'resetPassword', 'logout'];
+            let allFound = true;
+            
+            functions.forEach(funcName => {
+                const funcType = typeof window[funcName];
+                if (funcType === 'function') {
+                    addResult(`✅ ${funcName} function available (${funcType})`, 'success');
+                } else {
+                    addResult(`❌ ${funcName} function missing (${funcType})`, 'error');
+                    allFound = false;
+                }
+            });
+            
+            return allFound;
+        }
+
+        function testLoginButton() {
+            addResult('Testing login button functionality...', 'info');
+            
+            // Test if we can call handleLogin
+            try {
+                if (typeof handleLogin === 'function') {
+                    addResult('✅ handleLogin function is callable', 'success');
+                    
+                    // Don't actually call it, just test if it exists
+                    addResult('🔘 Login button test: Function ready to call', 'success');
+                } else {
+                    addResult('❌ handleLogin function not callable', 'error');
+                }
+            } catch (e) {
+                addResult('❌ Error testing login button: ' + e.message, 'error');
+            }
+            
+            // Test actual button click
+            addResult('ℹ️ To test actual login, open the main site and check console', 'info');
+        }
+
+        function runFullDiagnostic() {
+            document.getElementById('results').innerHTML = '';
+            addResult('🚀 Starting full GitHub Pages diagnostic...', 'info');
+            
+            setTimeout(() => {
+                addResult('📍 Current URL: ' + window.location.href, 'info');
+                addResult('📍 User Agent: ' + navigator.userAgent, 'info');
+                
+                testFirebaseConnection();
+            }, 500);
+            
+            setTimeout(() => {
+                testAuthFunctions();
+            }, 1000);
+            
+            setTimeout(() => {
+                testLoginButton();
+            }, 1500);
+            
+            setTimeout(() => {
+                addResult('🎯 Diagnostic complete! Check console output above.', 'info');
+                addResult('💡 If functions are missing, there may be a script loading issue on GitHub Pages.', 'warning');
+            }, 2000);
+        }
+
+        // Auto-run diagnostic when page loads
+        window.addEventListener('load', function() {
+            addResult('📱 Page loaded on GitHub Pages', 'info');
+            setTimeout(runFullDiagnostic, 1000);
+        });
+    </script>
+</body>
+</html>
