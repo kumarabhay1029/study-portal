@@ -146,9 +146,19 @@ class StudyPortalAuth {
         
         const modal = document.getElementById('loginModal');
         if (modal) {
-            modal.classList.add('active');
+            // Remove any previous closing animation
+            modal.classList.remove('closing');
+            
+            // Show modal with animation
+            modal.style.display = 'flex';
+            
+            // Trigger animation after display is set
+            requestAnimationFrame(() => {
+                modal.classList.add('active');
+            });
+            
             this.showAuthTab('login');
-            console.log('✅ Login modal opened');
+            console.log('✅ Login modal opened with animation');
         } else {
             console.error('❌ Login modal not found');
             this.showError('Login modal not found. Please refresh the page.');
@@ -161,8 +171,18 @@ class StudyPortalAuth {
         
         const modal = document.getElementById('loginModal');
         if (modal) {
+            // Add closing animation
+            modal.classList.add('closing');
             modal.classList.remove('active');
-            this.clearAuthForms();
+            
+            // Hide modal after animation completes
+            setTimeout(() => {
+                modal.style.display = 'none';
+                modal.classList.remove('closing');
+                this.clearAuthForms();
+            }, 300);
+            
+            console.log('✅ Login modal closed with animation');
         }
     }
     
@@ -204,10 +224,13 @@ class StudyPortalAuth {
             return;
         }
         
-        // Update button state
+        // Update button state with animation
         if (loginBtn) {
-            loginBtn.textContent = 'Signing in...';
+            loginBtn.classList.add('loading');
             loginBtn.disabled = true;
+            
+            // Add pulse effect to button
+            loginBtn.style.animation = 'pulse 1s ease-in-out infinite';
         }
         
         try {
@@ -215,6 +238,9 @@ class StudyPortalAuth {
             if (!window.auth || !this.authReady) {
                 throw new Error('Firebase Auth not ready');
             }
+            
+            // Add slight delay for better UX
+            await new Promise(resolve => setTimeout(resolve, 500));
             
             // Attempt login
             const userCredential = await window.auth.signInWithEmailAndPassword(email, password);
@@ -235,17 +261,24 @@ class StudyPortalAuth {
             };
             sessionStorage.setItem('currentSession', JSON.stringify(sessionData));
             
+            // Close modal with animation
             this.closeLoginModal();
-            this.showSuccess('Login successful! Welcome back.');
+            
+            // Show success with animation
+            this.showSuccess('🎉 Login successful! Welcome back.');
             
         } catch (error) {
             console.error('❌ Login error:', error);
             this.handleAuthError(error);
         } finally {
-            // Reset button
+            // Reset button state with animation
             if (loginBtn) {
-                loginBtn.textContent = 'Sign In';
-                loginBtn.disabled = false;
+                loginBtn.style.animation = '';
+                
+                setTimeout(() => {
+                    loginBtn.classList.remove('loading');
+                    loginBtn.disabled = false;
+                }, 300);
             }
         }
     }
@@ -347,15 +380,21 @@ class StudyPortalAuth {
     async logout() {
         console.log('🔐 Logout attempt started (main method)');
         
-        // Get logout button and show loading state
+        // Get logout button and show loading state with animation
         const logoutBtn = document.getElementById('profileLogoutBtn');
         if (logoutBtn) {
             logoutBtn.classList.add('loading');
             logoutBtn.disabled = true;
+            
+            // Add pulse animation during logout
+            logoutBtn.style.animation = 'pulse 1s ease-in-out infinite';
         }
         
         try {
-            // Close profile modal first
+            // Add slight delay for better UX
+            await new Promise(resolve => setTimeout(resolve, 800));
+            
+            // Close profile modal with animation first
             this.closeProfileModal();
             
             if (window.auth && typeof window.auth.signOut === 'function') {
@@ -373,11 +412,11 @@ class StudyPortalAuth {
             // Reset internal state
             this.currentUser = null;
             
-            // Update UI
+            // Update UI with animation
             this.updateUI(null);
             
             console.log('✅ Logout successful');
-            this.showSuccess('You have been signed out successfully. Come back soon! 👋');
+            this.showSuccess('🚪 You have been signed out successfully. Come back soon! 👋');
             
         } catch (error) {
             console.error('❌ Logout error:', error);
@@ -393,10 +432,15 @@ class StudyPortalAuth {
             
             this.showError('Logout completed, but there was an issue: ' + error.message);
         } finally {
-            // Reset button state
+            // Reset button state with animation
             if (logoutBtn) {
-                logoutBtn.classList.remove('loading');
-                logoutBtn.disabled = false;
+                logoutBtn.style.animation = '';
+                
+                // Smooth transition back to normal state
+                setTimeout(() => {
+                    logoutBtn.classList.remove('loading');
+                    logoutBtn.disabled = false;
+                }, 300);
             }
         }
     }
@@ -522,8 +566,15 @@ If the issue persists, check FIREBASE_FIX_GUIDE.md for solutions.`;
                 }
             }
             
-            profileModal.classList.add('active');
-            console.log('✅ Profile modal opened successfully');
+            // Show modal with animation
+            profileModal.style.display = 'flex';
+            
+            // Trigger animation after display is set
+            requestAnimationFrame(() => {
+                profileModal.classList.add('active');
+            });
+            
+            console.log('✅ Profile modal opened successfully with animation');
         } else {
             console.error('❌ Profile modal element not found');
         }
@@ -533,8 +584,17 @@ If the issue persists, check FIREBASE_FIX_GUIDE.md for solutions.`;
         console.log('🔐 Closing profile modal...');
         const profileModal = document.getElementById('profileModal');
         if (profileModal) {
+            // Add closing animation
+            profileModal.classList.add('closing');
             profileModal.classList.remove('active');
-            console.log('✅ Profile modal closed');
+            
+            // Hide modal after animation completes
+            setTimeout(() => {
+                profileModal.style.display = 'none';
+                profileModal.classList.remove('closing');
+            }, 300);
+            
+            console.log('✅ Profile modal closed with animation');
         } else {
             console.error('❌ Profile modal element not found');
         }
@@ -597,9 +657,12 @@ If the issue persists, check FIREBASE_FIX_GUIDE.md for solutions.`;
             container = document.body;
         }
         
-        // Clear existing messages
+        // Clear existing messages with animation
         const existingMessages = container.querySelectorAll('.auth-message');
-        existingMessages.forEach(msg => msg.remove());
+        existingMessages.forEach(msg => {
+            msg.classList.add('removing');
+            setTimeout(() => msg.remove(), 300);
+        });
         
         // Create message element
         const messageEl = document.createElement('div');
@@ -611,6 +674,9 @@ If the issue persists, check FIREBASE_FIX_GUIDE.md for solutions.`;
             font-size: 14px;
             line-height: 1.4;
             border: 1px solid;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: all 0.4s ease;
             ${type === 'error' ? 
                 'background: #fee; color: #c33; border-color: #fcc;' :
                 type === 'success' ?
@@ -627,13 +693,21 @@ If the issue persists, check FIREBASE_FIX_GUIDE.md for solutions.`;
             container.appendChild(messageEl);
         }
         
+        // Trigger animation after element is added
+        requestAnimationFrame(() => {
+            messageEl.style.opacity = '1';
+            messageEl.style.transform = 'translateX(0)';
+        });
+        
         // Auto remove after delay for success messages
         if (type === 'success') {
             setTimeout(() => {
                 if (messageEl.parentNode) {
-                    messageEl.remove();
+                    messageEl.style.opacity = '0';
+                    messageEl.style.transform = 'translateX(20px)';
+                    setTimeout(() => messageEl.remove(), 300);
                 }
-            }, 5000);
+            }, 4000);
         }
     }
     
@@ -698,11 +772,12 @@ let authSystem;
 window.logout = function() {
     console.log('🔐 Logout called (immediate fallback)');
     
-    // Get logout button and show loading state
+    // Get logout button and show loading state with animation
     const logoutBtn = document.getElementById('profileLogoutBtn');
     if (logoutBtn) {
         logoutBtn.classList.add('loading');
         logoutBtn.disabled = true;
+        logoutBtn.style.animation = 'pulse 1s ease-in-out infinite';
     }
     
     // Try multiple approaches to ensure logout works
@@ -711,19 +786,93 @@ window.logout = function() {
         window.authSystem.logout();
     } else if (window.auth && typeof window.auth.signOut === 'function') {
         console.log('🔐 Using direct Firebase logout');
-        // Direct Firebase logout if auth system not ready
-        window.auth.signOut().then(() => {
-            console.log('✅ Direct logout successful');
+        
+        // Add delay for better UX
+        setTimeout(() => {
+            // Direct Firebase logout if auth system not ready
+            window.auth.signOut().then(() => {
+                console.log('✅ Direct logout successful');
+                
+                // Clear session data
+                sessionStorage.removeItem('currentSession');
+                localStorage.removeItem('rememberLogin');
+                localStorage.removeItem('userEmail');
+                
+                // Close profile modal with animation
+                const profileModal = document.getElementById('profileModal');
+                if (profileModal) {
+                    profileModal.classList.add('closing');
+                    profileModal.classList.remove('active');
+                    setTimeout(() => {
+                        profileModal.style.display = 'none';
+                        profileModal.classList.remove('closing');
+                    }, 300);
+                }
+                
+                // Update UI
+                const loginBtn = document.querySelector('.login-btn');
+                if (loginBtn) {
+                    loginBtn.textContent = 'Login';
+                }
+                
+                // Show success message with better UX
+                if (window.authSystem && typeof window.authSystem.showSuccess === 'function') {
+                    window.authSystem.showSuccess('🚪 You have been signed out successfully. Come back soon! 👋');
+                } else {
+                    alert('🚪 You have been signed out successfully. Come back soon! 👋');
+                }
+                
+            }).catch((error) => {
+                console.error('❌ Logout error:', error);
+                
+                // Force logout even on error
+                sessionStorage.removeItem('currentSession');
+                localStorage.removeItem('rememberLogin');
+                localStorage.removeItem('userEmail');
+                
+                const profileModal = document.getElementById('profileModal');
+                if (profileModal) {
+                    profileModal.style.display = 'none';
+                }
+                
+                const loginBtn = document.querySelector('.login-btn');
+                if (loginBtn) {
+                    loginBtn.textContent = 'Login';
+                }
+                
+                alert('Logout completed, but there was an issue: ' + error.message);
+            }).finally(() => {
+                // Reset button state with animation
+                if (logoutBtn) {
+                    logoutBtn.style.animation = '';
+                    setTimeout(() => {
+                        logoutBtn.classList.remove('loading');
+                        logoutBtn.disabled = false;
+                    }, 300);
+                }
+            });
+        }, 500);
+    } else {
+        console.log('🔐 Using manual logout');
+        
+        // Add delay for manual logout too
+        setTimeout(() => {
+            // Manual logout as last resort
             
             // Clear session data
             sessionStorage.removeItem('currentSession');
             localStorage.removeItem('rememberLogin');
             localStorage.removeItem('userEmail');
             
-            // Close profile modal
+            // Close profile modal with animation
             const profileModal = document.getElementById('profileModal');
             if (profileModal) {
+                profileModal.classList.add('closing');
                 profileModal.classList.remove('active');
+                setTimeout(() => {
+                    profileModal.style.display = 'none';
+                    profileModal.classList.remove('closing');
+                }, 300);
             }
             
             // Update UI
@@ -732,72 +881,22 @@ window.logout = function() {
                 loginBtn.textContent = 'Login';
             }
             
-            // Show success message with better UX
-            if (window.authSystem && typeof window.authSystem.showSuccess === 'function') {
-                window.authSystem.showSuccess('You have been signed out successfully. Come back soon! 👋');
-            } else {
-                alert('You have been signed out successfully. Come back soon! 👋');
+            // Reset currentUser
+            if (window.authSystem) {
+                window.authSystem.currentUser = null;
             }
             
-        }).catch((error) => {
-            console.error('❌ Logout error:', error);
-            
-            // Force logout even on error
-            sessionStorage.removeItem('currentSession');
-            localStorage.removeItem('rememberLogin');
-            localStorage.removeItem('userEmail');
-            
-            const profileModal = document.getElementById('profileModal');
-            if (profileModal) {
-                profileModal.classList.remove('active');
-            }
-            
-            const loginBtn = document.querySelector('.login-btn');
-            if (loginBtn) {
-                loginBtn.textContent = 'Login';
-            }
-            
-            alert('Logout completed, but there was an issue: ' + error.message);
-        }).finally(() => {
-            // Reset button state
+            // Reset button state with animation
             if (logoutBtn) {
-                logoutBtn.classList.remove('loading');
-                logoutBtn.disabled = false;
+                logoutBtn.style.animation = '';
+                setTimeout(() => {
+                    logoutBtn.classList.remove('loading');
+                    logoutBtn.disabled = false;
+                }, 300);
             }
-        });
-    } else {
-        console.log('🔐 Using manual logout');
-        // Manual logout as last resort
-        
-        // Clear session data
-        sessionStorage.removeItem('currentSession');
-        localStorage.removeItem('rememberLogin');
-        localStorage.removeItem('userEmail');
-        
-        // Close profile modal
-        const profileModal = document.getElementById('profileModal');
-        if (profileModal) {
-            profileModal.classList.remove('active');
-        }
-        
-        // Update UI
-        const loginBtn = document.querySelector('.login-btn');
-        if (loginBtn) {
-            loginBtn.textContent = 'Login';
-        }
-        
-        // Reset currentUser
-        if (window.authSystem) {
-            window.authSystem.currentUser = null;
-        }
-        
-        // Reset button state
-        if (logoutBtn) {
-            logoutBtn.classList.remove('loading');
-            logoutBtn.disabled = false;
-        }
-        
-        alert('You have been signed out successfully. Come back soon! 👋');
+            
+            alert('🚪 You have been signed out successfully. Come back soon! 👋');
+        }, 500);
     }
 };
 
@@ -805,8 +904,17 @@ window.closeProfileModal = function() {
     console.log('🔐 Closing profile modal (immediate)...');
     const profileModal = document.getElementById('profileModal');
     if (profileModal) {
+        // Add closing animation
+        profileModal.classList.add('closing');
         profileModal.classList.remove('active');
-        console.log('✅ Profile modal closed');
+        
+        // Hide modal after animation completes
+        setTimeout(() => {
+            profileModal.style.display = 'none';
+            profileModal.classList.remove('closing');
+        }, 300);
+        
+        console.log('✅ Profile modal closed with animation');
     }
 };
 
