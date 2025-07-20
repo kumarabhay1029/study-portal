@@ -752,10 +752,16 @@ if (!window.finalAuthInitialized) {
                 try {
                     console.log(`🔄 Attempting to switch to ${tab} tab`);
                     
-                    // Remove active class from all tab buttons
+                    // Check if we're on a page with tabs (like main site, not error-detection)
                     const tabButtons = document.querySelectorAll('.tab-btn');
                     if (tabButtons.length === 0) {
-                        console.warn('⚠️ No tab buttons found');
+                        // Only warn if we're on the main page (has login modal)
+                        const loginModal = document.querySelector('#loginModal');
+                        if (loginModal) {
+                            console.warn('⚠️ No tab buttons found in login modal');
+                        } else {
+                            console.log('ℹ️ No tab buttons found (not on main page)');
+                        }
                         return;
                     }
                     
@@ -1522,6 +1528,12 @@ window.detectErrors = function() {
     const errors = [];
     const warnings = [];
     
+    // Detect current page type
+    const isMainPage = document.querySelector('#loginModal') !== null;
+    const isErrorPage = document.title.includes('Error Detection');
+    
+    console.log(`📍 Page type: ${isMainPage ? 'Main' : isErrorPage ? 'Error Detection' : 'Other'}`);
+    
     // Check essential functions
     const essentialFunctions = [
         'showAuthTab', 'toggleMobileMenu', 'closeMobileMenu',
@@ -1535,18 +1547,35 @@ window.detectErrors = function() {
         }
     });
     
-    // Check essential elements
-    const essentialElements = [
-        '.sidebar', '.mobile-backdrop', '.mobile-menu-toggle',
-        '#loginModal', '.tab-btn', '.tab-content'
-    ];
-    
-    essentialElements.forEach(selector => {
-        const elements = document.querySelectorAll(selector);
-        if (elements.length === 0) {
-            warnings.push(`No elements found for: ${selector}`);
-        }
-    });
+    // Check essential elements (only for main page)
+    if (isMainPage) {
+        const essentialElements = [
+            '.sidebar', '.mobile-backdrop', '.mobile-menu-toggle',
+            '#loginModal', '.tab-btn', '.tab-content'
+        ];
+        
+        essentialElements.forEach(selector => {
+            const elements = document.querySelectorAll(selector);
+            if (elements.length === 0) {
+                warnings.push(`No elements found for: ${selector}`);
+            }
+        });
+        
+        // Check form elements (only for main page)
+        const formElements = [
+            '#loginEmail', '#loginPassword', '#registerEmail', 
+            '#registerPassword', '#confirmPassword', '#forgotEmail'
+        ];
+        
+        formElements.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (!element) {
+                warnings.push(`Form element not found: ${selector}`);
+            }
+        });
+    } else {
+        console.log('ℹ️ Skipping UI element checks (not on main page)');
+    }
     
     // Check Firebase
     if (!window.firebaseReady) {
@@ -1558,19 +1587,6 @@ window.detectErrors = function() {
     if (!window.finalAuth) {
         warnings.push('Final Auth system not initialized');
     }
-    
-    // Check form elements
-    const formElements = [
-        '#loginEmail', '#loginPassword', '#registerEmail', 
-        '#registerPassword', '#confirmPassword', '#forgotEmail'
-    ];
-    
-    formElements.forEach(selector => {
-        const element = document.querySelector(selector);
-        if (!element) {
-            warnings.push(`Form element not found: ${selector}`);
-        }
-    });
     
     // Report results
     console.log(`🔴 Errors found: ${errors.length}`);
