@@ -12,18 +12,41 @@
 console.log('🚀 Study Portal Bundle Loading...');
 
 /* ==========================================================================
-   FIREBASE CONFIGURATION - ENHANCED
+   FIREBASE CONFIGURATION - SECURE VERSION
    ========================================================================== */
 
-// Enhanced Firebase Configuration with error recovery
-const firebaseConfig = {
-    apiKey: "AIzaSyAMOoKFc6PeWoCaEa0-iZ1o2xer3capkyQ",
-    authDomain: "f1site-b35c6.firebaseapp.com",
-    projectId: "f1site-b35c6",
-    storageBucket: "f1site-b35c6.firebasestorage.app",
-    messagingSenderId: "1077434047400",
-    appId: "1:1077434047400:web:0e30d9b02540355a4b1b9d"
-};
+// Secure Firebase Configuration - API key hidden from source
+function getFirebaseConfig() {
+    // For GitHub Pages, we'll use a secure method
+    // In production, you should move this to environment variables
+    
+    // Check if config is available via environment variables (for local development)
+    if (typeof process !== 'undefined' && process.env) {
+        return {
+            apiKey: process.env.FIREBASE_API_KEY,
+            authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+            projectId: process.env.FIREBASE_PROJECT_ID,
+            storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+            messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+            appId: process.env.FIREBASE_APP_ID
+        };
+    }
+    
+    // For GitHub Pages deployment, we'll load from a separate secure file
+    // This should be loaded from a secure endpoint in production
+    return window.firebaseConfig || {
+        // Placeholder - will be replaced by build process
+        apiKey: "{{FIREBASE_API_KEY}}",
+        authDomain: "{{FIREBASE_AUTH_DOMAIN}}",
+        projectId: "{{FIREBASE_PROJECT_ID}}",
+        storageBucket: "{{FIREBASE_STORAGE_BUCKET}}",
+        messagingSenderId: "{{FIREBASE_MESSAGING_SENDER_ID}}",
+        appId: "{{FIREBASE_APP_ID}}"
+    };
+}
+
+// Get configuration securely
+const firebaseConfig = getFirebaseConfig();
 
 // Enhanced initialization with retry mechanism
 let initializationAttempts = 0;

@@ -13,6 +13,9 @@
     <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-storage-compat.js"></script>
     
+    <!-- Firebase Configuration (Secure) -->
+    <script src="js/firebase-config.js"></script>
+    
     <!-- Edge Browser Compatibility -->
     <script>
         // Edge browser compatibility fixes
@@ -27,8 +30,8 @@
     <!-- Cross-Browser Compatibility Script -->
     <script src="js/edge-compatibility.js"></script>
     
-    <!-- FINAL AUTH SYSTEM - Single clean solution -->
-    <script src="js/auth-final.js"></script>
+    <!-- STUDY PORTAL BUNDLE - Secure single solution -->
+    <script src="js/study-portal-bundle.js"></script>
     
     <!-- Custom Stylesheets -->
     <link rel="stylesheet" href="css/main.css">
@@ -784,11 +787,10 @@
                     });
                     
                     console.log('✅ Login button event listener installed');
-                } else {
-                    console.error('❌ Login button not found');
                 }
             }, 1500); // Increased timeout for GitHub Pages
         });
     </script>
+    
 </body>
 </html>
