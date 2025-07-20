@@ -749,18 +749,30 @@ if (!window.finalAuthInitialized) {
             
             // Form functions
             window.showAuthTab = (tab) => {
-                const tabs = ['login', 'register', 'forgot'];
-                tabs.forEach(t => {
-                    const tabEl = document.getElementById(t + 'Tab');
-                    const contentEl = document.getElementById(t + 'Content');
-                    if (tabEl) tabEl.classList.remove('active');
-                    if (contentEl) contentEl.classList.remove('active');
+                // Remove active class from all tab buttons
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('active');
                 });
                 
-                const activeTab = document.getElementById(tab + 'Tab');
-                const activeContent = document.getElementById(tab + 'Content');
-                if (activeTab) activeTab.classList.add('active');
-                if (activeContent) activeContent.classList.add('active');
+                // Remove active class from all tab content
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // Add active class to clicked tab button
+                const tabButtons = document.querySelectorAll('.tab-btn');
+                const tabIndex = tab === 'login' ? 0 : tab === 'register' ? 1 : 2;
+                if (tabButtons[tabIndex]) {
+                    tabButtons[tabIndex].classList.add('active');
+                }
+                
+                // Add active class to corresponding content
+                const activeContent = document.getElementById(tab + 'Tab');
+                if (activeContent) {
+                    activeContent.classList.add('active');
+                }
+                
+                console.log(`✅ Switched to ${tab} tab`);
             };
             
             // Password strength checker
@@ -1013,6 +1025,9 @@ if (!window.finalAuthInitialized) {
                         }
                     });
                 }
+                
+                // Initialize the login tab as active by default
+                window.showAuthTab('login');
             }, 100);
             
             console.log('✅ Global auth functions setup complete');
@@ -1395,8 +1410,55 @@ window.testMobileMenu = function() {
     console.log('==========================================');
 };
 
+// Test authentication tabs
+window.testAuthTabs = function() {
+    console.log('==========================================');
+    console.log('🔐 TESTING AUTHENTICATION TABS');
+    console.log('==========================================');
+    
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    console.log('🔍 Element status:');
+    console.log('• Tab buttons found:', tabButtons.length);
+    console.log('• Tab contents found:', tabContents.length);
+    
+    tabButtons.forEach((btn, index) => {
+        console.log(`• Button ${index + 1}:`, btn.textContent, btn.classList.contains('active') ? '(active)' : '');
+    });
+    
+    tabContents.forEach((content, index) => {
+        console.log(`• Content ${index + 1}:`, content.id, content.classList.contains('active') ? '(active)' : '');
+    });
+    
+    console.log('');
+    console.log('🧪 Testing tab switching:');
+    console.log('1. Testing Login tab...');
+    window.showAuthTab('login');
+    setTimeout(() => {
+        console.log('2. Testing Register tab...');
+        window.showAuthTab('register');
+        setTimeout(() => {
+            console.log('3. Testing Forgot tab...');
+            window.showAuthTab('forgot');
+            setTimeout(() => {
+                console.log('4. Back to Login tab...');
+                window.showAuthTab('login');
+                console.log('✅ Tab switching test complete!');
+            }, 1000);
+        }, 1000);
+    }, 1000);
+    
+    console.log('');
+    console.log('🔧 Manual functions:');
+    console.log('• showAuthTab("login") - Switch to login');
+    console.log('• showAuthTab("register") - Switch to register');
+    console.log('• showAuthTab("forgot") - Switch to forgot password');
+    console.log('==========================================');
+};
+
 console.log('✅ Study Portal Bundle Loaded Successfully!');
-console.log('🔧 Debug functions available: debugAuth(), testLogin(), testPasswordReset(), testRegistration(), testMobileMenu(), showPasswordResetHelp()');
+console.log('🔧 Debug functions available: debugAuth(), testLogin(), testPasswordReset(), testRegistration(), testMobileMenu(), testAuthTabs(), showPasswordResetHelp()');
 if (isDebugMode) {
     console.log('🐛 Auto-running debug check...');
     setTimeout(() => window.debugAuth(), 2000);
