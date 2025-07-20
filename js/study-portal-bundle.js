@@ -2373,24 +2373,25 @@ class MobileInterface {
         
         app.innerHTML = `
             <div class="mobile-dashboard-container">
-                <!-- User Header -->
+                <!-- Professional User Header -->
                 <div class="mobile-user-header">
-                    <div class="user-avatar-large">
+                    <div class="professional-avatar">
                         ${user.photoURL ? 
-                            `<img src="${user.photoURL}" alt="User" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">` : 
+                            `<img src="${user.photoURL}" alt="User" class="avatar-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">` : 
                             ''
                         }
-                        <div class="avatar-fallback" ${user.photoURL ? 'style="display: none;"' : ''}>
-                            ${(user.displayName || user.email).charAt(0).toUpperCase()}
+                        <div class="avatar-initials" ${user.photoURL ? 'style="display: none;"' : 'style="display: flex;"'}>
+                            <span class="initial-letter">${(user.displayName || user.email).charAt(0).toUpperCase()}</span>
+                            <div class="avatar-glow"></div>
                         </div>
                     </div>
-                    <div class="user-info">
-                        <h3>Welcome back!</h3>
-                        <p class="user-name">${user.displayName || 'Student'}</p>
-                        <span class="user-role">BCA Student Portal</span>
+                    <div class="user-welcome-info">
+                        <div class="welcome-greeting">Welcome back!</div>
+                        <div class="user-name-display">${user.displayName || 'Abhay'}</div>
+                        <div class="user-badge">BCA Student Portal</div>
                     </div>
-                    <button class="mobile-logout-header" onclick="mobileInterface.handleMobileLogout()">
-                        🚪
+                    <button class="profile-settings-btn" onclick="mobileInterface.handleMobileLogout()">
+                        ⚙️
                     </button>
                 </div>
                 
@@ -2413,34 +2414,71 @@ class MobileInterface {
                     </div>
                 </div>
                 
-                <!-- Quick Actions -->
-                <div class="mobile-quick-actions">
-                    <h4>📌 Quick Access</h4>
-                    <div class="quick-action-buttons">
-                        <button class="quick-btn books" onclick="mobileInterface.showMobileSection('books')">
-                            📚 Study Books
-                            <span class="quick-subtitle">All semester materials</span>
-                        </button>
-                        <button class="quick-btn assignments" onclick="mobileInterface.showMobileSection('assignments')">
-                            📝 Assignments
-                            <span class="quick-subtitle">Tasks & deadlines</span>
-                        </button>
-                        <button class="quick-btn notes" onclick="mobileInterface.showMobileSection('notes')">
-                            📋 Study Notes
-                            <span class="quick-subtitle">Quick references</span>
-                        </button>
+                <!-- Professional Quick Access -->
+                <div class="professional-quick-access">
+                    <div class="section-header-pro">
+                        <div class="header-icon">⚡</div>
+                        <div class="header-content">
+                            <h4>Quick Access</h4>
+                            <span class="header-subtitle">Essential tools at your fingertips</span>
+                        </div>
+                    </div>
+                    <div class="quick-action-grid">
+                        <div class="pro-quick-card books-card" onclick="mobileInterface.showMobileSection('books')">
+                            <div class="card-icon-wrapper">
+                                <div class="card-icon">📚</div>
+                                <div class="icon-badge">38+</div>
+                            </div>
+                            <div class="card-content">
+                                <h5>Study Books</h5>
+                                <p>All semester materials</p>
+                                <div class="card-arrow">→</div>
+                            </div>
+                        </div>
+                        
+                        <div class="pro-quick-card assignments-card" onclick="mobileInterface.showMobileSection('assignments')">
+                            <div class="card-icon-wrapper">
+                                <div class="card-icon">📝</div>
+                                <div class="icon-badge">12</div>
+                            </div>
+                            <div class="card-content">
+                                <h5>Assignments</h5>
+                                <p>Tasks & deadlines</p>
+                                <div class="card-arrow">→</div>
+                            </div>
+                        </div>
+                        
+                        <div class="pro-quick-card notes-card" onclick="mobileInterface.showMobileSection('notes')">
+                            <div class="card-icon-wrapper">
+                                <div class="card-icon">📋</div>
+                                <div class="icon-badge">New</div>
+                            </div>
+                            <div class="card-content">
+                                <h5>Study Notes</h5>
+                                <p>Quick references</p>
+                                <div class="card-arrow">→</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Explore All Button -->
-                <button class="mobile-explore-btn" onclick="mobileInterface.showAllSections()">
-                    <span class="explore-icon">🧭</span>
-                    <div class="explore-content">
-                        <div class="explore-title">Explore All Sections</div>
-                        <div class="explore-subtitle">Tap to see all available options</div>
-                    </div>
-                    <span class="explore-arrow">→</span>
-                </button>
+                <!-- Enhanced Explore Button -->
+                <div class="explore-section">
+                    <button class="professional-explore-btn" onclick="mobileInterface.showAllSections()">
+                        <div class="explore-left">
+                            <div class="explore-icon-bg">
+                                <span class="explore-icon">🎯</span>
+                            </div>
+                            <div class="explore-text">
+                                <div class="explore-title">Explore All Features</div>
+                                <div class="explore-subtitle">Discover research, projects & community</div>
+                            </div>
+                        </div>
+                        <div class="explore-arrow-wrapper">
+                            <span class="explore-arrow">→</span>
+                        </div>
+                    </button>
+                </div>
             </div>
         `;
     }
