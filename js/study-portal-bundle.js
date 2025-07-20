@@ -572,6 +572,51 @@ if (!window.finalAuthInitialized) {
             }
         }
 
+        async registerWithEmailPassword(email, password) {
+            if (!this.authReady || !window.auth) {
+                this.showMessage('⏳ Authentication system not ready', 'info');
+                return;
+            }
+
+            try {
+                this.showMessage('📝 Creating your account...', 'info');
+                
+                // Create user with email and password
+                const userCredential = await window.auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+                
+                console.log('✅ Registration successful:', user.email);
+                
+                // Send email verification
+                await user.sendEmailVerification();
+                
+                this.showMessage('🎉 Account created successfully! Please check your email to verify your account.', 'success');
+                
+                // Close the modal after a delay
+                setTimeout(() => {
+                    this.closeLoginModal();
+                }, 3000);
+                
+            } catch (error) {
+                console.error('❌ Registration error:', error);
+                let errorMessage = 'Registration failed';
+                
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = 'An account with this email already exists. Please try logging in instead.';
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessage = 'Password is too weak. Please choose a stronger password.';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'Please enter a valid email address.';
+                } else if (error.code === 'auth/network-request-failed') {
+                    errorMessage = 'Network error. Please check your connection and try again.';
+                } else {
+                    errorMessage = error.message;
+                }
+                
+                this.showMessage(`❌ ${errorMessage}`, 'error');
+            }
+        }
+
         async sendPasswordReset(email) {
             if (!this.authReady || !window.auth) {
                 this.showMessage('⏳ Authentication system not ready', 'info');
@@ -718,10 +763,145 @@ if (!window.finalAuthInitialized) {
                 if (activeContent) activeContent.classList.add('active');
             };
             
+            // Password strength checker
+            window.checkPasswordStrength = (password) => {
+                const strength = {
+                    score: 0,
+                    text: 'Very Weak',
+                    class: 'weak',
+                    percentage: 0
+                };
+                
+                if (!password) {
+                    strength.text = 'Password strength will appear here';
+                    return strength;
+                }
+                
+                let score = 0;
+                const checks = {
+                    length: password.length >= 8,
+                    lowercase: /[a-z]/.test(password),
+                    uppercase: /[A-Z]/.test(password),
+                    numbers: /\d/.test(password),
+                    special: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+                    noCommon: !['password', '123456', 'qwerty', 'abc123', 'password123'].includes(password.toLowerCase())
+                };
+                
+                // Calculate score
+                if (checks.length) score += 2;
+                if (checks.lowercase) score += 1;
+                if (checks.uppercase) score += 1;
+                if (checks.numbers) score += 1;
+                if (checks.special) score += 2;
+                if (checks.noCommon) score += 1;
+                if (password.length >= 12) score += 1;
+                
+                // Determine strength level
+                if (score < 3) {
+                    strength.score = 0;
+                    strength.text = 'Very Weak';
+                    strength.class = 'weak';
+                    strength.percentage = 20;
+                } else if (score < 5) {
+                    strength.score = 1;
+                    strength.text = 'Weak';
+                    strength.class = 'weak';
+                    strength.percentage = 40;
+                } else if (score < 7) {
+                    strength.score = 2;
+                    strength.text = 'Fair';
+                    strength.class = 'fair';
+                    strength.percentage = 60;
+                } else if (score < 8) {
+                    strength.score = 3;
+                    strength.text = 'Good';
+                    strength.class = 'good';
+                    strength.percentage = 80;
+                } else {
+                    strength.score = 4;
+                    strength.text = 'Strong';
+                    strength.class = 'strong';
+                    strength.percentage = 100;
+                }
+                
+                return strength;
+            };
+            
+            // Update password strength display
+            window.updatePasswordStrength = (password) => {
+                const strength = window.checkPasswordStrength(password);
+                const strengthText = document.getElementById('strengthText');
+                const strengthFill = document.getElementById('strengthFill');
+                
+                if (strengthText) {
+                    strengthText.textContent = strength.text;
+                    strengthText.className = `strength-text ${strength.class}`;
+                }
+                
+                if (strengthFill) {
+                    strengthFill.className = `strength-fill ${strength.class}`;
+                    strengthFill.style.width = `${strength.percentage}%`;
+                }
+            };
+            
             window.registerUser = (event) => {
                 if (event) event.preventDefault();
-                if (window.finalAuth) {
-                    window.finalAuth.showMessage('📝 Registration feature coming soon!', 'info');
+                
+                // Get form fields
+                const email = document.getElementById('registerEmail')?.value.trim();
+                const password = document.getElementById('registerPassword')?.value;
+                const confirmPassword = document.getElementById('confirmPassword')?.value;
+                const agreeTerms = document.getElementById('agreeTerms')?.checked;
+                
+                // Validate fields
+                if (!email || !password || !confirmPassword) {
+                    if (window.finalAuth) {
+                        window.finalAuth.showMessage('❌ Please fill in all required fields', 'error');
+                    }
+                    return;
+                }
+                
+                // Validate email format
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    if (window.finalAuth) {
+                        window.finalAuth.showMessage('❌ Please enter a valid email address', 'error');
+                    }
+                    return;
+                }
+                
+                // Check password strength
+                const strength = window.checkPasswordStrength(password);
+                if (strength.score < 2) {
+                    if (window.finalAuth) {
+                        window.finalAuth.showMessage('❌ Password is too weak. Please choose a stronger password.', 'error');
+                    }
+                    return;
+                }
+                
+                // Check password confirmation
+                if (password !== confirmPassword) {
+                    if (window.finalAuth) {
+                        window.finalAuth.showMessage('❌ Passwords do not match', 'error');
+                    }
+                    return;
+                }
+                
+                // Check terms agreement
+                if (!agreeTerms) {
+                    if (window.finalAuth) {
+                        window.finalAuth.showMessage('❌ You must agree to the Terms of Service to create an account', 'error');
+                    }
+                    return;
+                }
+                
+                // Proceed with registration
+                if (window.auth && window.finalAuth) {
+                    window.finalAuth.registerWithEmailPassword(email, password);
+                } else {
+                    if (window.finalAuth) {
+                        window.finalAuth.showMessage('⏳ Authentication system not ready. Please try again.', 'info');
+                    }
                 }
             };
             
@@ -801,6 +981,39 @@ if (!window.finalAuthInitialized) {
                     }
                 }
             };
+            
+            // Setup password strength checking
+            setTimeout(() => {
+                const registerPasswordField = document.getElementById('registerPassword');
+                const confirmPasswordField = document.getElementById('confirmPassword');
+                
+                if (registerPasswordField) {
+                    registerPasswordField.addEventListener('input', (e) => {
+                        window.updatePasswordStrength(e.target.value);
+                    });
+                }
+                
+                if (confirmPasswordField) {
+                    confirmPasswordField.addEventListener('input', (e) => {
+                        const password = document.getElementById('registerPassword')?.value;
+                        const confirmPassword = e.target.value;
+                        const validation = document.getElementById('confirmPasswordValidation');
+                        
+                        if (validation) {
+                            if (confirmPassword && password !== confirmPassword) {
+                                validation.textContent = 'Passwords do not match';
+                                validation.className = 'input-validation error';
+                            } else if (confirmPassword && password === confirmPassword) {
+                                validation.textContent = 'Passwords match';
+                                validation.className = 'input-validation success';
+                            } else {
+                                validation.textContent = '';
+                                validation.className = 'input-validation';
+                            }
+                        }
+                    });
+                }
+            }, 100);
             
             console.log('✅ Global auth functions setup complete');
         }
