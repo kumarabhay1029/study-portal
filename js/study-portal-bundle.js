@@ -1760,12 +1760,15 @@ class MobileInterface {
     init() {
         console.log('🚀 Initializing Mobile Interface...');
         
-        // Check if mobile
+        // Setup auth state checking first
+        this.checkAuthState();
+        
+        // Check if mobile immediately
         if (window.innerWidth <= 768) {
             this.setupMobileInterface();
         }
         
-        // Listen for resize
+        // Listen for resize events
         window.addEventListener('resize', () => {
             if (window.innerWidth <= 768) {
                 this.setupMobileInterface();
@@ -1774,8 +1777,12 @@ class MobileInterface {
             }
         });
         
-        // Check if user is already logged in
-        this.checkAuthState();
+        // Force mobile if URL parameter is set
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('mobile') === 'true') {
+            console.log('🔧 Forcing mobile view via URL parameter');
+            this.setupMobileInterface();
+        }
     }
     
     setupMobileInterface() {
@@ -2048,24 +2055,101 @@ class MobileInterface {
         // Override the existing login success handler
         const originalLoginUser = window.loginUser;
         
+        if (!originalLoginUser) {
+            console.warn('⚠️ Original loginUser function not found, creating wrapper');
+            // If original function doesn't exist, create our own
+            window.loginUser = async (event) => {
+                return await this.handleDirectLogin(event);
+            };
+            return;
+        }
+        
         window.loginUser = async (event) => {
-            const result = await originalLoginUser(event);
-            
-            if (result && result.success) {
-                // Close login modal
-                const loginModal = document.getElementById('loginModal');
-                if (loginModal) {
-                    loginModal.classList.remove('active');
+            try {
+                const result = await originalLoginUser(event);
+                
+                // Check if login was successful
+                if (window.auth && window.auth.currentUser) {
+                    console.log('✅ Mobile interface detected successful login');
+                    
+                    // Close login modal
+                    const loginModal = document.getElementById('loginModal');
+                    if (loginModal) {
+                        loginModal.classList.remove('active');
+                        setTimeout(() => {
+                            loginModal.style.display = 'none';
+                        }, 400);
+                    }
+                    
+                    // Update mobile interface
+                    this.isLoggedIn = true;
+                    this.currentUser = window.auth.currentUser;
+                    this.showMobileDashboard();
+                    
+                    return { success: true, user: window.auth.currentUser };
                 }
                 
-                // Update mobile interface
-                this.isLoggedIn = true;
-                this.currentUser = result.user;
-                this.showMobileDashboard();
+                return result;
+            } catch (error) {
+                console.error('❌ Mobile login handler error:', error);
+                return { success: false, error: error.message };
+            }
+        };
+    }
+    
+    async handleDirectLogin(event) {
+        if (event) event.preventDefault();
+        
+        if (!window.auth) {
+            console.error('❌ Firebase Auth not available');
+            return { success: false, error: 'Authentication system not ready' };
+        }
+
+        // Get form fields
+        const emailField = document.getElementById('email') || document.getElementById('loginEmail');
+        const passwordField = document.getElementById('password') || document.getElementById('loginPassword');
+        
+        const email = emailField?.value?.trim();
+        const password = passwordField?.value?.trim();
+
+        if (!email || !password) {
+            if (window.finalAuth) {
+                window.finalAuth.showMessage('❌ Please enter both email and password', 'error');
+            }
+            return { success: false, error: 'Missing credentials' };
+        }
+
+        try {
+            console.log('🔐 Mobile interface attempting direct login...');
+            const userCredential = await window.auth.signInWithEmailAndPassword(email, password);
+            const user = userCredential.user;
+            
+            console.log('✅ Direct login successful:', user.email);
+            
+            // Clear form fields
+            if (emailField) emailField.value = '';
+            if (passwordField) passwordField.value = '';
+            
+            return { success: true, user: user };
+            
+        } catch (error) {
+            console.error('❌ Direct login error:', error);
+            
+            let errorMessage = 'Login failed';
+            if (error.code === 'auth/invalid-email') {
+                errorMessage = 'Invalid email address';
+            } else if (error.code === 'auth/user-not-found') {
+                errorMessage = 'No account found with this email';
+            } else if (error.code === 'auth/wrong-password') {
+                errorMessage = 'Incorrect password';
             }
             
-            return result;
-        };
+            if (window.finalAuth) {
+                window.finalAuth.showMessage(`❌ ${errorMessage}`, 'error');
+            }
+            
+            return { success: false, error: errorMessage };
+        }
     }
     
     showMobileDashboard() {
@@ -2818,6 +2902,31 @@ class MobileInterface {
             this.isLoggedIn = true;
             this.currentUser = window.auth.currentUser;
         }
+        
+        // Listen for auth state changes
+        if (window.auth) {
+            window.auth.onAuthStateChanged((user) => {
+                console.log('🔄 Mobile interface detected auth state change:', user ? 'logged in' : 'logged out');
+                
+                if (user) {
+                    this.isLoggedIn = true;
+                    this.currentUser = user;
+                    
+                    // If we're on mobile and user just logged in, show dashboard
+                    if (window.innerWidth <= 768) {
+                        this.showMobileDashboard();
+                    }
+                } else {
+                    this.isLoggedIn = false;
+                    this.currentUser = null;
+                    
+                    // If we're on mobile and user logged out, show landing
+                    if (window.innerWidth <= 768) {
+                        this.showMobileLanding();
+                    }
+                }
+            });
+        }
     }
     
     logout() {
@@ -2840,15 +2949,108 @@ class MobileInterface {
 
 // Initialize mobile interface when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('📱 Initializing mobile interface on DOM ready...');
     window.mobileInterface = new MobileInterface();
 });
 
+// Also initialize if DOM is already ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        if (!window.mobileInterface) {
+            console.log('📱 Initializing mobile interface (DOM was loading)...');
+            window.mobileInterface = new MobileInterface();
+        }
+    });
+} else {
+    console.log('📱 Initializing mobile interface (DOM already ready)...');
+    window.mobileInterface = new MobileInterface();
+}
+
 console.log('✅ Study Portal Bundle Loaded Successfully!');
 console.log('🔧 Debug functions available: debugAuth(), testLogin(), testPasswordReset(), testRegistration(), testMobileMenu(), testAuthTabs(), detectErrors(), showPasswordResetHelp()');
+
+// Add mobile interface debug functions
+window.debugMobileInterface = function() {
+    console.log('==========================================');
+    console.log('📱 MOBILE INTERFACE DEBUG');
+    console.log('==========================================');
+    
+    console.log('🔍 Interface Status:');
+    console.log('• Mobile Interface Object:', window.mobileInterface ? '✅ Available' : '❌ Missing');
+    console.log('• Screen Width:', window.innerWidth);
+    console.log('• Is Mobile Size:', window.innerWidth <= 768);
+    console.log('• URL Mobile Param:', new URLSearchParams(window.location.search).get('mobile'));
+    
+    if (window.mobileInterface) {
+        console.log('• Is Logged In:', window.mobileInterface.isLoggedIn);
+        console.log('• Current User:', window.mobileInterface.currentUser?.email || 'None');
+        console.log('• Current Section:', window.mobileInterface.currentSection || 'None');
+    }
+    
+    console.log('');
+    console.log('🔍 Mobile Elements:');
+    const mobileLanding = document.querySelector('.mobile-landing');
+    const mobileApp = document.querySelector('.mobile-app');
+    
+    console.log('• Mobile Landing:', mobileLanding ? '✅ Found' : '❌ Missing');
+    console.log('• Mobile App:', mobileApp ? '✅ Found' : '❌ Missing');
+    
+    if (mobileLanding) {
+        console.log('  - Display:', window.getComputedStyle(mobileLanding).display);
+        console.log('  - Visibility:', window.getComputedStyle(mobileLanding).visibility);
+    }
+    
+    if (mobileApp) {
+        console.log('  - Display:', window.getComputedStyle(mobileApp).display);
+        console.log('  - Visibility:', window.getComputedStyle(mobileApp).visibility);
+    }
+    
+    console.log('');
+    console.log('🔧 Test Functions:');
+    console.log('• forceMobileView() - Force mobile interface');
+    console.log('• testMobileLogin() - Test mobile login flow');
+    console.log('• resetMobileInterface() - Reset interface');
+    console.log('==========================================');
+};
+
+window.forceMobileView = function() {
+    console.log('🔧 Forcing mobile view...');
+    if (window.mobileInterface) {
+        window.mobileInterface.setupMobileInterface();
+        console.log('✅ Mobile interface forced');
+    } else {
+        console.error('❌ Mobile interface not available');
+    }
+};
+
+window.testMobileLogin = function() {
+    console.log('🧪 Testing mobile login flow...');
+    if (window.mobileInterface) {
+        window.mobileInterface.openMobileLogin();
+        console.log('✅ Mobile login modal should be open');
+    } else {
+        console.error('❌ Mobile interface not available');
+    }
+};
+
+window.resetMobileInterface = function() {
+    console.log('🔄 Resetting mobile interface...');
+    if (window.mobileInterface) {
+        window.mobileInterface.isLoggedIn = false;
+        window.mobileInterface.currentUser = null;
+        window.mobileInterface.currentSection = null;
+        window.mobileInterface.showMobileLanding();
+        console.log('✅ Mobile interface reset to landing');
+    } else {
+        console.error('❌ Mobile interface not available');
+    }
+};
+
 if (isDebugMode) {
     console.log('🐛 Auto-running debug check...');
     setTimeout(() => {
         window.debugAuth();
         window.detectErrors();
+        window.debugMobileInterface();
     }, 2000);
 }
