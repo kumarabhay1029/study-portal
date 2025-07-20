@@ -2441,34 +2441,6 @@ class MobileInterface {
                     </div>
                     <span class="explore-arrow">→</span>
                 </button>
-                
-                <!-- Recent Activity -->
-                <div class="mobile-recent-activity">
-                    <h4>🕒 Recent Activity</h4>
-                    <div class="activity-list">
-                        <div class="activity-item">
-                            <span class="activity-icon">📖</span>
-                            <div class="activity-content">
-                                <span class="activity-text">Downloaded BCS-111 Computer Basics</span>
-                                <span class="activity-time">2 hours ago</span>
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <span class="activity-icon">📝</span>
-                            <div class="activity-content">
-                                <span class="activity-text">Viewed Assignment Guidelines</span>
-                                <span class="activity-time">1 day ago</span>
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <span class="activity-icon">🚀</span>
-                            <div class="activity-content">
-                                <span class="activity-text">Explored Project Ideas</span>
-                                <span class="activity-time">3 days ago</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         `;
     }
