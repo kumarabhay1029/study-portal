@@ -1294,8 +1294,43 @@ window.showPasswordResetHelp = function() {
     console.log('=====================================');
 };
 
+// Test registration system
+window.testRegistration = function() {
+    console.log('==========================================');
+    console.log('🧪 TESTING REGISTRATION SYSTEM');
+    console.log('==========================================');
+    
+    // Test password strength checker
+    console.log('Testing password strength checker:');
+    const testPasswords = ['123', 'password', 'Password1', 'MySecure123!', 'VeryStrongPassword123!@#'];
+    testPasswords.forEach(pwd => {
+        const strength = window.checkPasswordStrength(pwd);
+        console.log(`Password: "${pwd}" -> ${strength.text} (${strength.percentage}%)`);
+    });
+    
+    console.log('');
+    console.log('📝 To test registration:');
+    console.log('1. Click the "Create Account" button');
+    console.log('2. Fill in email and password');
+    console.log('3. Watch password strength indicator');
+    console.log('4. Confirm password to see matching validation');
+    console.log('5. Check terms agreement');
+    console.log('6. Submit to create account');
+    console.log('');
+    console.log('✅ Password strength requirements:');
+    console.log('• Minimum: Fair level (score 2+)');
+    console.log('• 8+ characters recommended');
+    console.log('• Mix of letters, numbers, symbols');
+    console.log('• Avoid common passwords');
+    console.log('');
+    console.log('🔧 Debug functions:');
+    console.log('• checkPasswordStrength("your-password")');
+    console.log('• updatePasswordStrength("your-password")');
+    console.log('==========================================');
+};
+
 console.log('✅ Study Portal Bundle Loaded Successfully!');
-console.log('🔧 Debug functions available: debugAuth(), testLogin(), testPasswordReset(), showPasswordResetHelp()');
+console.log('🔧 Debug functions available: debugAuth(), testLogin(), testPasswordReset(), testRegistration(), showPasswordResetHelp()');
 if (isDebugMode) {
     console.log('🐛 Auto-running debug check...');
     setTimeout(() => window.debugAuth(), 2000);
