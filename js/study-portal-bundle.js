@@ -1082,19 +1082,37 @@ function updateActiveNavigation(sectionName) {
  * Toggle mobile menu visibility
  */
 function toggleMobileMenu() {
+    console.log('🍔 Hamburger menu toggle clicked');
+    
     const sidebar = document.querySelector('.sidebar');
-    const overlay = document.querySelector('.mobile-overlay');
+    const overlay = document.querySelector('.mobile-backdrop');
+    const hamburgerBtn = document.querySelector('.mobile-menu-toggle');
+    
+    console.log('📱 Elements found:', {
+        sidebar: !!sidebar,
+        overlay: !!overlay,
+        hamburgerBtn: !!hamburgerBtn
+    });
     
     if (sidebar && overlay) {
-        sidebar.classList.toggle('mobile-active');
+        sidebar.classList.toggle('active');
         overlay.classList.toggle('active');
         
+        // Animate hamburger button
+        if (hamburgerBtn) {
+            hamburgerBtn.classList.toggle('active');
+        }
+        
         // Prevent body scroll when menu is open
-        if (sidebar.classList.contains('mobile-active')) {
+        if (sidebar.classList.contains('active')) {
             document.body.style.overflow = 'hidden';
+            console.log('✅ Mobile menu opened');
         } else {
             document.body.style.overflow = '';
+            console.log('✅ Mobile menu closed');
         }
+    } else {
+        console.error('❌ Mobile menu elements not found');
     }
 }
 
@@ -1102,13 +1120,23 @@ function toggleMobileMenu() {
  * Close mobile menu
  */
 function closeMobileMenu() {
+    console.log('🍔 Closing mobile menu');
+    
     const sidebar = document.querySelector('.sidebar');
-    const overlay = document.querySelector('.mobile-overlay');
+    const overlay = document.querySelector('.mobile-backdrop');
+    const hamburgerBtn = document.querySelector('.mobile-menu-toggle');
     
     if (sidebar && overlay) {
-        sidebar.classList.remove('mobile-active');
+        sidebar.classList.remove('active');
         overlay.classList.remove('active');
+        
+        // Reset hamburger button animation
+        if (hamburgerBtn) {
+            hamburgerBtn.classList.remove('active');
+        }
+        
         document.body.style.overflow = '';
+        console.log('✅ Mobile menu closed');
     }
 }
 
@@ -1167,7 +1195,7 @@ function initializeApp() {
     }
     
     // Setup mobile menu overlay click handler
-    const overlay = document.querySelector('.mobile-overlay');
+    const overlay = document.querySelector('.mobile-backdrop');
     if (overlay) {
         overlay.addEventListener('click', closeMobileMenu);
     }
@@ -1329,8 +1357,46 @@ window.testRegistration = function() {
     console.log('==========================================');
 };
 
+// Test mobile menu system
+window.testMobileMenu = function() {
+    console.log('==========================================');
+    console.log('🍔 TESTING MOBILE MENU SYSTEM');
+    console.log('==========================================');
+    
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.querySelector('.mobile-backdrop');
+    const hamburgerBtn = document.querySelector('.mobile-menu-toggle');
+    
+    console.log('📱 Element status:');
+    console.log('• Sidebar:', sidebar ? '✅ Found' : '❌ Not found');
+    console.log('• Backdrop overlay:', overlay ? '✅ Found' : '❌ Not found');
+    console.log('• Hamburger button:', hamburgerBtn ? '✅ Found' : '❌ Not found');
+    
+    if (sidebar) {
+        console.log('• Sidebar classes:', Array.from(sidebar.classList));
+    }
+    if (overlay) {
+        console.log('• Overlay classes:', Array.from(overlay.classList));
+    }
+    if (hamburgerBtn) {
+        console.log('• Button classes:', Array.from(hamburgerBtn.classList));
+    }
+    
+    console.log('');
+    console.log('🧪 Manual tests:');
+    console.log('1. Click hamburger button (top-left corner)');
+    console.log('2. Menu should slide in from left');
+    console.log('3. Click backdrop to close');
+    console.log('4. Menu should slide out');
+    console.log('');
+    console.log('🔧 Debug functions:');
+    console.log('• toggleMobileMenu() - Toggle menu');
+    console.log('• closeMobileMenu() - Close menu');
+    console.log('==========================================');
+};
+
 console.log('✅ Study Portal Bundle Loaded Successfully!');
-console.log('🔧 Debug functions available: debugAuth(), testLogin(), testPasswordReset(), testRegistration(), showPasswordResetHelp()');
+console.log('🔧 Debug functions available: debugAuth(), testLogin(), testPasswordReset(), testRegistration(), testMobileMenu(), showPasswordResetHelp()');
 if (isDebugMode) {
     console.log('🐛 Auto-running debug check...');
     setTimeout(() => window.debugAuth(), 2000);
