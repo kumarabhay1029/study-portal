@@ -2704,7 +2704,12 @@ class MobileInterface {
             { title: 'MCS-203', subtitle: 'Operating Systems', url: 'https://egyankosh.ac.in/handle/123456789/72496', semester: '2nd' },
             { title: 'MCSL-204', subtitle: 'Windows & Linux Lab', url: 'https://egyankosh.ac.in/handle/123456789/72667', semester: '2nd' },
             { title: 'MCSL-205', subtitle: 'C & Python Lab', url: 'https://egyankosh.ac.in/handle/123456789/72733', semester: '2nd' },
-            { title: 'MCS-201', subtitle: 'Programming in C & Python', url: 'https://egyankosh.ac.in/handle/123456789/72701', semester: '2nd' }
+            { title: 'MCS-201', subtitle: 'Programming in C & Python', url: 'https://egyankosh.ac.in/handle/123456789/72701', semester: '2nd' },
+            { title: 'MCS-301', subtitle: 'Data Structures', url: 'https://egyankosh.ac.in/handle/123456789/72501', semester: '3rd' },
+            { title: 'MCS-302', subtitle: 'Database Management Systems', url: 'https://egyankosh.ac.in/handle/123456789/72502', semester: '3rd' },
+            { title: 'MCS-303', subtitle: 'Software Engineering', url: 'https://egyankosh.ac.in/handle/123456789/72503', semester: '3rd' },
+            { title: 'MCSL-304', subtitle: 'Database Lab', url: 'https://egyankosh.ac.in/handle/123456789/72504', semester: '3rd' },
+            { title: 'MCSL-305', subtitle: 'Programming Lab', url: 'https://egyankosh.ac.in/handle/123456789/72505', semester: '3rd' }
         ];
         
         // Group books by semester
@@ -2718,43 +2723,140 @@ class MobileInterface {
         
         let content = '<div class="mobile-books-container">';
         
-        // Add quick stats
+        // Add semester navigation tabs
         content += `
-            <div class="books-stats">
-                <div class="books-stat-item">
-                    <span class="stat-number">${books.length}</span>
-                    <span class="stat-label">Total Books</span>
-                </div>
-                <div class="books-stat-item">
-                    <span class="stat-number">${Object.keys(semesters).length}</span>
-                    <span class="stat-label">Semesters</span>
-                </div>
-                <div class="books-stat-item">
-                    <span class="stat-number">PDF</span>
-                    <span class="stat-label">Format</span>
+            <div class="semester-tabs-wrapper">
+                <div class="semester-tabs" id="semesterTabs">
+                    <button class="semester-tab active" onclick="mobileInterface.showSemester('all')" data-semester="all">
+                        <span class="tab-icon">📚</span>
+                        <span class="tab-text">All Books</span>
+                        <span class="tab-count">${books.length}</span>
+                    </button>
+        `;
+        
+        // Add individual semester tabs
+        Object.keys(semesters).sort().forEach(semester => {
+            content += `
+                    <button class="semester-tab" onclick="mobileInterface.showSemester('${semester}')" data-semester="${semester}">
+                        <span class="tab-icon">${semester === '1st' ? '🥇' : semester === '2nd' ? '🥈' : '🥉'}</span>
+                        <span class="tab-text">${semester} Sem</span>
+                        <span class="tab-count">${semesters[semester].length}</span>
+                    </button>
+            `;
+        });
+        
+        content += `
                 </div>
             </div>
         `;
         
-        // Add semester sections
+        // Add quick stats
+        content += `
+            <div class="books-stats-header">
+                <div class="books-stat-card">
+                    <div class="stat-icon">📖</div>
+                    <div class="stat-content">
+                        <span class="stat-number">${books.length}</span>
+                        <span class="stat-label">Total Books</span>
+                    </div>
+                </div>
+                <div class="books-stat-card">
+                    <div class="stat-icon">🎓</div>
+                    <div class="stat-content">
+                        <span class="stat-number">${Object.keys(semesters).length}</span>
+                        <span class="stat-label">Semesters</span>
+                    </div>
+                </div>
+                <div class="books-stat-card">
+                    <div class="stat-icon">📄</div>
+                    <div class="stat-content">
+                        <span class="stat-number">PDF</span>
+                        <span class="stat-label">Format</span>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Add all books view
+        content += `
+            <div class="semester-content" id="semester-all">
+        `;
+        
+        // Add semester sections for all view
         Object.keys(semesters).sort().forEach(semester => {
             content += `
                 <div class="semester-section">
-                    <h4 class="semester-title">${semester} Semester</h4>
+                    <div class="semester-header">
+                        <div class="semester-title-wrapper">
+                            <span class="semester-icon">${semester === '1st' ? '🥇' : semester === '2nd' ? '🥈' : '🥉'}</span>
+                            <h4 class="semester-title">${semester} Semester</h4>
+                        </div>
+                        <div class="semester-stats">
+                            <span class="book-count">${semesters[semester].length} books</span>
+                        </div>
+                    </div>
                     <div class="mobile-books-grid">
             `;
             
             semesters[semester].forEach(book => {
                 content += `
                     <div class="mobile-book-card">
-                        <div class="book-header">
-                            <div class="book-title-mobile">${book.title}</div>
+                        <div class="book-card-header">
+                            <div class="book-code">${book.title}</div>
                             <div class="book-semester-badge">${semester}</div>
                         </div>
-                        <div class="book-subtitle-mobile">${book.subtitle}</div>
-                        <button class="mobile-download-btn" onclick="window.open('${book.url}', '_blank')">
-                            📥 Download PDF
-                        </button>
+                        <div class="book-title-mobile">${book.subtitle}</div>
+                        <div class="book-card-footer">
+                            <button class="mobile-download-btn primary" onclick="window.open('${book.url}', '_blank')">
+                                <span class="btn-icon">📥</span>
+                                <span class="btn-text">Download PDF</span>
+                            </button>
+                            <button class="mobile-preview-btn" onclick="mobileInterface.previewBook('${book.title}', '${book.url}')">
+                                <span class="btn-icon">👁️</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            content += '</div></div>';
+        });
+        
+        content += '</div>';
+        
+        // Add individual semester views
+        Object.keys(semesters).sort().forEach(semester => {
+            content += `
+                <div class="semester-content hidden" id="semester-${semester}">
+                    <div class="semester-header-single">
+                        <div class="semester-title-wrapper">
+                            <span class="semester-icon">${semester === '1st' ? '🥇' : semester === '2nd' ? '🥈' : '🥉'}</span>
+                            <h3 class="semester-title-large">${semester} Semester</h3>
+                        </div>
+                        <div class="semester-description">
+                            <p>${semesters[semester].length} books available for download</p>
+                        </div>
+                    </div>
+                    <div class="mobile-books-grid-single">
+            `;
+            
+            semesters[semester].forEach(book => {
+                content += `
+                    <div class="mobile-book-card enhanced">
+                        <div class="book-card-header">
+                            <div class="book-code">${book.title}</div>
+                            <div class="book-semester-badge featured">${semester}</div>
+                        </div>
+                        <div class="book-title-mobile">${book.subtitle}</div>
+                        <div class="book-card-footer">
+                            <button class="mobile-download-btn primary large" onclick="window.open('${book.url}', '_blank')">
+                                <span class="btn-icon">📥</span>
+                                <span class="btn-text">Download PDF</span>
+                            </button>
+                            <button class="mobile-preview-btn" onclick="mobileInterface.previewBook('${book.title}', '${book.url}')">
+                                <span class="btn-icon">👁️</span>
+                            </button>
+                        </div>
                     </div>
                 `;
             });
@@ -3207,6 +3309,103 @@ class MobileInterface {
                 welcomePopup.remove();
             }
         }, 5000);
+    }
+    
+    // Semester navigation functions
+    showSemester(semesterType) {
+        // Update active tab
+        const tabs = document.querySelectorAll('.semester-tab');
+        tabs.forEach(tab => {
+            tab.classList.remove('active');
+            if (tab.dataset.semester === semesterType) {
+                tab.classList.add('active');
+            }
+        });
+        
+        // Show/hide semester content
+        const contents = document.querySelectorAll('.semester-content');
+        contents.forEach(content => {
+            content.classList.add('hidden');
+            if (content.id === `semester-${semesterType}`) {
+                content.classList.remove('hidden');
+            }
+        });
+    }
+    
+    previewBook(title, url) {
+        // Show preview modal
+        const modal = document.createElement('div');
+        modal.className = 'book-preview-modal';
+        modal.innerHTML = `
+            <div class="preview-modal-content">
+                <div class="preview-header">
+                    <h3>📖 ${title}</h3>
+                    <button class="close-preview" onclick="this.closest('.book-preview-modal').remove()">✕</button>
+                </div>
+                <div class="preview-body">
+                    <div class="preview-options">
+                        <button class="preview-btn download" onclick="window.open('${url}', '_blank'); this.closest('.book-preview-modal').remove();">
+                            <span class="btn-icon">📥</span>
+                            <span class="btn-text">Download PDF</span>
+                        </button>
+                        <button class="preview-btn view" onclick="window.open('${url}', '_blank');">
+                            <span class="btn-icon">👁️</span>
+                            <span class="btn-text">View Online</span>
+                        </button>
+                        <button class="preview-btn share" onclick="mobileInterface.shareBook('${title}', '${url}');">
+                            <span class="btn-icon">📤</span>
+                            <span class="btn-text">Share</span>
+                        </button>
+                    </div>
+                    <div class="preview-info">
+                        <p>📚 This book will open in a new tab for reading or download.</p>
+                        <p>💡 Tip: Save to your device for offline reading!</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Auto-close on backdrop click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.remove();
+            }
+        });
+    }
+    
+    shareBook(title, url) {
+        if (navigator.share) {
+            navigator.share({
+                title: `📚 ${title} - Study Material`,
+                text: `Check out this study material: ${title}`,
+                url: url
+            }).catch(console.error);
+        } else {
+            // Fallback: copy to clipboard
+            navigator.clipboard.writeText(`📚 ${title}\n${url}`).then(() => {
+                this.showToast('📋 Book link copied to clipboard!');
+            }).catch(() => {
+                this.showToast('📤 Share: ' + title + '\n' + url);
+            });
+        }
+    }
+    
+    showToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'mobile-toast';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 100);
+        
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
     }
 }
 

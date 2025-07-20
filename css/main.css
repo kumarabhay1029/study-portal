@@ -4650,6 +4650,679 @@ body::after {
         box-shadow: 0 20px 40px rgba(33, 150, 243, 0.25);
     }
     
+    /* ==================================================
+       MOBILE SECTION NAVIGATION
+       ================================================== */
+    
+    .mobile-section-view {
+        width: 100%;
+        height: 100vh;
+        overflow-y: auto;
+        background: inherit;
+    }
+    
+    .mobile-section-header {
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(20px);
+        border-bottom: 2px solid rgba(255,255,255,0.2);
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    
+    .section-back-btn {
+        background: rgba(255,255,255,0.2);
+        border: 2px solid rgba(255,255,255,0.3);
+        border-radius: 15px;
+        color: white;
+        font-size: 0.95rem;
+        font-weight: 600;
+        padding: 12px 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        backdrop-filter: blur(10px);
+    }
+    
+    .section-back-btn:hover {
+        background: rgba(255,255,255,0.3);
+        border-color: rgba(255,255,255,0.5);
+        transform: translateX(-3px);
+    }
+    
+    .mobile-section-header h3 {
+        color: white;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 0;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        flex: 1;
+        text-align: center;
+    }
+    
+    .section-menu-btn {
+        background: rgba(255,255,255,0.2);
+        border: 2px solid rgba(255,255,255,0.3);
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+    }
+    
+    .section-menu-btn:hover {
+        background: rgba(255,255,255,0.3);
+        border-color: rgba(255,255,255,0.5);
+        transform: scale(1.1);
+    }
+    
+    .mobile-section-content {
+        padding: 0;
+        min-height: calc(100vh - 100px);
+    }
+    
+    /* ==================================================
+       ENHANCED MOBILE BOOKS SECTION
+       ================================================== */
+    
+    .mobile-books-container {
+        padding: 0;
+        background: inherit;
+    }
+    
+    /* Semester Tabs Navigation */
+    .semester-tabs-wrapper {
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(15px);
+        border-bottom: 2px solid rgba(255,255,255,0.2);
+        padding: 15px;
+        position: sticky;
+        top: 80px;
+        z-index: 99;
+    }
+    
+    .semester-tabs {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        padding: 5px;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+    
+    .semester-tabs::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .semester-tab {
+        background: rgba(255,255,255,0.15);
+        border: 2px solid rgba(255,255,255,0.25);
+        border-radius: 20px;
+        color: white;
+        padding: 15px 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        min-width: 100px;
+        flex-shrink: 0;
+        backdrop-filter: blur(10px);
+    }
+    
+    .semester-tab.active {
+        background: rgba(76, 175, 80, 0.3);
+        border-color: rgba(76, 175, 80, 0.6);
+        transform: scale(1.05);
+    }
+    
+    .semester-tab:hover:not(.active) {
+        background: rgba(255,255,255,0.25);
+        border-color: rgba(255,255,255,0.4);
+        transform: translateY(-2px);
+    }
+    
+    .tab-icon {
+        font-size: 1.2rem;
+        margin-bottom: 2px;
+    }
+    
+    .tab-text {
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-align: center;
+    }
+    
+    .tab-count {
+        background: rgba(255,255,255,0.2);
+        border: 1px solid rgba(255,255,255,0.3);
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        padding: 2px 8px;
+        min-width: 20px;
+        text-align: center;
+    }
+    
+    .semester-tab.active .tab-count {
+        background: rgba(255,255,255,0.3);
+        border-color: rgba(255,255,255,0.5);
+    }
+    
+    /* Books Stats Header */
+    .books-stats-header {
+        display: flex;
+        gap: 15px;
+        padding: 20px;
+        background: rgba(255,255,255,0.05);
+    }
+    
+    .books-stat-card {
+        flex: 1;
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(15px);
+        border: 2px solid rgba(255,255,255,0.2);
+        border-radius: 18px;
+        padding: 20px 15px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: all 0.3s ease;
+    }
+    
+    .books-stat-card:hover {
+        background: rgba(255,255,255,0.25);
+        border-color: rgba(255,255,255,0.4);
+        transform: translateY(-3px);
+    }
+    
+    .books-stat-card .stat-icon {
+        font-size: 2rem;
+        width: 50px;
+        height: 50px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    
+    .books-stat-card .stat-content {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+    
+    .books-stat-card .stat-number {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: white;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    
+    .books-stat-card .stat-label {
+        font-size: 0.85rem;
+        color: rgba(255,255,255,0.8);
+        font-weight: 500;
+    }
+    
+    /* Semester Content Sections */
+    .semester-content {
+        padding: 20px;
+    }
+    
+    .semester-content.hidden {
+        display: none;
+    }
+    
+    /* Semester Section Headers */
+    .semester-section {
+        margin-bottom: 30px;
+    }
+    
+    .semester-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        padding: 0 5px;
+    }
+    
+    .semester-title-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .semester-icon {
+        font-size: 1.8rem;
+        background: rgba(255,255,255,0.2);
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid rgba(255,255,255,0.3);
+    }
+    
+    .semester-title {
+        color: white;
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin: 0;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    
+    .semester-stats {
+        background: rgba(255,255,255,0.15);
+        border: 1px solid rgba(255,255,255,0.3);
+        border-radius: 15px;
+        padding: 8px 15px;
+        backdrop-filter: blur(10px);
+    }
+    
+    .book-count {
+        color: rgba(255,255,255,0.9);
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+    
+    /* Single Semester View Headers */
+    .semester-header-single {
+        text-align: center;
+        margin-bottom: 30px;
+        padding: 30px 20px;
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(15px);
+        border-radius: 25px;
+        border: 2px solid rgba(255,255,255,0.2);
+    }
+    
+    .semester-title-large {
+        color: white;
+        font-size: 2rem;
+        font-weight: 800;
+        margin: 10px 0;
+        text-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    
+    .semester-description p {
+        color: rgba(255,255,255,0.8);
+        font-size: 1.1rem;
+        font-weight: 400;
+        margin: 0;
+    }
+    
+    /* Mobile Books Grid */
+    .mobile-books-grid {
+        display: grid;
+        gap: 20px;
+        grid-template-columns: 1fr;
+    }
+    
+    .mobile-books-grid-single {
+        display: grid;
+        gap: 25px;
+        grid-template-columns: 1fr;
+    }
+    
+    /* Enhanced Mobile Book Cards */
+    .mobile-book-card {
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(20px);
+        border: 2px solid rgba(255,255,255,0.25);
+        border-radius: 25px;
+        padding: 25px;
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .mobile-book-card.enhanced {
+        border-radius: 30px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+    
+    .mobile-book-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255,0.1);
+        transition: left 0.5s ease;
+    }
+    
+    .mobile-book-card:hover::before {
+        left: 100%;
+    }
+    
+    .mobile-book-card:hover {
+        background: rgba(255,255,255,0.25);
+        border-color: rgba(255,255,255,0.4);
+        transform: translateY(-8px);
+        box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+    }
+    
+    .book-card-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .book-code {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        font-size: 1rem;
+        font-weight: 700;
+        padding: 10px 18px;
+        border-radius: 15px;
+        border: 2px solid rgba(255,255,255,0.3);
+        text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    
+    .book-semester-badge {
+        background: rgba(255,255,255,0.25);
+        border: 2px solid rgba(255,255,255,0.3);
+        color: white;
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 6px 12px;
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+    }
+    
+    .book-semester-badge.featured {
+        background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+        border-color: rgba(255,255,255,0.4);
+        font-weight: 700;
+    }
+    
+    .book-title-mobile {
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 600;
+        line-height: 1.4;
+        margin-bottom: 20px;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        position: relative;
+        z-index: 2;
+    }
+    
+    .book-card-footer {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+    }
+    
+    /* Enhanced Download Buttons */
+    .mobile-download-btn {
+        background: linear-gradient(135deg, #00b894, #00a085);
+        border: 2px solid rgba(255,255,255,0.3);
+        border-radius: 18px;
+        color: white;
+        font-size: 0.95rem;
+        font-weight: 600;
+        padding: 15px 25px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+        justify-content: center;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 20px rgba(0, 184, 148, 0.3);
+    }
+    
+    .mobile-download-btn.large {
+        padding: 18px 30px;
+        font-size: 1.05rem;
+        border-radius: 22px;
+    }
+    
+    .mobile-download-btn:hover {
+        background: linear-gradient(135deg, #00a085, #00b894);
+        border-color: rgba(255,255,255,0.5);
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(0, 184, 148, 0.4);
+    }
+    
+    .mobile-download-btn .btn-icon {
+        font-size: 1.1rem;
+    }
+    
+    .mobile-download-btn .btn-text {
+        font-weight: 700;
+    }
+    
+    .mobile-preview-btn {
+        background: rgba(255,255,255,0.2);
+        border: 2px solid rgba(255,255,255,0.3);
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        flex-shrink: 0;
+    }
+    
+    .mobile-preview-btn:hover {
+        background: rgba(255,255,255,0.3);
+        border-color: rgba(255,255,255,0.5);
+        transform: scale(1.1);
+    }
+    
+    /* ==================================================
+       BOOK PREVIEW MODAL
+       ================================================== */
+    
+    .book-preview-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.8);
+        backdrop-filter: blur(10px);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    .preview-modal-content {
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(25px);
+        border: 2px solid rgba(255,255,255,0.3);
+        border-radius: 25px;
+        padding: 0;
+        max-width: 400px;
+        width: 100%;
+        overflow: hidden;
+        animation: slideUp 0.3s ease;
+    }
+    
+    @keyframes slideUp {
+        from { transform: translateY(50px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    
+    .preview-header {
+        background: rgba(255,255,255,0.1);
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 2px solid rgba(255,255,255,0.2);
+    }
+    
+    .preview-header h3 {
+        color: white;
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin: 0;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    
+    .close-preview {
+        background: rgba(255,255,255,0.2);
+        border: 2px solid rgba(255,255,255,0.3);
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .close-preview:hover {
+        background: rgba(255,255,255,0.3);
+        border-color: rgba(255,255,255,0.5);
+        transform: scale(1.1);
+    }
+    
+    .preview-body {
+        padding: 25px;
+    }
+    
+    .preview-options {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .preview-btn {
+        background: rgba(255,255,255,0.15);
+        border: 2px solid rgba(255,255,255,0.3);
+        border-radius: 18px;
+        color: white;
+        font-size: 1rem;
+        font-weight: 600;
+        padding: 18px 25px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        backdrop-filter: blur(10px);
+    }
+    
+    .preview-btn.download {
+        background: linear-gradient(135deg, #00b894, #00a085);
+        box-shadow: 0 8px 20px rgba(0, 184, 148, 0.3);
+    }
+    
+    .preview-btn.view {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
+    }
+    
+    .preview-btn.share {
+        background: linear-gradient(135deg, #e84393, #fd79a8);
+        box-shadow: 0 8px 20px rgba(232, 67, 147, 0.3);
+    }
+    
+    .preview-btn:hover {
+        border-color: rgba(255,255,255,0.5);
+        transform: translateY(-3px);
+    }
+    
+    .preview-btn .btn-icon {
+        font-size: 1.3rem;
+    }
+    
+    .preview-btn .btn-text {
+        font-weight: 700;
+    }
+    
+    .preview-info {
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 15px;
+        padding: 15px;
+        backdrop-filter: blur(10px);
+    }
+    
+    .preview-info p {
+        color: rgba(255,255,255,0.8);
+        font-size: 0.9rem;
+        margin: 0 0 8px 0;
+        line-height: 1.4;
+    }
+    
+    .preview-info p:last-child {
+        margin-bottom: 0;
+    }
+    
+    /* ==================================================
+       MOBILE TOAST NOTIFICATIONS
+       ================================================== */
+    
+    .mobile-toast {
+        position: fixed;
+        bottom: 100px;
+        left: 50%;
+        transform: translateX(-50%) translateY(100px);
+        background: rgba(0,0,0,0.9);
+        color: white;
+        padding: 15px 25px;
+        border-radius: 25px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
+        z-index: 10001;
+        transition: all 0.3s ease;
+        max-width: 90%;
+        text-align: center;
+    }
+    
+    .mobile-toast.show {
+        transform: translateX(-50%) translateY(0);
+    }
+    
     /* Quick Actions section */
     .mobile-quick-actions {
         margin: 30px 0;
