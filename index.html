@@ -68,15 +68,15 @@
         </div>
         
         <!-- Navigation links - each calls showSection() function to switch content -->
-        <a href="#" onclick="showSection('home')" data-section="home">🏠 Home</a>
-        <a href="#" onclick="showSection('dashboard')" data-section="dashboard">📊 Dashboard</a>
-        <a href="#" onclick="showSection('books')" data-section="books">📚 Books</a>
-        <a href="#" onclick="showSection('assignments')" data-section="assignments">📝 Assignments</a>
-        <a href="#" onclick="showSection('notes')" data-section="notes">📋 Notes</a>
-        <a href="#" onclick="showSection('projects')" data-section="projects">🚀 Projects</a>
-        <a href="#" onclick="showSection('research')" data-section="research">📄 Research Papers</a>
-        <a href="#" onclick="showSection('members')" data-section="members">👥 Members</a>
-        <a href="#" onclick="showSection('community')" data-section="community">🤝 Community</a>
+        <button class="nav-link" onclick="showSection('home')" data-section="home">🏠 Home</button>
+        <button class="nav-link" onclick="showSection('dashboard')" data-section="dashboard">📊 Dashboard</button>
+        <button class="nav-link" onclick="showSection('books')" data-section="books">📚 Books</button>
+        <button class="nav-link" onclick="showSection('assignments')" data-section="assignments">📝 Assignments</button>
+        <button class="nav-link" onclick="showSection('notes')" data-section="notes">📋 Notes</button>
+        <button class="nav-link" onclick="showSection('projects')" data-section="projects">🚀 Projects</button>
+        <button class="nav-link" onclick="showSection('research')" data-section="research">📄 Research Papers</button>
+        <button class="nav-link" onclick="showSection('members')" data-section="members">👥 Members</button>
+        <button class="nav-link" onclick="showSection('community')" data-section="community">🤝 Community</button>
     </div>
 
     <!-- ==========================================================================
@@ -1138,7 +1138,7 @@
                 </form>
                 
                 <p class="auth-link">
-                    <a href="#" onclick="showAuthTab('forgot')">🔗 Forgot Password?</a>
+                    <button type="button" class="link-btn" onclick="showAuthTab('forgot')">🔗 Forgot Password?</button>
                 </p>
             </div>
             
@@ -1182,7 +1182,7 @@
                         <label class="checkbox-label">
                             <input type="checkbox" id="agreeTerms" required>
                             <span class="checkmark"></span>
-                            I agree to the <a href="#" onclick="showTerms()">Terms of Service</a> and <a href="#" onclick="showPrivacy()">Privacy Policy</a>
+                            I agree to the <button type="button" class="link-btn" onclick="showTerms()">Terms of Service</button> and <button type="button" class="link-btn" onclick="showPrivacy()">Privacy Policy</button>
                         </label>
                     </div>
                     <button type="submit" class="auth-btn primary" id="registerBtn">
@@ -1214,8 +1214,8 @@
                     </p>
                 </div>
                 <p class="auth-link">
-                    <a href="#" onclick="showAuthTab('login')">← Back to Login</a> | 
-                    <a href="#" onclick="showAuthTab('register')">Create New Account</a>
+                    <button type="button" class="link-btn" onclick="showAuthTab('login')">← Back to Login</button> | 
+                    <button type="button" class="link-btn" onclick="showAuthTab('register')">Create New Account</button>
                 </p>
             </div>
         </div>

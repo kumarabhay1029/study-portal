@@ -750,6 +750,11 @@ if (!window.finalAuthInitialized) {
             // Form functions
             window.showAuthTab = (tab) => {
                 try {
+                    // Prevent hash from being added to URL
+                    if (window.history && window.history.replaceState) {
+                        window.history.replaceState(null, null, window.location.pathname + window.location.search);
+                    }
+                    
                     console.log(`🔄 Attempting to switch to ${tab} tab`);
                     
                     // Check if we're on a page with tabs (like main site, not error-detection)
@@ -1133,6 +1138,11 @@ let currentSection = 'home';
  * @param {string} sectionName - Name of the section to show
  */
 function showSection(sectionName) {
+    // Prevent hash from being added to URL
+    if (window.history && window.history.replaceState) {
+        window.history.replaceState(null, null, window.location.pathname + window.location.search);
+    }
+    
     // Hide all sections
     document.querySelectorAll('.section-container').forEach(section => {
         section.classList.remove('active');
@@ -1156,7 +1166,7 @@ function showSection(sectionName) {
  */
 function updateActiveNavigation(sectionName) {
     // Remove active class from all nav items
-    document.querySelectorAll('.nav-btn, .sidebar a').forEach(item => {
+    document.querySelectorAll('.nav-btn, .sidebar a, .sidebar .nav-link').forEach(item => {
         item.classList.remove('active');
     });
 
@@ -1716,6 +1726,23 @@ window.detectErrors = function() {
     console.log('==========================================');
     
     return { errors, warnings };
+};
+
+// Add missing modal interaction functions
+window.showTerms = function() {
+    // Prevent hash from being added to URL
+    if (window.history && window.history.replaceState) {
+        window.history.replaceState(null, null, window.location.pathname + window.location.search);
+    }
+    alert('Terms of Service will be displayed here. This feature will be implemented soon.');
+};
+
+window.showPrivacy = function() {
+    // Prevent hash from being added to URL
+    if (window.history && window.history.replaceState) {
+        window.history.replaceState(null, null, window.location.pathname + window.location.search);
+    }
+    alert('Privacy Policy will be displayed here. This feature will be implemented soon.');
 };
 
 console.log('✅ Study Portal Bundle Loaded Successfully!');

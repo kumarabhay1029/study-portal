@@ -138,7 +138,8 @@ body::after {
 }
 
 /* Sidebar navigation links */
-.sidebar a {
+.sidebar a,
+.sidebar .nav-link {
     display: block;
     color: #ffffff;
     padding: 15px 25px;
@@ -151,10 +152,16 @@ body::after {
     position: relative;
     overflow: hidden;
     cursor: pointer;
+    border: none;
+    background: transparent;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
 }
 
 /* Animated shine effect on sidebar links */
-.sidebar a::before {
+.sidebar a::before,
+.sidebar .nav-link::before {
     content: '';
     position: absolute;
     top: 0;
@@ -166,20 +173,49 @@ body::after {
 }
 
 /* Sidebar link hover effects */
-.sidebar a:hover {
+.sidebar a:hover,
+.sidebar .nav-link:hover {
     background: rgba(79, 195, 247, 0.2);
     transform: translateX(5px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-.sidebar a:hover::before {
+.sidebar a:hover::before,
+.sidebar .nav-link:hover::before {
     left: 100%;
 }
 
 /* Active sidebar link styling */
-.sidebar a.active {
+.sidebar a.active,
+.sidebar .nav-link.active {
     background: rgba(79, 195, 247, 0.3);
     border-left: 4px solid #4fc3f7;
+}
+
+/* Link-style buttons for modal interactions */
+.link-btn {
+    background: none;
+    border: none;
+    color: #4fc3f7;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: inherit;
+    font-family: inherit;
+    padding: 0;
+    margin: 0;
+    transition: color 0.3s ease;
+    display: inline;
+}
+
+.link-btn:hover {
+    color: #29b6f6;
+    text-decoration: none;
+}
+
+.link-btn:focus {
+    outline: 2px solid rgba(79, 195, 247, 0.5);
+    outline-offset: 2px;
+    border-radius: 2px;
 }
 
 /* ==========================================================================
