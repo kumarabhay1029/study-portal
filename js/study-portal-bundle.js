@@ -572,6 +572,104 @@ if (!window.finalAuthInitialized) {
             }
         }
 
+        async sendPasswordReset(email) {
+            if (!this.authReady || !window.auth) {
+                this.showMessage('⏳ Authentication system not ready', 'info');
+                return;
+            }
+
+            try {
+                console.log('🔐 Sending password reset email to:', email);
+                this.showMessage('📧 Sending reset email...', 'info', 2000);
+                
+                await window.auth.sendPasswordResetEmail(email);
+                
+                console.log('✅ Password reset email sent successfully');
+                this.showMessage('📧 Password reset email sent! Check your inbox.', 'success', 6000);
+                
+                // Clear the email field
+                const forgotEmailField = document.getElementById('forgotEmail');
+                if (forgotEmailField) forgotEmailField.value = '';
+                
+                // Show additional instructions
+                setTimeout(() => {
+                    this.showMessage('ℹ️ Check your spam folder if you don\'t see the email', 'info', 5000);
+                }, 7000);
+                
+            } catch (error) {
+                console.error('❌ Password reset error:', error);
+                let errorMessage = 'Failed to send reset email';
+                
+                // Provide user-friendly error messages
+                if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'Invalid email address';
+                } else if (error.code === 'auth/user-not-found') {
+                    errorMessage = 'No account found with this email address';
+                } else if (error.code === 'auth/too-many-requests') {
+                    errorMessage = 'Too many reset attempts. Please try again later';
+                } else if (error.code === 'auth/network-request-failed') {
+                    errorMessage = 'Network error. Please check your internet connection';
+                } else {
+                    errorMessage = error.message;
+                }
+                
+                this.showMessage(`❌ ${errorMessage}`, 'error');
+            }
+        }
+
+        async handlePasswordResetCode(actionCode) {
+            if (!this.authReady || !window.auth) {
+                this.showMessage('⏳ Authentication system not ready', 'info');
+                return;
+            }
+
+            try {
+                // Verify the password reset code is valid
+                const email = await window.auth.verifyPasswordResetCode(actionCode);
+                console.log('✅ Password reset code verified for:', email);
+                
+                // Prompt user for new password
+                const newPassword = prompt('Enter your new password (minimum 6 characters):');
+                
+                if (!newPassword) {
+                    this.showMessage('❌ Password reset cancelled', 'info');
+                    return;
+                }
+                
+                if (newPassword.length < 6) {
+                    this.showMessage('❌ Password must be at least 6 characters long', 'error');
+                    return;
+                }
+                
+                // Confirm the password reset
+                await window.auth.confirmPasswordReset(actionCode, newPassword);
+                
+                console.log('✅ Password reset successful');
+                this.showMessage('🎉 Password reset successful! You can now login with your new password.', 'success', 6000);
+                
+                // Optionally open login modal
+                setTimeout(() => {
+                    this.openLoginModal();
+                }, 2000);
+                
+            } catch (error) {
+                console.error('❌ Password reset code error:', error);
+                let errorMessage = 'Password reset failed';
+                
+                if (error.code === 'auth/expired-action-code') {
+                    errorMessage = 'Password reset link has expired. Please request a new one.';
+                } else if (error.code === 'auth/invalid-action-code') {
+                    errorMessage = 'Invalid or already used reset link. Please request a new one.';
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessage = 'Password is too weak. Please choose a stronger password.';
+                } else {
+                    errorMessage = error.message;
+                }
+                
+                this.showMessage(`❌ ${errorMessage}`, 'error');
+            }
+        }
+
         closeLoginModal() {
             const modal = document.getElementById('loginModal');
             if (modal) {
@@ -629,8 +727,44 @@ if (!window.finalAuthInitialized) {
             
             window.resetPassword = (event) => {
                 if (event) event.preventDefault();
-                if (window.finalAuth) {
-                    window.finalAuth.showMessage('🔐 Password reset feature coming soon!', 'info');
+                
+                // Get email from forgot password form or login form
+                const forgotEmailField = document.getElementById('forgotEmail');
+                const loginEmailField = document.getElementById('loginEmail') || document.getElementById('email');
+                
+                let email = '';
+                
+                // Try to get email from forgot password form first
+                if (forgotEmailField && forgotEmailField.value) {
+                    email = forgotEmailField.value.trim();
+                } else if (loginEmailField && loginEmailField.value) {
+                    // If no email in forgot form, try to use email from login form
+                    email = loginEmailField.value.trim();
+                }
+                
+                if (!email) {
+                    if (window.finalAuth) {
+                        window.finalAuth.showMessage('❌ Please enter your email address', 'error');
+                    }
+                    return;
+                }
+                
+                // Validate email format
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    if (window.finalAuth) {
+                        window.finalAuth.showMessage('❌ Please enter a valid email address', 'error');
+                    }
+                    return;
+                }
+                
+                // Send password reset email
+                if (window.auth && window.finalAuth) {
+                    window.finalAuth.sendPasswordReset(email);
+                } else {
+                    if (window.finalAuth) {
+                        window.finalAuth.showMessage('⏳ Authentication system not ready. Please try again.', 'info');
+                    }
                 }
             };
             
@@ -638,6 +772,33 @@ if (!window.finalAuthInitialized) {
                 const input = document.getElementById(inputId);
                 if (input) {
                     input.type = input.type === 'password' ? 'text' : 'password';
+                }
+            };
+            
+            // Additional password reset helper functions
+            window.checkPasswordResetCode = (actionCode) => {
+                // This would be called when user clicks the reset link from email
+                if (window.auth && window.finalAuth) {
+                    window.finalAuth.handlePasswordResetCode(actionCode);
+                }
+            };
+            
+            window.showForgotPasswordHelp = () => {
+                if (window.finalAuth) {
+                    window.finalAuth.showMessage('💡 Enter your email and we\'ll send you a reset link', 'info', 4000);
+                }
+            };
+            
+            // Copy email from login to forgot password form
+            window.copyEmailToForgot = () => {
+                const loginEmail = document.getElementById('loginEmail') || document.getElementById('email');
+                const forgotEmail = document.getElementById('forgotEmail');
+                
+                if (loginEmail && forgotEmail && loginEmail.value) {
+                    forgotEmail.value = loginEmail.value;
+                    if (window.finalAuth) {
+                        window.finalAuth.showMessage('📧 Email copied to reset form', 'info', 2000);
+                    }
                 }
             };
             
@@ -879,8 +1040,49 @@ window.testLogin = function() {
     }
 };
 
+// Password reset help and testing functions
+window.testPasswordReset = function() {
+    console.log('🧪 Testing password reset system...');
+    if (window.finalAuth) {
+        const testEmail = prompt('Enter email to test password reset:');
+        if (testEmail) {
+            window.finalAuth.sendPasswordReset(testEmail);
+        }
+    } else {
+        console.error('❌ finalAuth not available');
+    }
+};
+
+window.showPasswordResetHelp = function() {
+    console.log('📖 === PASSWORD RESET HELP ===');
+    console.log('');
+    console.log('🔄 How Password Reset Works:');
+    console.log('1. User clicks "Forgot Password?" link');
+    console.log('2. User enters their email address');
+    console.log('3. Firebase sends a reset email');
+    console.log('4. User clicks the link in the email');
+    console.log('5. User enters a new password');
+    console.log('6. Password is updated successfully');
+    console.log('');
+    console.log('🎯 Available Functions:');
+    console.log('• resetPassword(event) - Send reset email');
+    console.log('• checkPasswordResetCode(code) - Handle reset link');
+    console.log('• testPasswordReset() - Test the reset system');
+    console.log('• copyEmailToForgot() - Copy email to forgot form');
+    console.log('• showForgotPasswordHelp() - Show help message');
+    console.log('');
+    console.log('⚠️ Important Notes:');
+    console.log('• Reset links expire after 1 hour');
+    console.log('• Links can only be used once');
+    console.log('• Check spam folder if email not received');
+    console.log('• Password must be at least 6 characters');
+    console.log('');
+    console.log('🔧 For testing, use: testPasswordReset()');
+    console.log('=====================================');
+};
+
 console.log('✅ Study Portal Bundle Loaded Successfully!');
-console.log('🔧 Debug functions available: debugAuth(), testLogin()');
+console.log('🔧 Debug functions available: debugAuth(), testLogin(), testPasswordReset(), showPasswordResetHelp()');
 if (isDebugMode) {
     console.log('🐛 Auto-running debug check...');
     setTimeout(() => window.debugAuth(), 2000);
