@@ -1533,3 +1533,347 @@ body::after {
         top: 2px;
     }
 }
+
+/* ==========================================================================
+   BOOKS SECTION STYLES
+   ========================================================================== */
+
+/* Books section intro */
+.books-intro {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.books-intro p {
+    font-size: 1.1rem;
+    color: #e0e0e0;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Semester sections */
+.semester-section {
+    margin-bottom: 3rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.semester-section:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Semester titles */
+.semester-title {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: #ffffff;
+    text-align: center;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Books grid layout */
+.books-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+/* Individual book cards */
+.book-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    border-radius: 15px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 140px;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.book-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(74, 144, 226, 0.1) 0%, rgba(143, 148, 251, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.book-card:hover::before {
+    opacity: 1;
+}
+
+.book-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Special styling for project card */
+.book-card.special {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.2) 0%, rgba(255, 152, 0, 0.1) 100%);
+    border-color: rgba(255, 193, 7, 0.3);
+}
+
+.book-card.special:hover {
+    border-color: rgba(255, 193, 7, 0.5);
+    box-shadow: 0 15px 40px rgba(255, 193, 7, 0.2);
+}
+
+/* Book information area */
+.book-info {
+    flex: 1;
+    margin-bottom: 1rem;
+}
+
+.book-info h4 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #4a90e2;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.book-info p {
+    font-size: 0.95rem;
+    color: #e0e0e0;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* Download buttons */
+.download-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+    color: white;
+    text-decoration: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    text-align: center;
+    min-height: 44px;
+    position: relative;
+    overflow: hidden;
+}
+
+.download-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.download-btn:hover::before {
+    left: 100%;
+}
+
+.download-btn:hover {
+    background: linear-gradient(135deg, #357abd 0%, #2a5a8a 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(74, 144, 226, 0.3);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.download-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 15px rgba(74, 144, 226, 0.2);
+}
+
+/* Special project button styling */
+.project-btn {
+    background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+}
+
+.project-btn:hover {
+    background: linear-gradient(135deg, #f57c00 0%, #e65100 100%);
+    box-shadow: 0 8px 25px rgba(255, 152, 0, 0.3);
+}
+
+/* Disabled button styling */
+.download-btn.disabled {
+    background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.download-btn.disabled:hover {
+    transform: none;
+    box-shadow: none;
+    background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+}
+
+.download-btn.disabled::before {
+    display: none;
+}
+
+/* Books footer section */
+.books-footer {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-info h4 {
+    color: #4a90e2;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+    text-align: center;
+}
+
+.footer-info ul {
+    list-style: none;
+    padding: 0;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.footer-info li {
+    background: rgba(255, 255, 255, 0.05);
+    margin-bottom: 0.8rem;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    border-left: 4px solid #4a90e2;
+    color: #e0e0e0;
+    transition: all 0.3s ease;
+}
+
+.footer-info li:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
+    border-left-color: #357abd;
+}
+
+/* Responsive design for books section */
+@media (max-width: 768px) {
+    .books-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .book-card {
+        padding: 1.25rem;
+        min-height: 120px;
+    }
+    
+    .semester-section {
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .semester-title {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .book-info h4 {
+        font-size: 1.1rem;
+    }
+    
+    .book-info p {
+        font-size: 0.9rem;
+    }
+    
+    .download-btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.85rem;
+    }
+    
+    .books-intro {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .books-intro p {
+        font-size: 1rem;
+    }
+    
+    .books-footer {
+        padding: 1.5rem;
+        margin-top: 2rem;
+    }
+    
+    .footer-info li {
+        padding: 0.8rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .books-grid {
+        gap: 0.8rem;
+    }
+    
+    .book-card {
+        padding: 1rem;
+        min-height: 110px;
+    }
+    
+    .semester-section {
+        padding: 1rem;
+    }
+    
+    .semester-title {
+        font-size: 1.3rem;
+    }
+    
+    .book-info h4 {
+        font-size: 1rem;
+    }
+    
+    .book-info p {
+        font-size: 0.85rem;
+    }
+    
+    .download-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+}
+
+/* Dark mode compatibility */
+@media (prefers-color-scheme: dark) {
+    .book-card {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+    }
+    
+    .book-info p {
+        color: #d0d0d0;
+    }
+    
+    .footer-info li {
+        color: #d0d0d0;
+    }
+}
