@@ -12,12 +12,13 @@ if (window.finalAuthInitialized) {
 } else {
     window.finalAuthInitialized = true;
 
-    // Single, comprehensive auth system
+    // Single, comprehensive auth system with smooth animations
     class FinalAuthSystem {
         constructor() {
             this.currentUser = null;
             this.authReady = false;
             this.initializeSystem();
+            this.setupAnimationSystem();
         }
 
         initializeSystem() {
@@ -29,6 +30,118 @@ if (window.finalAuthInitialized) {
             
             // Then try to connect to Firebase
             this.connectToFirebase();
+        }
+
+        setupAnimationSystem() {
+            // Create animation styles if not already present
+            if (!document.getElementById('auth-animations')) {
+                const animationStyles = document.createElement('style');
+                animationStyles.id = 'auth-animations';
+                animationStyles.textContent = `
+                    /* Smooth Modal Animations */
+                    .login-modal, .profile-modal {
+                        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                        opacity: 0;
+                        transform: translateY(-20px);
+                    }
+                    
+                    .login-modal.active, .profile-modal.active {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                    
+                    .modal-content {
+                        transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                        transform: translateY(30px);
+                        opacity: 0;
+                    }
+                    
+                    .login-modal.active .modal-content,
+                    .profile-modal.active .modal-content {
+                        transform: translateY(0);
+                        opacity: 1;
+                    }
+                    
+                    /* Smooth Message Box */
+                    .auth-message {
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%) scale(0.8);
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        color: white;
+                        padding: 20px 30px;
+                        border-radius: 15px;
+                        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                        z-index: 10000;
+                        opacity: 0;
+                        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                        pointer-events: none;
+                        backdrop-filter: blur(10px);
+                        border: 1px solid rgba(255, 255, 255, 0.2);
+                        font-weight: 600;
+                        text-align: center;
+                        min-width: 250px;
+                    }
+                    
+                    .auth-message.show {
+                        opacity: 1;
+                        transform: translate(-50%, -50%) scale(1);
+                        pointer-events: auto;
+                    }
+                    
+                    .auth-message.success {
+                        background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+                    }
+                    
+                    .auth-message.error {
+                        background: linear-gradient(135deg, #e84393 0%, #fd79a8 100%);
+                    }
+                    
+                    /* Button animations */
+                    .login-btn {
+                        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                    }
+                    
+                    .login-btn:hover {
+                        transform: translateY(-2px);
+                    }
+                    
+                    .login-btn:active {
+                        transform: translateY(0);
+                    }
+                `;
+                document.head.appendChild(animationStyles);
+                console.log('✨ Animation system initialized');
+            }
+        }
+
+        showMessage(message, type = 'info', duration = 3000) {
+            // Remove existing messages
+            const existingMessages = document.querySelectorAll('.auth-message');
+            existingMessages.forEach(msg => msg.remove());
+
+            // Create new message
+            const messageEl = document.createElement('div');
+            messageEl.className = `auth-message ${type}`;
+            messageEl.textContent = message;
+            
+            document.body.appendChild(messageEl);
+            
+            // Show animation
+            setTimeout(() => {
+                messageEl.classList.add('show');
+            }, 100);
+            
+            // Hide animation
+            setTimeout(() => {
+                messageEl.classList.remove('show');
+                setTimeout(() => {
+                    if (messageEl.parentNode) {
+                        messageEl.remove();
+                    }
+                }, 400);
+            }, duration);
         }
 
         setupLoginButton() {
@@ -97,10 +210,16 @@ if (window.finalAuthInitialized) {
             const modal = document.getElementById('loginModal');
             if (modal) {
                 modal.style.display = 'flex';
-                modal.classList.add('active');
-                console.log('✅ Login modal opened');
+                
+                // Smooth animation
+                requestAnimationFrame(() => {
+                    modal.classList.add('active');
+                });
+                
+                this.showMessage('🌟 Welcome! Please sign in to continue', 'info', 2000);
+                console.log('✅ Login modal opened with animation');
             } else {
-                alert('Login system is loading. Please try again in a moment.');
+                this.showMessage('⏳ Login system is loading...', 'info', 2000);
             }
         }
 
@@ -116,8 +235,14 @@ if (window.finalAuthInitialized) {
                 }
                 
                 modal.style.display = 'flex';
-                modal.classList.add('active');
-                console.log('✅ Profile modal opened');
+                
+                // Smooth animation
+                requestAnimationFrame(() => {
+                    modal.classList.add('active');
+                });
+                
+                this.showMessage(`👤 Welcome back, ${this.currentUser.email}!`, 'success', 2000);
+                console.log('✅ Profile modal opened with animation');
             }
         }
 
@@ -153,7 +278,7 @@ if (window.finalAuthInitialized) {
             const password = document.getElementById('loginPassword')?.value;
             
             if (!email || !password) {
-                alert('Please enter both email and password');
+                this.showMessage('❌ Please enter both email and password', 'error');
                 return;
             }
 
@@ -162,15 +287,17 @@ if (window.finalAuthInitialized) {
                     throw new Error('Firebase Auth not ready');
                 }
 
+                this.showMessage('🔐 Signing you in...', 'info', 2000);
+                
                 const userCredential = await window.auth.signInWithEmailAndPassword(email, password);
                 console.log('✅ Login successful:', userCredential.user.email);
                 
                 this.closeLoginModal();
-                alert('🎉 Login successful! Welcome back.');
+                this.showMessage('🎉 Welcome back! Login successful', 'success');
                 
             } catch (error) {
                 console.error('❌ Login error:', error);
-                alert('Login failed: ' + error.message);
+                this.showMessage(`❌ Login failed: ${error.message}`, 'error');
             }
         }
 
@@ -192,7 +319,7 @@ if (window.finalAuthInitialized) {
                 this.updateButtonState(null);
                 
                 console.log('✅ Logout successful');
-                alert('🚪 You have been signed out successfully.');
+                this.showMessage('🚪 Successfully signed out', 'success');
                 
             } catch (error) {
                 console.error('❌ Logout error:', error);
@@ -200,23 +327,31 @@ if (window.finalAuthInitialized) {
                 this.currentUser = null;
                 this.updateButtonState(null);
                 this.closeProfileModal();
-                alert('Logout completed.');
+                this.showMessage('✅ Logout completed', 'success');
             }
         }
 
         closeLoginModal() {
             const modal = document.getElementById('loginModal');
             if (modal) {
-                modal.style.display = 'none';
                 modal.classList.remove('active');
+                
+                // Wait for animation to complete before hiding
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                }, 400);
             }
         }
 
         closeProfileModal() {
             const modal = document.getElementById('profileModal');
             if (modal) {
-                modal.style.display = 'none';
                 modal.classList.remove('active');
+                
+                // Wait for animation to complete before hiding
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                }, 400);
             }
         }
 
@@ -248,12 +383,12 @@ if (window.finalAuthInitialized) {
             
             window.registerUser = (event) => {
                 if (event) event.preventDefault();
-                alert('Registration feature will be implemented soon.');
+                window.finalAuth.showMessage('📝 Registration feature coming soon!', 'info');
             };
             
             window.resetPassword = (event) => {
                 if (event) event.preventDefault();
-                alert('Password reset feature will be implemented soon.');
+                window.finalAuth.showMessage('🔐 Password reset feature coming soon!', 'info');
             };
             
             window.togglePasswordVisibility = (inputId) => {
