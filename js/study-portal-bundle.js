@@ -749,30 +749,55 @@ if (!window.finalAuthInitialized) {
             
             // Form functions
             window.showAuthTab = (tab) => {
-                // Remove active class from all tab buttons
-                document.querySelectorAll('.tab-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                
-                // Remove active class from all tab content
-                document.querySelectorAll('.tab-content').forEach(content => {
-                    content.classList.remove('active');
-                });
-                
-                // Add active class to clicked tab button
-                const tabButtons = document.querySelectorAll('.tab-btn');
-                const tabIndex = tab === 'login' ? 0 : tab === 'register' ? 1 : 2;
-                if (tabButtons[tabIndex]) {
-                    tabButtons[tabIndex].classList.add('active');
+                try {
+                    console.log(`🔄 Attempting to switch to ${tab} tab`);
+                    
+                    // Remove active class from all tab buttons
+                    const tabButtons = document.querySelectorAll('.tab-btn');
+                    if (tabButtons.length === 0) {
+                        console.warn('⚠️ No tab buttons found');
+                        return;
+                    }
+                    
+                    tabButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // Remove active class from all tab content
+                    const tabContents = document.querySelectorAll('.tab-content');
+                    if (tabContents.length === 0) {
+                        console.warn('⚠️ No tab contents found');
+                        return;
+                    }
+                    
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked tab button
+                    const tabMap = { 'login': 0, 'register': 1, 'forgot': 2 };
+                    const tabIndex = tabMap[tab];
+                    
+                    if (tabIndex !== undefined && tabButtons[tabIndex]) {
+                        tabButtons[tabIndex].classList.add('active');
+                        console.log(`✅ Tab button ${tabIndex} activated`);
+                    } else {
+                        console.warn(`⚠️ Tab button not found for ${tab} (index: ${tabIndex})`);
+                    }
+                    
+                    // Add active class to corresponding content
+                    const activeContent = document.getElementById(tab + 'Tab');
+                    if (activeContent) {
+                        activeContent.classList.add('active');
+                        console.log(`✅ Tab content ${tab}Tab activated`);
+                    } else {
+                        console.warn(`⚠️ Tab content not found: ${tab}Tab`);
+                    }
+                    
+                    console.log(`✅ Successfully switched to ${tab} tab`);
+                } catch (error) {
+                    console.error(`❌ Error switching to ${tab} tab:`, error);
                 }
-                
-                // Add active class to corresponding content
-                const activeContent = document.getElementById(tab + 'Tab');
-                if (activeContent) {
-                    activeContent.classList.add('active');
-                }
-                
-                console.log(`✅ Switched to ${tab} tab`);
             };
             
             // Password strength checker
@@ -996,38 +1021,69 @@ if (!window.finalAuthInitialized) {
             
             // Setup password strength checking
             setTimeout(() => {
-                const registerPasswordField = document.getElementById('registerPassword');
-                const confirmPasswordField = document.getElementById('confirmPassword');
-                
-                if (registerPasswordField) {
-                    registerPasswordField.addEventListener('input', (e) => {
-                        window.updatePasswordStrength(e.target.value);
-                    });
-                }
-                
-                if (confirmPasswordField) {
-                    confirmPasswordField.addEventListener('input', (e) => {
-                        const password = document.getElementById('registerPassword')?.value;
-                        const confirmPassword = e.target.value;
-                        const validation = document.getElementById('confirmPasswordValidation');
-                        
-                        if (validation) {
-                            if (confirmPassword && password !== confirmPassword) {
-                                validation.textContent = 'Passwords do not match';
-                                validation.className = 'input-validation error';
-                            } else if (confirmPassword && password === confirmPassword) {
-                                validation.textContent = 'Passwords match';
-                                validation.className = 'input-validation success';
-                            } else {
-                                validation.textContent = '';
-                                validation.className = 'input-validation';
+                try {
+                    console.log('🔒 Setting up password strength checking...');
+                    
+                    const registerPasswordField = document.getElementById('registerPassword');
+                    const confirmPasswordField = document.getElementById('confirmPassword');
+                    
+                    if (registerPasswordField) {
+                        registerPasswordField.addEventListener('input', (e) => {
+                            try {
+                                if (window.updatePasswordStrength) {
+                                    window.updatePasswordStrength(e.target.value);
+                                } else {
+                                    console.warn('⚠️ updatePasswordStrength function not available');
+                                }
+                            } catch (error) {
+                                console.error('❌ Error updating password strength:', error);
                             }
-                        }
-                    });
+                        });
+                        console.log('✅ Password strength listener attached');
+                    } else {
+                        console.warn('⚠️ Register password field not found');
+                    }
+                    
+                    if (confirmPasswordField) {
+                        confirmPasswordField.addEventListener('input', (e) => {
+                            try {
+                                const password = document.getElementById('registerPassword')?.value || '';
+                                const confirmPassword = e.target.value;
+                                const validation = document.getElementById('confirmPasswordValidation');
+                                
+                                if (validation) {
+                                    if (confirmPassword && password !== confirmPassword) {
+                                        validation.textContent = 'Passwords do not match';
+                                        validation.className = 'input-validation error';
+                                    } else if (confirmPassword && password === confirmPassword) {
+                                        validation.textContent = 'Passwords match';
+                                        validation.className = 'input-validation success';
+                                    } else {
+                                        validation.textContent = '';
+                                        validation.className = 'input-validation';
+                                    }
+                                } else {
+                                    console.warn('⚠️ Confirm password validation element not found');
+                                }
+                            } catch (error) {
+                                console.error('❌ Error in password confirmation:', error);
+                            }
+                        });
+                        console.log('✅ Password confirmation listener attached');
+                    } else {
+                        console.warn('⚠️ Confirm password field not found');
+                    }
+                    
+                    // Initialize the login tab as active by default
+                    if (window.showAuthTab) {
+                        window.showAuthTab('login');
+                        console.log('✅ Login tab initialized');
+                    } else {
+                        console.warn('⚠️ showAuthTab function not available for initialization');
+                    }
+                } catch (error) {
+                    console.error('❌ Error setting up password strength checking:', error);
                 }
-                
-                // Initialize the login tab as active by default
-                window.showAuthTab('login');
             }, 100);
             
             console.log('✅ Global auth functions setup complete');
@@ -1457,9 +1513,87 @@ window.testAuthTabs = function() {
     console.log('==========================================');
 };
 
+// Comprehensive error detection
+window.detectErrors = function() {
+    console.log('==========================================');
+    console.log('🔍 COMPREHENSIVE ERROR DETECTION');
+    console.log('==========================================');
+    
+    const errors = [];
+    const warnings = [];
+    
+    // Check essential functions
+    const essentialFunctions = [
+        'showAuthTab', 'toggleMobileMenu', 'closeMobileMenu',
+        'checkPasswordStrength', 'updatePasswordStrength',
+        'resetPassword', 'registerUser', 'loginUser'
+    ];
+    
+    essentialFunctions.forEach(func => {
+        if (!window[func]) {
+            errors.push(`Missing function: ${func}`);
+        }
+    });
+    
+    // Check essential elements
+    const essentialElements = [
+        '.sidebar', '.mobile-backdrop', '.mobile-menu-toggle',
+        '#loginModal', '.tab-btn', '.tab-content'
+    ];
+    
+    essentialElements.forEach(selector => {
+        const elements = document.querySelectorAll(selector);
+        if (elements.length === 0) {
+            warnings.push(`No elements found for: ${selector}`);
+        }
+    });
+    
+    // Check Firebase
+    if (!window.firebaseReady) {
+        warnings.push('Firebase not ready');
+    }
+    if (!window.auth) {
+        warnings.push('Firebase Auth not available');
+    }
+    if (!window.finalAuth) {
+        warnings.push('Final Auth system not initialized');
+    }
+    
+    // Check form elements
+    const formElements = [
+        '#loginEmail', '#loginPassword', '#registerEmail', 
+        '#registerPassword', '#confirmPassword', '#forgotEmail'
+    ];
+    
+    formElements.forEach(selector => {
+        const element = document.querySelector(selector);
+        if (!element) {
+            warnings.push(`Form element not found: ${selector}`);
+        }
+    });
+    
+    // Report results
+    console.log(`🔴 Errors found: ${errors.length}`);
+    errors.forEach(error => console.error(`  ❌ ${error}`));
+    
+    console.log(`🟡 Warnings found: ${warnings.length}`);
+    warnings.forEach(warning => console.warn(`  ⚠️ ${warning}`));
+    
+    if (errors.length === 0 && warnings.length === 0) {
+        console.log('✅ No errors or warnings detected!');
+    }
+    
+    console.log('==========================================');
+    
+    return { errors, warnings };
+};
+
 console.log('✅ Study Portal Bundle Loaded Successfully!');
-console.log('🔧 Debug functions available: debugAuth(), testLogin(), testPasswordReset(), testRegistration(), testMobileMenu(), testAuthTabs(), showPasswordResetHelp()');
+console.log('🔧 Debug functions available: debugAuth(), testLogin(), testPasswordReset(), testRegistration(), testMobileMenu(), testAuthTabs(), detectErrors(), showPasswordResetHelp()');
 if (isDebugMode) {
     console.log('🐛 Auto-running debug check...');
-    setTimeout(() => window.debugAuth(), 2000);
+    setTimeout(() => {
+        window.debugAuth();
+        window.detectErrors();
+    }, 2000);
 }
