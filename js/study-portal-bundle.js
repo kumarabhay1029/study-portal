@@ -1030,6 +1030,15 @@ if (!window.finalAuthInitialized) {
                 try {
                     console.log('🔒 Setting up password strength checking...');
                     
+                    // Check if we're on a page with registration form
+                    const loginModal = document.querySelector('#loginModal');
+                    const registerTab = document.querySelector('#registerTab');
+                    
+                    if (!loginModal || !registerTab) {
+                        console.log('ℹ️ Skipping password strength setup (not on main page)');
+                        return;
+                    }
+                    
                     const registerPasswordField = document.getElementById('registerPassword');
                     const confirmPasswordField = document.getElementById('confirmPassword');
                     
@@ -1047,7 +1056,8 @@ if (!window.finalAuthInitialized) {
                         });
                         console.log('✅ Password strength listener attached');
                     } else {
-                        console.warn('⚠️ Register password field not found');
+                        // Only warn if we're on the main page  
+                        console.log('ℹ️ Register password field not found (not on main page)');
                     }
                     
                     if (confirmPasswordField) {
@@ -1077,7 +1087,8 @@ if (!window.finalAuthInitialized) {
                         });
                         console.log('✅ Password confirmation listener attached');
                     } else {
-                        console.warn('⚠️ Confirm password field not found');
+                        // Only warn if we're on the main page
+                        console.log('ℹ️ Confirm password field not found (not on main page)');
                     }
                     
                     // Initialize the login tab as active by default
