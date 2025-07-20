@@ -1267,6 +1267,104 @@ function submitContactForm(event) {
 }
 
 /**
+ * Show specific year in books section
+ * @param {string} yearId - The year container ID to show
+ */
+function showYear(yearId) {
+    console.log(`📚 Switching to year: ${yearId}`);
+    
+    // Hide all year containers
+    document.querySelectorAll('.year-container').forEach(container => {
+        container.classList.remove('active');
+    });
+    
+    // Show selected year container
+    const targetYear = document.getElementById(yearId);
+    if (targetYear) {
+        targetYear.classList.add('active');
+    }
+    
+    // Update navigation buttons
+    document.querySelectorAll('.year-nav-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Activate current button
+    const activeBtn = document.querySelector(`[data-year="${yearId}"]`);
+    if (activeBtn) {
+        activeBtn.classList.add('active');
+    }
+}
+
+/**
+ * Download books by category (placeholder function)
+ * @param {string} category - The category to download
+ */
+function downloadAllBooks(category) {
+    console.log(`📥 Downloading all ${category} books...`);
+    showMessage(`Preparing download for all ${category} books. This feature will open individual download links.`, 'info');
+    
+    // Get all books of the specified category
+    const categoryCards = document.querySelectorAll(`.book-card.${category}`);
+    if (categoryCards.length === 0) {
+        showMessage(`No ${category} books found in the current view.`, 'warning');
+        return;
+    }
+    
+    // Simulate batch download by opening links with delay
+    let delay = 0;
+    categoryCards.forEach(card => {
+        const downloadLink = card.querySelector('.download-btn:not(.disabled)');
+        if (downloadLink && downloadLink.href && downloadLink.href !== '#') {
+            setTimeout(() => {
+                window.open(downloadLink.href, '_blank');
+            }, delay);
+            delay += 1000; // 1 second delay between downloads
+        }
+    });
+    
+    showMessage(`Opening ${categoryCards.length} ${category} books in new tabs...`, 'success');
+}
+
+/**
+ * Initialize books section functionality
+ */
+function initializeBooksSection() {
+    console.log('📚 Initializing Books Section...');
+    
+    // Setup year navigation buttons
+    document.querySelectorAll('.year-nav-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const yearId = btn.getAttribute('data-year');
+            if (yearId) {
+                showYear(yearId);
+            }
+        });
+    });
+    
+    // Setup quick download buttons
+    document.querySelectorAll('.quick-link-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const category = btn.textContent.toLowerCase().includes('programming') ? 'programming' :
+                           btn.textContent.toLowerCase().includes('lab') ? 'lab' :
+                           btn.textContent.toLowerCase().includes('mathematics') ? 'mathematics' : '';
+            if (category) {
+                downloadAllBooks(category);
+            }
+        });
+    });
+    
+    // Ensure first year is active by default
+    setTimeout(() => {
+        showYear('first-year');
+    }, 100);
+    
+    console.log('✅ Books Section Initialized');
+}
+
+/**
  * Initialize application when DOM is ready
  */
 function initializeApp() {
@@ -1305,6 +1403,9 @@ function initializeApp() {
         contactForm.addEventListener('submit', submitContactForm);
     }
     
+    // Initialize books section functionality
+    initializeBooksSection();
+    
     // Initial section setup
     const hash = window.location.hash.replace('#', '');
     const initialSection = hash || 'home';
@@ -1326,6 +1427,8 @@ window.toggleMobileMenu = toggleMobileMenu;
 window.closeMobileMenu = closeMobileMenu;
 window.handleSearch = handleSearch;
 window.submitContactForm = submitContactForm;
+window.showYear = showYear;
+window.downloadAllBooks = downloadAllBooks;
 
 // Debug and troubleshooting functions
 window.debugAuth = function() {
