@@ -1754,6 +1754,8 @@ class MobileInterface {
         this.currentUser = null;
         this.currentSection = null;
         this.isLoggedIn = false;
+        this.hasShownWelcome = false; // Track if welcome message was shown
+        this.lastWelcomeUser = null;  // Track which user got the welcome
         this.init();
     }
     
@@ -1858,12 +1860,34 @@ class MobileInterface {
             <div class="landing-logo">📖</div>
             <h1 class="landing-title">Study Portal</h1>
             <p class="landing-subtitle">Your complete academic resource hub for BCA studies</p>
-            <button class="mobile-login-btn" onclick="mobileInterface.openMobileLogin()">
+            <button class="mobile-login-btn" onclick="window.openMobileLoginSafe()">
                 <span>🔐 Enter Portal</span>
             </button>
         `;
         
         document.body.appendChild(landing);
+        
+        // Add safe login function
+        window.openMobileLoginSafe = () => {
+            console.log('🔐 Mobile login button clicked');
+            if (window.mobileInterface && window.mobileInterface.openMobileLogin) {
+                window.mobileInterface.openMobileLogin();
+            } else {
+                console.log('⚠️ Mobile interface not ready, using fallback');
+                // Fallback to direct modal opening
+                const loginModal = document.getElementById('loginModal');
+                if (loginModal) {
+                    loginModal.style.display = 'flex';
+                    setTimeout(() => {
+                        loginModal.classList.add('active');
+                    }, 10);
+                    console.log('✅ Login modal opened directly');
+                } else {
+                    console.error('❌ Login modal not found');
+                    alert('Login system is loading. Please try again in a moment.');
+                }
+            }
+        };
     }
     
     createMobileApp() {
@@ -2909,16 +2933,32 @@ class MobileInterface {
                 console.log('🔄 Mobile interface detected auth state change:', user ? 'logged in' : 'logged out');
                 
                 if (user) {
+                    const wasLoggedOut = !this.isLoggedIn;
+                    const isNewUser = this.lastWelcomeUser !== user.uid;
+                    
                     this.isLoggedIn = true;
                     this.currentUser = user;
                     
                     // If we're on mobile and user just logged in, show dashboard
                     if (window.innerWidth <= 768) {
                         this.showMobileDashboard();
+                        
+                        // Only show welcome for new logins (not page refreshes)
+                        if (wasLoggedOut && isNewUser && !this.hasShownWelcome) {
+                            setTimeout(() => {
+                                this.showWelcomePopup(user);
+                                this.hasShownWelcome = true;
+                                this.lastWelcomeUser = user.uid;
+                            }, 500); // Small delay to let dashboard load
+                        }
                     }
                 } else {
                     this.isLoggedIn = false;
                     this.currentUser = null;
+                    
+                    // Reset welcome tracking on logout
+                    this.hasShownWelcome = false;
+                    this.lastWelcomeUser = null;
                     
                     // If we're on mobile and user logged out, show landing
                     if (window.innerWidth <= 768) {
@@ -2944,6 +2984,43 @@ class MobileInterface {
         
         // Show landing screen
         this.showMobileLanding();
+    }
+    
+    showWelcomePopup(user) {
+        // Only show welcome popup on mobile and if not already shown
+        if (window.innerWidth > 768 || this.hasShownWelcome) {
+            return;
+        }
+        
+        console.log('🎉 Showing welcome popup for:', user.email);
+        
+        // Create welcome popup
+        const welcomePopup = document.createElement('div');
+        welcomePopup.className = 'mobile-welcome-popup';
+        welcomePopup.innerHTML = `
+            <div class="welcome-content">
+                <div class="welcome-header">
+                    <h2>🎉 Welcome!</h2>
+                    <p>Hello ${user.displayName || user.email}!</p>
+                </div>
+                <div class="welcome-message">
+                    <p>You're now logged into the Study Portal!</p>
+                    <p>Tap below to start exploring.</p>
+                </div>
+                <button class="welcome-continue-btn" onclick="this.parentElement.parentElement.remove()">
+                    Continue to Portal →
+                </button>
+            </div>
+        `;
+        
+        document.body.appendChild(welcomePopup);
+        
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+            if (welcomePopup.parentElement) {
+                welcomePopup.remove();
+            }
+        }, 5000);
     }
 }
 
