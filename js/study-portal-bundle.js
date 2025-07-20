@@ -1762,29 +1762,95 @@ class MobileInterface {
     init() {
         console.log('🚀 Initializing Mobile Interface...');
         
+        // Enhanced mobile detection with better viewport handling
+        this.setupViewport();
+        
         // Setup auth state checking first
         this.checkAuthState();
         
-        // Check if mobile immediately
-        if (window.innerWidth <= 768) {
+        // Enhanced mobile detection
+        if (this.isMobileDevice() || window.innerWidth <= 768) {
             this.setupMobileInterface();
         }
         
-        // Listen for resize events
-        window.addEventListener('resize', () => {
-            if (window.innerWidth <= 768) {
-                this.setupMobileInterface();
-            } else {
-                this.showDesktopInterface();
-            }
-        });
+        // Listen for resize and orientation changes
+        this.setupResponsiveListeners();
         
         // Force mobile if URL parameter is set
+        this.checkForceMode();
+        
+        // Add touch event optimizations
+        this.setupTouchOptimizations();
+    }
+    
+    setupViewport() {
+        // Ensure proper viewport meta tag exists
+        let viewport = document.querySelector('meta[name="viewport"]');
+        if (!viewport) {
+            viewport = document.createElement('meta');
+            viewport.name = 'viewport';
+            document.head.appendChild(viewport);
+        }
+        
+        // Enhanced viewport for mobile
+        viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover';
+    }
+    
+    isMobileDevice() {
+        // Enhanced mobile detection
+        const userAgent = navigator.userAgent;
+        const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+        const touchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        const screenSize = window.innerWidth <= 768 || window.innerHeight <= 768;
+        
+        return mobileRegex.test(userAgent) || touchDevice || screenSize;
+    }
+    
+    setupResponsiveListeners() {
+        let resizeTimeout;
+        
+        const handleResize = () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                if (this.isMobileDevice() || window.innerWidth <= 768) {
+                    this.setupMobileInterface();
+                } else {
+                    this.showDesktopInterface();
+                }
+            }, 150); // Debounce resize events
+        };
+        
+        window.addEventListener('resize', handleResize);
+        window.addEventListener('orientationchange', () => {
+            setTimeout(handleResize, 500); // Delay for orientation change
+        });
+    }
+    
+    checkForceMode() {
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('mobile') === 'true') {
             console.log('🔧 Forcing mobile view via URL parameter');
             this.setupMobileInterface();
         }
+    }
+    
+    setupTouchOptimizations() {
+        // Prevent default touch behaviors that might interfere
+        document.addEventListener('touchstart', (e) => {
+            // Allow normal touch on input elements
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                return;
+            }
+        }, { passive: true });
+        
+        // Prevent bounce scrolling on iOS
+        document.addEventListener('touchmove', (e) => {
+            if (e.target.closest('.mobile-app') || e.target.closest('.mobile-section')) {
+                // Allow scrolling within mobile content
+                return;
+            }
+            e.preventDefault();
+        }, { passive: false });
     }
     
     setupMobileInterface() {
@@ -1854,22 +1920,41 @@ class MobileInterface {
     }
     
     createMobileLanding() {
+        console.log('🏗️ Creating enhanced mobile landing...');
+        
         const landing = document.createElement('div');
         landing.className = 'mobile-landing';
         landing.innerHTML = `
-            <div class="landing-logo">📖</div>
-            <h1 class="landing-title">Study Portal</h1>
-            <p class="landing-subtitle">Your complete academic resource hub for BCA studies</p>
-            <button class="mobile-login-btn" onclick="window.openMobileLoginSafe()">
-                <span>🔐 Enter Portal</span>
-            </button>
+            <div class="landing-content">
+                <div class="landing-logo">📖</div>
+                <h1 class="landing-title">Study Portal</h1>
+                <p class="landing-subtitle">Your complete academic resource hub for BCA studies</p>
+                <button class="mobile-login-btn" onclick="window.openMobileLoginSafe()">
+                    <span>🔐 Enter Portal</span>
+                </button>
+            </div>
         `;
         
         document.body.appendChild(landing);
         
-        // Add safe login function
+        // Add enhanced touch feedback to the login button
+        const loginBtn = landing.querySelector('.mobile-login-btn');
+        if (loginBtn) {
+            this.addTouchFeedback(loginBtn);
+        }
+        
+        // Add safe login function with enhanced error handling
         window.openMobileLoginSafe = () => {
             console.log('🔐 Mobile login button clicked');
+            
+            // Provide immediate visual feedback
+            if (loginBtn) {
+                loginBtn.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    loginBtn.style.transform = 'scale(1)';
+                }, 150);
+            }
+            
             if (window.mobileInterface && window.mobileInterface.openMobileLogin) {
                 window.mobileInterface.openMobileLogin();
             } else {
@@ -1888,6 +1973,30 @@ class MobileInterface {
                 }
             }
         };
+    }
+    
+    addTouchFeedback(element) {
+        console.log('👆 Adding touch feedback to element');
+        
+        element.addEventListener('touchstart', (e) => {
+            element.style.transform = 'translateY(-8px) scale(1.05)';
+            element.style.transition = 'all 0.1s ease';
+            element.style.boxShadow = '0 25px 60px rgba(238, 90, 36, 0.8)';
+        }, { passive: true });
+        
+        element.addEventListener('touchend', (e) => {
+            setTimeout(() => {
+                element.style.transform = 'translateY(0) scale(1)';
+                element.style.transition = 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                element.style.boxShadow = '0 15px 40px rgba(238, 90, 36, 0.4)';
+            }, 100);
+        }, { passive: true });
+        
+        element.addEventListener('touchcancel', (e) => {
+            element.style.transform = 'translateY(0) scale(1)';
+            element.style.transition = 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+            element.style.boxShadow = '0 15px 40px rgba(238, 90, 36, 0.4)';
+        }, { passive: true });
     }
     
     createMobileApp() {
@@ -2030,6 +2139,73 @@ class MobileInterface {
         `;
         
         document.body.appendChild(app);
+        
+        // Add touch feedback to all interactive elements
+        this.enhanceMobileInteractions(app);
+        
+        console.log('✅ Mobile app created with enhanced touch feedback');
+    }
+    
+    enhanceMobileInteractions(container) {
+        console.log('✨ Enhancing mobile interactions...');
+        
+        // Add touch feedback to menu items
+        const menuItems = container.querySelectorAll('.mobile-menu-item');
+        menuItems.forEach(item => {
+            this.addMenuItemFeedback(item);
+        });
+        
+        // Add touch feedback to buttons
+        const buttons = container.querySelectorAll('.mobile-user-btn, .mobile-logout-btn, .back-btn');
+        buttons.forEach(button => {
+            this.addButtonFeedback(button);
+        });
+        
+        console.log(`✅ Enhanced ${menuItems.length} menu items and ${buttons.length} buttons`);
+    }
+    
+    addMenuItemFeedback(element) {
+        element.addEventListener('touchstart', (e) => {
+            element.style.transform = 'translateY(-10px) scale(1.05)';
+            element.style.transition = 'all 0.15s ease';
+            element.style.filter = 'brightness(1.1)';
+        }, { passive: true });
+        
+        element.addEventListener('touchend', (e) => {
+            setTimeout(() => {
+                element.style.transform = 'translateY(0) scale(1)';
+                element.style.transition = 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                element.style.filter = 'brightness(1)';
+            }, 100);
+        }, { passive: true });
+        
+        element.addEventListener('touchcancel', (e) => {
+            element.style.transform = 'translateY(0) scale(1)';
+            element.style.transition = 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+            element.style.filter = 'brightness(1)';
+        }, { passive: true });
+    }
+    
+    addButtonFeedback(element) {
+        element.addEventListener('touchstart', (e) => {
+            element.style.transform = 'scale(0.95)';
+            element.style.transition = 'all 0.1s ease';
+            element.style.filter = 'brightness(1.1)';
+        }, { passive: true });
+        
+        element.addEventListener('touchend', (e) => {
+            setTimeout(() => {
+                element.style.transform = 'scale(1)';
+                element.style.transition = 'all 0.3s ease';
+                element.style.filter = 'brightness(1)';
+            }, 100);
+        }, { passive: true });
+        
+        element.addEventListener('touchcancel', (e) => {
+            element.style.transform = 'scale(1)';
+            element.style.transition = 'all 0.3s ease';
+            element.style.filter = 'brightness(1)';
+        }, { passive: true });
     }
     
     showMobileLanding() {
