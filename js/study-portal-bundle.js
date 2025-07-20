@@ -1745,6 +1745,1104 @@ window.showPrivacy = function() {
     alert('Privacy Policy will be displayed here. This feature will be implemented soon.');
 };
 
+/**
+ * MOBILE PROGRESSIVE INTERFACE CONTROLLER
+ * Handles the mobile-first progressive revelation interface
+ */
+class MobileInterface {
+    constructor() {
+        this.currentUser = null;
+        this.currentSection = null;
+        this.isLoggedIn = false;
+        this.init();
+    }
+    
+    init() {
+        console.log('🚀 Initializing Mobile Interface...');
+        
+        // Check if mobile
+        if (window.innerWidth <= 768) {
+            this.setupMobileInterface();
+        }
+        
+        // Listen for resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth <= 768) {
+                this.setupMobileInterface();
+            } else {
+                this.showDesktopInterface();
+            }
+        });
+        
+        // Check if user is already logged in
+        this.checkAuthState();
+    }
+    
+    setupMobileInterface() {
+        console.log('📱 Setting up mobile interface...');
+        
+        // Hide desktop elements
+        this.hideDesktopElements();
+        
+        // Create mobile landing if not exists
+        if (!document.querySelector('.mobile-landing')) {
+            this.createMobileLanding();
+        }
+        
+        // Create mobile app container if not exists
+        if (!document.querySelector('.mobile-app')) {
+            this.createMobileApp();
+        }
+        
+        // Show appropriate state
+        if (this.isLoggedIn) {
+            this.showMobileApp();
+        } else {
+            this.showMobileLanding();
+        }
+    }
+    
+    hideDesktopElements() {
+        const desktopElements = [
+            '.main-bar',
+            '.sidebar', 
+            '.mobile-menu-toggle',
+            '.content-area',
+            '.notification-bar'
+        ];
+        
+        desktopElements.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                element.style.display = 'none';
+            }
+        });
+    }
+    
+    showDesktopInterface() {
+        // Hide mobile elements
+        const mobileLanding = document.querySelector('.mobile-landing');
+        const mobileApp = document.querySelector('.mobile-app');
+        
+        if (mobileLanding) mobileLanding.style.display = 'none';
+        if (mobileApp) mobileApp.style.display = 'none';
+        
+        // Show desktop elements
+        const desktopElements = [
+            '.main-bar',
+            '.sidebar',
+            '.mobile-menu-toggle', 
+            '.content-area',
+            '.notification-bar'
+        ];
+        
+        desktopElements.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                element.style.display = '';
+            }
+        });
+    }
+    
+    createMobileLanding() {
+        const landing = document.createElement('div');
+        landing.className = 'mobile-landing';
+        landing.innerHTML = `
+            <div class="landing-logo">📖</div>
+            <h1 class="landing-title">Study Portal</h1>
+            <p class="landing-subtitle">Your complete academic resource hub for BCA studies</p>
+            <button class="mobile-login-btn" onclick="mobileInterface.openMobileLogin()">
+                <span>🔐 Enter Portal</span>
+            </button>
+        `;
+        
+        document.body.appendChild(landing);
+    }
+    
+    createMobileApp() {
+        const app = document.createElement('div');
+        app.className = 'mobile-app';
+        app.innerHTML = `
+            <!-- Mobile Header -->
+            <div class="mobile-header">
+                <div class="user-avatar" id="mobileUserAvatar">👤</div>
+                <div class="welcome-text" id="mobileWelcomeText">Welcome!</div>
+                <div class="user-email" id="mobileUserEmail">user@example.com</div>
+                <button class="mobile-user-btn" onclick="mobileInterface.toggleUserMenu()">
+                    <span id="userMenuText">👋 Tap to explore</span>
+                </button>
+            </div>
+            
+            <!-- Expandable Menu Grid -->
+            <div class="mobile-menu-grid" id="mobileMenuGrid" style="display: none;">
+                <div class="mobile-menu-item books" onclick="mobileInterface.openSection('books')">
+                    <span class="menu-icon">📚</span>
+                    <div class="menu-label">Books</div>
+                    <div class="menu-subtitle">Study materials & textbooks</div>
+                </div>
+                
+                <div class="mobile-menu-item assignments" onclick="mobileInterface.openSection('assignments')">
+                    <span class="menu-icon">📝</span>
+                    <div class="menu-label">Assignments</div>
+                    <div class="menu-subtitle">Tasks & submissions</div>
+                </div>
+                
+                <div class="mobile-menu-item notes" onclick="mobileInterface.openSection('notes')">
+                    <span class="menu-icon">📋</span>
+                    <div class="menu-label">Notes</div>
+                    <div class="menu-subtitle">Quick references</div>
+                </div>
+                
+                <div class="mobile-menu-item research" onclick="mobileInterface.openSection('research')">
+                    <span class="menu-icon">📄</span>
+                    <div class="menu-label">Research</div>
+                    <div class="menu-subtitle">Papers & publications</div>
+                </div>
+                
+                <div class="mobile-menu-item projects" onclick="mobileInterface.openSection('projects')">
+                    <span class="menu-icon">🚀</span>
+                    <div class="menu-label">Projects</div>
+                    <div class="menu-subtitle">Ideas & collaboration</div>
+                </div>
+                
+                <div class="mobile-menu-item community" onclick="mobileInterface.openSection('community')">
+                    <span class="menu-icon">🤝</span>
+                    <div class="menu-label">Community</div>
+                    <div class="menu-subtitle">Connect & share</div>
+                </div>
+            </div>
+            
+            <!-- Logout Button (initially hidden) -->
+            <button class="mobile-logout-btn" id="mobileLogoutBtn" style="display: none;" onclick="mobileInterface.logout()">
+                🚪 Sign Out
+            </button>
+            
+            <!-- Section Content Areas -->
+            <div class="mobile-section" id="mobile-books-section">
+                <div class="section-header">
+                    <button class="back-btn" onclick="mobileInterface.closeSection()">←</button>
+                    <h2 class="section-title-mobile">📚 Study Books</h2>
+                </div>
+                <div class="section-content-mobile">
+                    <div class="mobile-books-grid" id="mobileBooksGrid">
+                        <!-- Books will be loaded here -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mobile-section" id="mobile-assignments-section">
+                <div class="section-header">
+                    <button class="back-btn" onclick="mobileInterface.closeSection()">←</button>
+                    <h2 class="section-title-mobile">📝 Assignments</h2>
+                </div>
+                <div class="section-content-mobile">
+                    <p>Track your assignments and submission deadlines.</p>
+                    <ul>
+                        <li>Assignment 1 - Due: January 30th</li>
+                        <li>Assignment 2 - Due: February 15th</li>
+                        <li>Assignment 3 - Due: March 10th</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mobile-section" id="mobile-notes-section">
+                <div class="section-header">
+                    <button class="back-btn" onclick="mobileInterface.closeSection()">←</button>
+                    <h2 class="section-title-mobile">📋 Study Notes</h2>
+                </div>
+                <div class="section-content-mobile">
+                    <p>Quick reference notes for all subjects.</p>
+                    <ul>
+                        <li>C Programming - Complete Guide</li>
+                        <li>Data Structures - Theory & Practice</li>
+                        <li>Database Management - Concepts</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mobile-section" id="mobile-research-section">
+                <div class="section-header">
+                    <button class="back-btn" onclick="mobileInterface.closeSection()">←</button>
+                    <h2 class="section-title-mobile">📄 Research Papers</h2>
+                </div>
+                <div class="section-content-mobile">
+                    <p>Academic papers organized by topics and semesters.</p>
+                    <p>Browse through our collection of peer-reviewed research.</p>
+                </div>
+            </div>
+            
+            <div class="mobile-section" id="mobile-projects-section">
+                <div class="section-header">
+                    <button class="back-btn" onclick="mobileInterface.closeSection()">←</button>
+                    <h2 class="section-title-mobile">🚀 Projects</h2>
+                </div>
+                <div class="section-content-mobile">
+                    <p>Explore project ideas and collaborate with fellow students.</p>
+                    <ul>
+                        <li>Library Management System</li>
+                        <li>E-commerce Website</li>
+                        <li>Student Information System</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mobile-section" id="mobile-community-section">
+                <div class="section-header">
+                    <button class="back-btn" onclick="mobileInterface.closeSection()">←</button>
+                    <h2 class="section-title-mobile">🤝 Community</h2>
+                </div>
+                <div class="section-content-mobile">
+                    <p>Connect with fellow students and join study groups.</p>
+                    <p>Share knowledge and help each other succeed.</p>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(app);
+    }
+    
+    showMobileLanding() {
+        const landing = document.querySelector('.mobile-landing');
+        const app = document.querySelector('.mobile-app');
+        
+        if (landing) {
+            landing.classList.remove('hidden');
+            landing.style.display = 'flex';
+        }
+        if (app) {
+            app.classList.remove('active');
+            app.style.display = 'none';
+        }
+    }
+    
+    showMobileApp() {
+        const landing = document.querySelector('.mobile-landing');
+        const app = document.querySelector('.mobile-app');
+        
+        if (landing) {
+            landing.classList.add('hidden');
+            landing.style.display = 'none';
+        }
+        if (app) {
+            app.classList.add('active');
+            app.style.display = 'block';
+        }
+        
+        this.updateUserInfo();
+    }
+    
+    openMobileLogin() {
+        console.log('🔐 Opening mobile login...');
+        
+        // Open the existing login modal
+        const loginModal = document.getElementById('loginModal');
+        if (loginModal) {
+            loginModal.classList.add('active');
+        }
+        
+        // Listen for successful login
+        this.listenForLogin();
+    }
+    
+    listenForLogin() {
+        // Override the existing login success handler
+        const originalLoginUser = window.loginUser;
+        
+        window.loginUser = async (event) => {
+            const result = await originalLoginUser(event);
+            
+            if (result && result.success) {
+                // Close login modal
+                const loginModal = document.getElementById('loginModal');
+                if (loginModal) {
+                    loginModal.classList.remove('active');
+                }
+                
+                // Update mobile interface
+                this.isLoggedIn = true;
+                this.currentUser = result.user;
+                this.showMobileDashboard();
+            }
+            
+            return result;
+        };
+    }
+    
+    showMobileDashboard() {
+        const landing = document.querySelector('.mobile-landing');
+        const app = document.querySelector('.mobile-app');
+        
+        if (landing) {
+            landing.style.display = 'none';
+        }
+        if (app) {
+            app.style.display = 'block';
+            this.loadMobileDashboard();
+        }
+    }
+    
+    loadMobileDashboard() {
+        const app = document.querySelector('.mobile-app');
+        if (!app) return;
+        
+        const user = this.currentUser || { displayName: 'Student', email: 'user@email.com' };
+        
+        app.innerHTML = `
+            <div class="mobile-dashboard-container">
+                <!-- User Header -->
+                <div class="mobile-user-header">
+                    <div class="user-avatar-large">
+                        ${user.photoURL ? 
+                            `<img src="${user.photoURL}" alt="User" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">` : 
+                            ''
+                        }
+                        <div class="avatar-fallback" ${user.photoURL ? 'style="display: none;"' : ''}>
+                            ${(user.displayName || user.email).charAt(0).toUpperCase()}
+                        </div>
+                    </div>
+                    <div class="user-info">
+                        <h3>Welcome back!</h3>
+                        <p class="user-name">${user.displayName || 'Student'}</p>
+                        <span class="user-role">BCA Student Portal</span>
+                    </div>
+                    <button class="mobile-logout-header" onclick="mobileInterface.handleMobileLogout()">
+                        🚪
+                    </button>
+                </div>
+                
+                <!-- Dashboard Stats -->
+                <div class="mobile-dashboard-stats">
+                    <div class="stat-card books-stat">
+                        <span class="stat-icon">📚</span>
+                        <span class="stat-number">38+</span>
+                        <span class="stat-label">Study Books</span>
+                    </div>
+                    <div class="stat-card assignments-stat">
+                        <span class="stat-icon">📝</span>
+                        <span class="stat-number">12</span>
+                        <span class="stat-label">Assignments</span>
+                    </div>
+                    <div class="stat-card projects-stat">
+                        <span class="stat-icon">🚀</span>
+                        <span class="stat-number">6</span>
+                        <span class="stat-label">Projects</span>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="mobile-quick-actions">
+                    <h4>📌 Quick Access</h4>
+                    <div class="quick-action-buttons">
+                        <button class="quick-btn books" onclick="mobileInterface.showMobileSection('books')">
+                            📚 Study Books
+                            <span class="quick-subtitle">All semester materials</span>
+                        </button>
+                        <button class="quick-btn assignments" onclick="mobileInterface.showMobileSection('assignments')">
+                            📝 Assignments
+                            <span class="quick-subtitle">Tasks & deadlines</span>
+                        </button>
+                        <button class="quick-btn notes" onclick="mobileInterface.showMobileSection('notes')">
+                            📋 Study Notes
+                            <span class="quick-subtitle">Quick references</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Explore All Button -->
+                <button class="mobile-explore-btn" onclick="mobileInterface.showAllSections()">
+                    <span class="explore-icon">🧭</span>
+                    <div class="explore-content">
+                        <div class="explore-title">Explore All Sections</div>
+                        <div class="explore-subtitle">Tap to see all available options</div>
+                    </div>
+                    <span class="explore-arrow">→</span>
+                </button>
+                
+                <!-- Recent Activity -->
+                <div class="mobile-recent-activity">
+                    <h4>🕒 Recent Activity</h4>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <span class="activity-icon">📖</span>
+                            <div class="activity-content">
+                                <span class="activity-text">Downloaded BCS-111 Computer Basics</span>
+                                <span class="activity-time">2 hours ago</span>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-icon">📝</span>
+                            <div class="activity-content">
+                                <span class="activity-text">Viewed Assignment Guidelines</span>
+                                <span class="activity-time">1 day ago</span>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-icon">🚀</span>
+                            <div class="activity-content">
+                                <span class="activity-text">Explored Project Ideas</span>
+                                <span class="activity-time">3 days ago</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    showAllSections() {
+        const app = document.querySelector('.mobile-app');
+        if (!app) return;
+        
+        app.innerHTML = `
+            <div class="mobile-sections-grid">
+                <!-- Header -->
+                <div class="sections-header">
+                    <button class="mobile-back-btn" onclick="mobileInterface.backToDashboard()">
+                        ← Dashboard
+                    </button>
+                    <h3>🗂️ All Sections</h3>
+                    <div class="header-spacer"></div>
+                </div>
+                
+                <!-- Sections Grid -->
+                <div class="sections-grid">
+                    <div class="section-card books" onclick="mobileInterface.showMobileSection('books')">
+                        <div class="card-icon">📚</div>
+                        <div class="card-content">
+                            <h4>Study Books</h4>
+                            <p>38+ BCA textbooks & study materials</p>
+                            <span class="card-badge active">6 Semesters</span>
+                        </div>
+                        <div class="card-arrow">→</div>
+                    </div>
+                    
+                    <div class="section-card assignments" onclick="mobileInterface.showMobileSection('assignments')">
+                        <div class="card-icon">📝</div>
+                        <div class="card-content">
+                            <h4>Assignments</h4>
+                            <p>Tasks, submissions & deadlines</p>
+                            <span class="card-badge urgent">Due Soon</span>
+                        </div>
+                        <div class="card-arrow">→</div>
+                    </div>
+                    
+                    <div class="section-card notes" onclick="mobileInterface.showMobileSection('notes')">
+                        <div class="card-icon">📋</div>
+                        <div class="card-content">
+                            <h4>Study Notes</h4>
+                            <p>Quick references & summaries</p>
+                            <span class="card-badge updated">Updated</span>
+                        </div>
+                        <div class="card-arrow">→</div>
+                    </div>
+                    
+                    <div class="section-card research" onclick="mobileInterface.showMobileSection('research')">
+                        <div class="card-icon">📄</div>
+                        <div class="card-content">
+                            <h4>Research Papers</h4>
+                            <p>Academic papers & publications</p>
+                            <span class="card-badge new">Latest</span>
+                        </div>
+                        <div class="card-arrow">→</div>
+                    </div>
+                    
+                    <div class="section-card projects" onclick="mobileInterface.showMobileSection('projects')">
+                        <div class="card-icon">🚀</div>
+                        <div class="card-content">
+                            <h4>Projects</h4>
+                            <p>Ideas, collaboration & resources</p>
+                            <span class="card-badge special">BCSP</span>
+                        </div>
+                        <div class="card-arrow">→</div>
+                    </div>
+                    
+                    <div class="section-card community" onclick="mobileInterface.showMobileSection('community')">
+                        <div class="card-icon">🤝</div>
+                        <div class="card-content">
+                            <h4>Community</h4>
+                            <p>Connect, share & discuss</p>
+                            <span class="card-badge social">Social</span>
+                        </div>
+                        <div class="card-arrow">→</div>
+                    </div>
+                </div>
+                
+                <!-- Footer -->
+                <div class="sections-footer">
+                    <p>📱 Tap any section to explore</p>
+                </div>
+            </div>
+        `;
+    }
+    
+    backToDashboard() {
+        this.loadMobileDashboard();
+    }
+    
+    handleMobileLogout() {
+        if (confirm('Are you sure you want to logout?')) {
+            // Call existing logout function
+            if (typeof finalAuth !== 'undefined' && finalAuth.logout) {
+                finalAuth.logout();
+            } else if (typeof logout === 'function') {
+                logout();
+            }
+            
+            // Reset mobile interface
+            this.isLoggedIn = false;
+            this.currentUser = null;
+            this.showMobileLanding();
+        }
+    }
+    
+    toggleUserMenu() {
+        const menuGrid = document.getElementById('mobileMenuGrid');
+        const userMenuText = document.getElementById('userMenuText');
+        const logoutBtn = document.getElementById('mobileLogoutBtn');
+        
+        if (menuGrid.style.display === 'none') {
+            // Show menu
+            menuGrid.style.display = 'grid';
+            menuGrid.classList.add('slide-up');
+            userMenuText.textContent = '📋 Choose section';
+            
+            // Show logout button
+            logoutBtn.style.display = 'block';
+            logoutBtn.classList.add('fade-in');
+        } else {
+            // Hide menu
+            menuGrid.style.display = 'none';
+            userMenuText.textContent = '👋 Tap to explore';
+            logoutBtn.style.display = 'none';
+        }
+    }
+    
+    openSection(sectionName) {
+        console.log(`📱 Opening section: ${sectionName}`);
+        
+        // Hide menu grid
+        const menuGrid = document.getElementById('mobileMenuGrid');
+        if (menuGrid) {
+            menuGrid.style.display = 'none';
+        }
+        
+        // Show section
+        const section = document.getElementById(`mobile-${sectionName}-section`);
+        if (section) {
+            section.classList.add('active');
+            this.currentSection = sectionName;
+            
+            // Load section specific content
+            this.loadSectionContent(sectionName);
+        }
+    }
+    
+    showMobileSection(sectionName) {
+        console.log(`📱 Opening section: ${sectionName}`);
+        
+        const app = document.querySelector('.mobile-app');
+        if (!app) return;
+        
+        this.currentSection = sectionName;
+        
+        // Create section view with navigation
+        app.innerHTML = `
+            <div class="mobile-section-view">
+                <!-- Section Header -->
+                <div class="mobile-section-header">
+                    <button class="section-back-btn" onclick="mobileInterface.backToDashboard()">
+                        ← Dashboard
+                    </button>
+                    <h3>${this.getSectionTitle(sectionName)}</h3>
+                    <button class="section-menu-btn" onclick="mobileInterface.showAllSections()">
+                        🗂️
+                    </button>
+                </div>
+                
+                <!-- Section Content -->
+                <div class="mobile-section-content">
+                    ${this.getSectionContent(sectionName)}
+                </div>
+            </div>
+        `;
+    }
+    
+    getSectionTitle(sectionName) {
+        const titles = {
+            'books': '📚 Study Books',
+            'assignments': '📝 Assignments', 
+            'notes': '📋 Study Notes',
+            'research': '📄 Research Papers',
+            'projects': '🚀 Projects',
+            'community': '🤝 Community'
+        };
+        return titles[sectionName] || 'Section';
+    }
+    
+    getSectionContent(sectionName) {
+        switch(sectionName) {
+            case 'books':
+                return this.getBooksContent();
+            case 'assignments':
+                return this.getAssignmentsContent();
+            case 'notes':
+                return this.getNotesContent();
+            case 'research':
+                return this.getResearchContent();
+            case 'projects':
+                return this.getProjectsContent();
+            case 'community':
+                return this.getCommunityContent();
+            default:
+                return '<p>Content coming soon...</p>';
+        }
+    }
+    
+    getBooksContent() {
+        const books = [
+            { title: 'BEVAE-181', subtitle: 'Environmental Studies', url: 'https://egyankosh.ac.in/handle/123456789/61136', semester: '1st' },
+            { title: 'BEGLA-136', subtitle: 'English at Workplace', url: 'https://egyankosh.ac.in/handle/123456789/56579', semester: '1st' },
+            { title: 'BCS-111', subtitle: 'Computer Basics and PC Software', url: 'https://egyankosh.ac.in/handle/123456789/434', semester: '1st' },
+            { title: 'BCSL-013', subtitle: 'Computer Basics Lab', url: 'https://egyankosh.ac.in/handle/123456789/442', semester: '1st' },
+            { title: 'BCS-012', subtitle: 'Basic Mathematics', url: 'https://egyankosh.ac.in/handle/123456789/442', semester: '1st' },
+            { title: 'FEG-02', subtitle: 'Foundation in English-2', url: 'https://egyankosh.ac.in/handle/123456789/422', semester: '1st' },
+            { title: 'MCS-202', subtitle: 'Computer Organisation', url: 'https://egyankosh.ac.in/handle/123456789/73833', semester: '2nd' },
+            { title: 'MCS-203', subtitle: 'Operating Systems', url: 'https://egyankosh.ac.in/handle/123456789/72496', semester: '2nd' },
+            { title: 'MCSL-204', subtitle: 'Windows & Linux Lab', url: 'https://egyankosh.ac.in/handle/123456789/72667', semester: '2nd' },
+            { title: 'MCSL-205', subtitle: 'C & Python Lab', url: 'https://egyankosh.ac.in/handle/123456789/72733', semester: '2nd' },
+            { title: 'MCS-201', subtitle: 'Programming in C & Python', url: 'https://egyankosh.ac.in/handle/123456789/72701', semester: '2nd' }
+        ];
+        
+        // Group books by semester
+        const semesters = {};
+        books.forEach(book => {
+            if (!semesters[book.semester]) {
+                semesters[book.semester] = [];
+            }
+            semesters[book.semester].push(book);
+        });
+        
+        let content = '<div class="mobile-books-container">';
+        
+        // Add quick stats
+        content += `
+            <div class="books-stats">
+                <div class="books-stat-item">
+                    <span class="stat-number">${books.length}</span>
+                    <span class="stat-label">Total Books</span>
+                </div>
+                <div class="books-stat-item">
+                    <span class="stat-number">${Object.keys(semesters).length}</span>
+                    <span class="stat-label">Semesters</span>
+                </div>
+                <div class="books-stat-item">
+                    <span class="stat-number">PDF</span>
+                    <span class="stat-label">Format</span>
+                </div>
+            </div>
+        `;
+        
+        // Add semester sections
+        Object.keys(semesters).sort().forEach(semester => {
+            content += `
+                <div class="semester-section">
+                    <h4 class="semester-title">${semester} Semester</h4>
+                    <div class="mobile-books-grid">
+            `;
+            
+            semesters[semester].forEach(book => {
+                content += `
+                    <div class="mobile-book-card">
+                        <div class="book-header">
+                            <div class="book-title-mobile">${book.title}</div>
+                            <div class="book-semester-badge">${semester}</div>
+                        </div>
+                        <div class="book-subtitle-mobile">${book.subtitle}</div>
+                        <button class="mobile-download-btn" onclick="window.open('${book.url}', '_blank')">
+                            📥 Download PDF
+                        </button>
+                    </div>
+                `;
+            });
+            
+            content += '</div></div>';
+        });
+        
+        content += '</div>';
+        return content;
+    }
+    
+    getAssignmentsContent() {
+        return `
+            <div class="mobile-assignments-container">
+                <div class="assignments-stats">
+                    <div class="assignment-stat pending">
+                        <span class="stat-number">3</span>
+                        <span class="stat-label">Pending</span>
+                    </div>
+                    <div class="assignment-stat completed">
+                        <span class="stat-number">8</span>
+                        <span class="stat-label">Completed</span>
+                    </div>
+                    <div class="assignment-stat upcoming">
+                        <span class="stat-number">2</span>
+                        <span class="stat-label">Upcoming</span>
+                    </div>
+                </div>
+                
+                <div class="assignments-list">
+                    <div class="assignment-item urgent">
+                        <div class="assignment-header">
+                            <h4>Data Structures Assignment</h4>
+                            <span class="due-badge urgent">Due Today</span>
+                        </div>
+                        <p>Implement Binary Tree operations in C</p>
+                        <div class="assignment-actions">
+                            <button class="btn-submit">📤 Submit</button>
+                            <button class="btn-details">📋 Details</button>
+                        </div>
+                    </div>
+                    
+                    <div class="assignment-item warning">
+                        <div class="assignment-header">
+                            <h4>Database Management Project</h4>
+                            <span class="due-badge warning">Due in 2 days</span>
+                        </div>
+                        <p>Design ER diagram for library system</p>
+                        <div class="assignment-actions">
+                            <button class="btn-submit">📤 Submit</button>
+                            <button class="btn-details">📋 Details</button>
+                        </div>
+                    </div>
+                    
+                    <div class="assignment-item normal">
+                        <div class="assignment-header">
+                            <h4>Web Technology Assignment</h4>
+                            <span class="due-badge normal">Due in 1 week</span>
+                        </div>
+                        <p>Create responsive website using HTML/CSS</p>
+                        <div class="assignment-actions">
+                            <button class="btn-submit">📤 Submit</button>
+                            <button class="btn-details">📋 Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    getNotesContent() {
+        return `
+            <div class="mobile-notes-container">
+                <div class="notes-categories">
+                    <button class="note-category active" onclick="mobileInterface.filterNotes('all')">All Notes</button>
+                    <button class="note-category" onclick="mobileInterface.filterNotes('programming')">Programming</button>
+                    <button class="note-category" onclick="mobileInterface.filterNotes('theory')">Theory</button>
+                </div>
+                
+                <div class="notes-grid">
+                    <div class="note-card programming">
+                        <div class="note-icon">💻</div>
+                        <h4>C Programming Basics</h4>
+                        <p>Variables, data types, control structures</p>
+                        <div class="note-meta">
+                            <span>📅 Last updated: 2 days ago</span>
+                            <span>📖 5 min read</span>
+                        </div>
+                        <button class="note-btn">📖 Read Notes</button>
+                    </div>
+                    
+                    <div class="note-card theory">
+                        <div class="note-icon">📚</div>
+                        <h4>Database Concepts</h4>
+                        <p>RDBMS, normalization, SQL basics</p>
+                        <div class="note-meta">
+                            <span>📅 Last updated: 1 week ago</span>
+                            <span>📖 8 min read</span>
+                        </div>
+                        <button class="note-btn">📖 Read Notes</button>
+                    </div>
+                    
+                    <div class="note-card programming">
+                        <div class="note-icon">🐍</div>
+                        <h4>Python Fundamentals</h4>
+                        <p>Syntax, functions, object-oriented programming</p>
+                        <div class="note-meta">
+                            <span>📅 Last updated: 3 days ago</span>
+                            <span>📖 6 min read</span>
+                        </div>
+                        <button class="note-btn">📖 Read Notes</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    getResearchContent() {
+        return `
+            <div class="mobile-research-container">
+                <div class="research-stats">
+                    <div class="research-stat">
+                        <span class="stat-number">150+</span>
+                        <span class="stat-label">Papers</span>
+                    </div>
+                    <div class="research-stat">
+                        <span class="stat-number">25</span>
+                        <span class="stat-label">Topics</span>
+                    </div>
+                    <div class="research-stat">
+                        <span class="stat-number">New</span>
+                        <span class="stat-label">This Week</span>
+                    </div>
+                </div>
+                
+                <div class="research-topics">
+                    <div class="topic-card">
+                        <div class="topic-icon">🤖</div>
+                        <h4>Artificial Intelligence</h4>
+                        <p>Machine learning, neural networks, AI applications</p>
+                        <span class="paper-count">42 papers</span>
+                        <button class="topic-btn">🔍 Explore</button>
+                    </div>
+                    
+                    <div class="topic-card">
+                        <div class="topic-icon">🔒</div>
+                        <h4>Cybersecurity</h4>
+                        <p>Network security, cryptography, ethical hacking</p>
+                        <span class="paper-count">28 papers</span>
+                        <button class="topic-btn">🔍 Explore</button>
+                    </div>
+                    
+                    <div class="topic-card">
+                        <div class="topic-icon">📊</div>
+                        <h4>Data Science</h4>
+                        <p>Big data, analytics, visualization techniques</p>
+                        <span class="paper-count">35 papers</span>
+                        <button class="topic-btn">🔍 Explore</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    getProjectsContent() {
+        return `
+            <div class="mobile-projects-container">
+                <div class="project-categories">
+                    <button class="project-category active">All Projects</button>
+                    <button class="project-category">Web Dev</button>
+                    <button class="project-category">Mobile</button>
+                    <button class="project-category">AI/ML</button>
+                </div>
+                
+                <div class="projects-grid">
+                    <div class="project-card featured">
+                        <div class="project-header">
+                            <h4>Library Management System</h4>
+                            <span class="project-badge featured">Featured</span>
+                        </div>
+                        <p>Complete web-based system for library operations</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">PHP</span>
+                            <span class="tech-tag">MySQL</span>
+                            <span class="tech-tag">Bootstrap</span>
+                        </div>
+                        <div class="project-actions">
+                            <button class="project-btn primary">🚀 Start Project</button>
+                            <button class="project-btn secondary">👁️ Preview</button>
+                        </div>
+                    </div>
+                    
+                    <div class="project-card">
+                        <div class="project-header">
+                            <h4>E-commerce Website</h4>
+                            <span class="project-badge popular">Popular</span>
+                        </div>
+                        <p>Online shopping platform with payment integration</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">React</span>
+                            <span class="tech-tag">Node.js</span>
+                            <span class="tech-tag">MongoDB</span>
+                        </div>
+                        <div class="project-actions">
+                            <button class="project-btn primary">🚀 Start Project</button>
+                            <button class="project-btn secondary">👁️ Preview</button>
+                        </div>
+                    </div>
+                    
+                    <div class="project-card">
+                        <div class="project-header">
+                            <h4>Student Management App</h4>
+                            <span class="project-badge new">New</span>
+                        </div>
+                        <p>Mobile app for student information management</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Flutter</span>
+                            <span class="tech-tag">Firebase</span>
+                            <span class="tech-tag">Dart</span>
+                        </div>
+                        <div class="project-actions">
+                            <button class="project-btn primary">🚀 Start Project</button>
+                            <button class="project-btn secondary">👁️ Preview</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    getCommunityContent() {
+        return `
+            <div class="mobile-community-container">
+                <div class="community-stats">
+                    <div class="community-stat">
+                        <span class="stat-number">1.2k</span>
+                        <span class="stat-label">Students</span>
+                    </div>
+                    <div class="community-stat">
+                        <span class="stat-number">48</span>
+                        <span class="stat-label">Study Groups</span>
+                    </div>
+                    <div class="community-stat">
+                        <span class="stat-number">320</span>
+                        <span class="stat-label">Discussions</span>
+                    </div>
+                </div>
+                
+                <div class="community-sections">
+                    <div class="community-card discussions">
+                        <div class="community-icon">💬</div>
+                        <h4>Discussions</h4>
+                        <p>Join conversations about coursework and career</p>
+                        <div class="community-meta">
+                            <span>🔥 52 active topics</span>
+                        </div>
+                        <button class="community-btn">💬 Join Discussion</button>
+                    </div>
+                    
+                    <div class="community-card study-groups">
+                        <div class="community-icon">👥</div>
+                        <h4>Study Groups</h4>
+                        <p>Form or join study groups for collaborative learning</p>
+                        <div class="community-meta">
+                            <span>📚 12 groups forming</span>
+                        </div>
+                        <button class="community-btn">👥 Find Groups</button>
+                    </div>
+                    
+                    <div class="community-card mentorship">
+                        <div class="community-icon">🎓</div>
+                        <h4>Mentorship</h4>
+                        <p>Connect with seniors and industry professionals</p>
+                        <div class="community-meta">
+                            <span>⭐ 25 mentors available</span>
+                        </div>
+                        <button class="community-btn">🎓 Find Mentor</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    closeSection() {
+        // Hide all sections
+        const sections = document.querySelectorAll('.mobile-section');
+        sections.forEach(section => {
+            section.classList.remove('active');
+        });
+        
+        // Show menu again
+        const menuGrid = document.getElementById('mobileMenuGrid');
+        const userMenuText = document.getElementById('userMenuText');
+        
+        if (menuGrid) {
+            menuGrid.style.display = 'grid';
+            userMenuText.textContent = '📋 Choose section';
+        }
+        
+        this.currentSection = null;
+    }
+    
+    loadSectionContent(sectionName) {
+        if (sectionName === 'books') {
+            this.loadMobileBooks();
+        }
+        // Add other section loaders as needed
+    }
+    
+    loadMobileBooks() {
+        const booksGrid = document.getElementById('mobileBooksGrid');
+        if (!booksGrid) return;
+        
+        // Sample books data from your actual data
+        const books = [
+            { title: 'BEVAE-181', subtitle: 'Environmental Studies', url: 'https://egyankosh.ac.in/handle/123456789/61136' },
+            { title: 'BEGLA-136', subtitle: 'English at Workplace', url: 'https://egyankosh.ac.in/handle/123456789/56579' },
+            { title: 'BCS-111', subtitle: 'Computer Basics and PC Software', url: 'https://egyankosh.ac.in/handle/123456789/434' },
+            { title: 'BCSL-013', subtitle: 'Computer Basics and PC Software Lab', url: 'https://egyankosh.ac.in/handle/123456789/442' },
+            { title: 'BCS-012', subtitle: 'Basic Mathematics', url: 'https://egyankosh.ac.in/handle/123456789/442' },
+            { title: 'FEG-02', subtitle: 'Foundation in English-2', url: 'https://egyankosh.ac.in/handle/123456789/422' },
+            { title: 'MCS-202', subtitle: 'Computer Organisation', url: 'https://egyankosh.ac.in/handle/123456789/73833' },
+            { title: 'MCS-203', subtitle: 'Operating Systems', url: 'https://egyankosh.ac.in/handle/123456789/72496' },
+            { title: 'MCSL-204', subtitle: 'Windows & Linux Lab', url: 'https://egyankosh.ac.in/handle/123456789/72667' },
+            { title: 'MCSL-205', subtitle: 'C & Python Lab', url: 'https://egyankosh.ac.in/handle/123456789/72733' },
+            { title: 'MCS-201', subtitle: 'Programming in C & Python', url: 'https://egyankosh.ac.in/handle/123456789/72701' }
+        ];
+        
+        booksGrid.innerHTML = books.map(book => `
+            <div class="mobile-book-card">
+                <div class="book-title-mobile">${book.title}</div>
+                <div class="book-subtitle-mobile">${book.subtitle}</div>
+                <button class="mobile-download-btn" onclick="window.open('${book.url}', '_blank')">
+                    📥 Download PDF
+                </button>
+            </div>
+        `).join('');
+    }
+    
+    updateUserInfo() {
+        const welcomeText = document.getElementById('mobileWelcomeText');
+        const userEmail = document.getElementById('mobileUserEmail');
+        const userAvatar = document.getElementById('mobileUserAvatar');
+        
+        if (this.currentUser) {
+            if (welcomeText) welcomeText.textContent = `Welcome, ${this.currentUser.displayName || 'Student'}!`;
+            if (userEmail) userEmail.textContent = this.currentUser.email;
+            if (userAvatar) userAvatar.textContent = this.currentUser.displayName?.charAt(0).toUpperCase() || '👤';
+        }
+    }
+    
+    checkAuthState() {
+        // Check if user is logged in (integrate with your auth system)
+        if (window.auth && window.auth.currentUser) {
+            this.isLoggedIn = true;
+            this.currentUser = window.auth.currentUser;
+        }
+    }
+    
+    logout() {
+        console.log('🚪 Mobile logout...');
+        
+        // Call existing logout function
+        if (typeof logout === 'function') {
+            logout();
+        }
+        
+        // Reset mobile interface
+        this.isLoggedIn = false;
+        this.currentUser = null;
+        this.currentSection = null;
+        
+        // Show landing screen
+        this.showMobileLanding();
+    }
+}
+
+// Initialize mobile interface when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    window.mobileInterface = new MobileInterface();
+});
+
 console.log('✅ Study Portal Bundle Loaded Successfully!');
 console.log('🔧 Debug functions available: debugAuth(), testLogin(), testPasswordReset(), testRegistration(), testMobileMenu(), testAuthTabs(), detectErrors(), showPasswordResetHelp()');
 if (isDebugMode) {
