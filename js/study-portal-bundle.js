@@ -494,8 +494,19 @@ if (!window.finalAuthInitialized) {
                 return;
             }
 
-            const email = document.getElementById('email')?.value;
-            const password = document.getElementById('password')?.value;
+            // Try both possible email field IDs (for compatibility)
+            const emailField = document.getElementById('email') || document.getElementById('loginEmail');
+            const passwordField = document.getElementById('password') || document.getElementById('loginPassword');
+            
+            const email = emailField?.value?.trim();
+            const password = passwordField?.value?.trim();
+
+            console.log('🔍 Login attempt - Fields found:', {
+                emailField: emailField ? emailField.id : 'not found',
+                passwordField: passwordField ? passwordField.id : 'not found',
+                email: email ? 'provided' : 'empty',
+                password: password ? 'provided' : 'empty'
+            });
 
             if (!email || !password) {
                 this.showMessage('❌ Please enter both email and password', 'error');
@@ -503,7 +514,7 @@ if (!window.finalAuthInitialized) {
             }
 
             try {
-                console.log('🔐 Attempting login...');
+                console.log('🔐 Attempting login with email:', email);
                 this.showMessage('🔐 Signing you in...', 'info', 2000);
                 
                 const userCredential = await window.auth.signInWithEmailAndPassword(email, password);
@@ -515,9 +526,30 @@ if (!window.finalAuthInitialized) {
                 this.closeLoginModal();
                 this.showMessage('🎉 Welcome back! Login successful', 'success');
                 
+                // Clear form fields after successful login
+                if (emailField) emailField.value = '';
+                if (passwordField) passwordField.value = '';
+                
             } catch (error) {
                 console.error('❌ Login error:', error);
-                this.showMessage(`❌ Login failed: ${error.message}`, 'error');
+                let errorMessage = 'Login failed';
+                
+                // Provide more user-friendly error messages
+                if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'Invalid email address';
+                } else if (error.code === 'auth/user-disabled') {
+                    errorMessage = 'This account has been disabled';
+                } else if (error.code === 'auth/user-not-found') {
+                    errorMessage = 'No account found with this email';
+                } else if (error.code === 'auth/wrong-password') {
+                    errorMessage = 'Incorrect password';
+                } else if (error.code === 'auth/too-many-requests') {
+                    errorMessage = 'Too many failed attempts. Please try again later';
+                } else {
+                    errorMessage = error.message;
+                }
+                
+                this.showMessage(`❌ ${errorMessage}`, 'error');
             }
         }
 
