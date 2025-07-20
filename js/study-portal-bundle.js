@@ -11,17 +11,28 @@
 
 console.log('🚀 Study Portal Bundle Loading...');
 
+// Debug mode - can be enabled by adding ?debug=true to URL
+const isDebugMode = new URLSearchParams(window.location.search).get('debug') === 'true';
+if (isDebugMode) {
+    console.log('🐛 Debug mode enabled');
+    window.studyPortalDebug = true;
+}
+
 /* ==========================================================================
    FIREBASE CONFIGURATION - SECURE VERSION
    ========================================================================== */
 
-// Secure Firebase Configuration - API key hidden from source
+// Secure Firebase Configuration - API key loaded from separate file
 function getFirebaseConfig() {
-    // For GitHub Pages, we'll use a secure method
-    // In production, you should move this to environment variables
+    // For GitHub Pages, load from the firebase-config.js file
+    if (window.firebaseConfig) {
+        console.log('✅ Firebase config loaded from firebase-config.js');
+        return window.firebaseConfig;
+    }
     
     // Check if config is available via environment variables (for local development)
     if (typeof process !== 'undefined' && process.env) {
+        console.log('🔧 Loading Firebase config from environment variables');
         return {
             apiKey: process.env.FIREBASE_API_KEY,
             authDomain: process.env.FIREBASE_AUTH_DOMAIN,
@@ -32,21 +43,22 @@ function getFirebaseConfig() {
         };
     }
     
-    // For GitHub Pages deployment, we'll load from a separate secure file
-    // This should be loaded from a secure endpoint in production
-    return window.firebaseConfig || {
-        // Placeholder - will be replaced by build process
-        apiKey: "{{FIREBASE_API_KEY}}",
-        authDomain: "{{FIREBASE_AUTH_DOMAIN}}",
-        projectId: "{{FIREBASE_PROJECT_ID}}",
-        storageBucket: "{{FIREBASE_STORAGE_BUCKET}}",
-        messagingSenderId: "{{FIREBASE_MESSAGING_SENDER_ID}}",
-        appId: "{{FIREBASE_APP_ID}}"
-    };
+    // Fallback - should not happen in production
+    console.error('❌ No Firebase configuration found!');
+    return null;
 }
 
 // Get configuration securely
 const firebaseConfig = getFirebaseConfig();
+
+// Validate Firebase configuration
+if (!firebaseConfig) {
+    console.error('💥 Firebase configuration is missing! Please check firebase-config.js');
+} else if (!firebaseConfig.apiKey || firebaseConfig.apiKey.includes('{{')) {
+    console.error('💥 Firebase configuration contains placeholders! Please check firebase-config.js');
+} else {
+    console.log('✅ Firebase configuration validated successfully');
+}
 
 // Enhanced initialization with retry mechanism
 let initializationAttempts = 0;
@@ -55,10 +67,20 @@ const maxAttempts = 3;
 function initializeFirebase() {
     initializationAttempts++;
     
+    // Check if we have valid configuration
+    if (!firebaseConfig) {
+        console.error('❌ Cannot initialize Firebase: No configuration available');
+        window.firebaseReady = false;
+        return;
+    }
+    
     try {
         // Check if Firebase is already initialized
         if (firebase.apps.length === 0) {
+            console.log('🚀 Initializing Firebase with config...');
             firebase.initializeApp(firebaseConfig);
+        } else {
+            console.log('🔄 Firebase already initialized, using existing app');
         }
         
         console.log('✅ Firebase initialized successfully!');
@@ -71,7 +93,7 @@ function initializeFirebase() {
         
         // Test authentication state
         window.auth.onAuthStateChanged(function(user) {
-            console.log('🔐 Auth state changed:', user ? 'User logged in' : 'No user');
+            console.log('🔐 Auth state changed:', user ? `User logged in: ${user.email}` : 'No user');
             
             // Dispatch custom event for auth state changes
             window.dispatchEvent(new CustomEvent('firebaseAuthReady', {
@@ -92,6 +114,11 @@ function initializeFirebase() {
             
     } catch (error) {
         console.error('❌ Firebase initialization error:', error);
+        console.error('🔍 Error details:', {
+            name: error.name,
+            message: error.message,
+            code: error.code
+        });
         
         if (initializationAttempts < maxAttempts) {
             console.log(`🔄 Retrying Firebase initialization... (${initializationAttempts}/${maxAttempts})`);
@@ -99,6 +126,11 @@ function initializeFirebase() {
         } else {
             console.error('💥 Firebase initialization failed after', maxAttempts, 'attempts');
             window.firebaseReady = false;
+            
+            // Show user-friendly error message
+            if (window.finalAuth && window.finalAuth.showMessage) {
+                window.finalAuth.showMessage('⚠️ Authentication system failed to initialize', 'error', 5000);
+            }
         }
     }
 }
@@ -106,13 +138,34 @@ function initializeFirebase() {
 // Firebase verification and diagnostics
 function verifyFirebaseConnection() {
     console.log('🔍 Firebase Connection Diagnostic:');
-    console.log('   • Firebase object:', typeof firebase !== 'undefined' ? '✅ Available' : '❌ Missing');
-    console.log('   • Auth service:', window.auth ? '✅ Ready' : '❌ Not initialized');
-    console.log('   • Apps length:', firebase?.apps?.length || 0);
-    console.log('   • Project ID:', firebaseConfig.projectId);
+    console.log('   • Firebase SDK:', typeof firebase !== 'undefined' ? '✅ Loaded' : '❌ Missing');
+    console.log('   • Firebase Config:', firebaseConfig ? '✅ Available' : '❌ Missing');
+    
+    if (firebaseConfig) {
+        console.log('   • API Key:', firebaseConfig.apiKey ? '✅ Present' : '❌ Missing');
+        console.log('   • Project ID:', firebaseConfig.projectId || '❌ Missing');
+        console.log('   • Auth Domain:', firebaseConfig.authDomain || '❌ Missing');
+    }
+    
+    console.log('   • Firebase Apps:', firebase?.apps?.length || 0);
+    console.log('   • Auth Service:', window.auth ? '✅ Initialized' : '❌ Not initialized');
     
     if (window.auth) {
-        console.log('   • Current user:', window.auth.currentUser ? '✅ Signed in' : '❌ Not signed in');
+        console.log('   • Current User:', window.auth.currentUser ? `✅ ${window.auth.currentUser.email}` : '❌ Not signed in');
+    }
+    
+    console.log('   • Firebase Ready:', window.firebaseReady ? '✅ Ready' : '❌ Not ready');
+    
+    // Test Firebase functionality
+    if (window.auth && window.firebaseReady) {
+        console.log('🧪 Testing Firebase Auth functionality...');
+        try {
+            // This should not throw an error if properly initialized
+            const currentUser = window.auth.currentUser;
+            console.log('✅ Firebase Auth is working correctly');
+        } catch (error) {
+            console.error('❌ Firebase Auth test failed:', error);
+        }
     }
 }
 
@@ -352,6 +405,10 @@ if (!window.finalAuthInitialized) {
                             console.log('ℹ️ No user logged in');
                         }
                     });
+                } else if (window.firebaseReady === false) {
+                    console.error('❌ Firebase failed to initialize, auth system disabled');
+                    this.authReady = false;
+                    this.showMessage('⚠️ Authentication system is not available', 'error', 5000);
                 } else {
                     console.log('⏳ Waiting for Firebase...');
                     setTimeout(checkFirebase, 1000);
@@ -748,4 +805,51 @@ window.closeMobileMenu = closeMobileMenu;
 window.handleSearch = handleSearch;
 window.submitContactForm = submitContactForm;
 
+// Debug and troubleshooting functions
+window.debugAuth = function() {
+    console.log('🔍 === AUTHENTICATION SYSTEM DEBUG ===');
+    console.log('Firebase Config:', firebaseConfig);
+    console.log('Firebase Ready:', window.firebaseReady);
+    console.log('Auth Ready:', window.finalAuth?.authReady);
+    console.log('Current User:', window.finalAuth?.currentUser);
+    console.log('Auth Object:', window.auth);
+    console.log('Final Auth Object:', window.finalAuth);
+    
+    // Test all auth functions
+    const authFunctions = ['handleLogin', 'openLoginModal', 'closeLoginModal', 'loginUser', 'logout'];
+    authFunctions.forEach(func => {
+        console.log(`${func}:`, typeof window[func] === 'function' ? '✅ Available' : '❌ Missing');
+    });
+    
+    // Check for login button
+    const loginBtn = document.querySelector('.login-btn');
+    console.log('Login Button:', loginBtn ? '✅ Found' : '❌ Missing');
+    
+    if (loginBtn) {
+        console.log('Login Button HTML:', loginBtn.outerHTML);
+    }
+    
+    // Check for modals
+    const loginModal = document.getElementById('loginModal');
+    const profileModal = document.getElementById('profileModal');
+    console.log('Login Modal:', loginModal ? '✅ Found' : '❌ Missing');
+    console.log('Profile Modal:', profileModal ? '✅ Found' : '❌ Missing');
+    
+    console.log('===========================================');
+};
+
+window.testLogin = function() {
+    console.log('🧪 Testing login system...');
+    if (window.finalAuth) {
+        window.finalAuth.showMessage('🧪 Test message - Login system is working!', 'info');
+    } else {
+        console.error('❌ finalAuth not available');
+    }
+};
+
 console.log('✅ Study Portal Bundle Loaded Successfully!');
+console.log('🔧 Debug functions available: debugAuth(), testLogin()');
+if (isDebugMode) {
+    console.log('🐛 Auto-running debug check...');
+    setTimeout(() => window.debugAuth(), 2000);
+}
