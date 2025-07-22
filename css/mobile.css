@@ -4,58 +4,60 @@
    Use alongside main.css for responsive design
    ========================================================================== */
 
-/* Desktop Quick Access Menu - Keep hamburger as quick access */
+/* Desktop Quick Access Menu - Unified styling */
 @media screen and (min-width: 769px) {
-    /* Style hamburger menu as quick access on desktop */
+    /* Unified hamburger menu styling for desktop */
     .mobile-menu-toggle {
         display: flex !important;
         position: fixed !important;
         top: 20px !important;
         left: 20px !important;
         z-index: 1002 !important;
-        background: rgba(255, 255, 255, 0.15) !important;
+        background: rgba(15, 32, 39, 0.9) !important;
         backdrop-filter: blur(15px) !important;
-        border: 1px solid rgba(255, 255, 255, 0.3) !important;
-        border-radius: 12px !important;
+        border: 1px solid rgba(79, 195, 247, 0.3) !important;
+        border-radius: 10px !important;
         padding: 12px !important;
-        width: 50px !important;
-        height: 50px !important;
+        width: 48px !important;
+        height: 48px !important;
         flex-direction: column !important;
         justify-content: center !important;
         align-items: center !important;
         gap: 4px !important;
         cursor: pointer !important;
-        transition: all 0.3s ease !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(79, 195, 247, 0.1) inset !important;
     }
     
     /* Desktop hamburger hover effect */
     .mobile-menu-toggle:hover {
-        background: rgba(79, 195, 247, 0.2) !important;
-        border-color: rgba(79, 195, 247, 0.5) !important;
-        transform: scale(1.05) !important;
-        box-shadow: 0 6px 20px rgba(79, 195, 247, 0.3) !important;
+        background: rgba(15, 32, 39, 0.95) !important;
+        border-color: rgba(79, 195, 247, 0.6) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(79, 195, 247, 0.3) inset !important;
     }
     
     /* Desktop hamburger active state */
     .mobile-menu-toggle.active {
-        background: rgba(79, 195, 247, 0.3) !important;
-        border-color: rgba(79, 195, 247, 0.7) !important;
-        box-shadow: 0 6px 25px rgba(79, 195, 247, 0.4) !important;
+        background: rgba(15, 32, 39, 0.98) !important;
+        border-color: rgba(79, 195, 247, 0.8) !important;
+        box-shadow: 0 6px 25px rgba(79, 195, 247, 0.4), 0 0 0 1px rgba(79, 195, 247, 0.5) inset !important;
     }
     
-    /* Hamburger bars for desktop */
+    /* Unified hamburger bars for desktop */
     .mobile-menu-toggle .hamburger-bar {
-        width: 24px !important;
-        height: 3px !important;
+        width: 22px !important;
+        height: 2.5px !important;
         background: #ffffff !important;
         border-radius: 2px !important;
         transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
     }
     
-    /* Desktop hamburger animation - enhanced for desktop */
+    /* Desktop hamburger animation - X transformation */
     .mobile-menu-toggle.active .hamburger-bar:nth-child(1) {
-        transform: translateY(7px) rotate(45deg) !important;
+        transform: translateY(6.5px) rotate(45deg) !important;
+        background: rgba(79, 195, 247, 1) !important;
     }
     
     .mobile-menu-toggle.active .hamburger-bar:nth-child(2) {
@@ -64,7 +66,8 @@
     }
     
     .mobile-menu-toggle.active .hamburger-bar:nth-child(3) {
-        transform: translateY(-7px) rotate(-45deg) !important;
+        transform: translateY(-6.5px) rotate(-45deg) !important;
+        background: rgba(79, 195, 247, 1) !important;
     }
     
     /* Desktop backdrop styling */
@@ -77,8 +80,8 @@
         left: 0 !important;
         width: 100% !important;
         height: 100% !important;
-        background: rgba(0, 0, 0, 0.4) !important;
-        backdrop-filter: blur(3px) !important;
+        background: rgba(0, 0, 0, 0.6) !important;
+        backdrop-filter: blur(5px) !important;
         z-index: 1000 !important;
         transition: all 0.3s ease !important;
     }
@@ -89,14 +92,14 @@
         opacity: 1 !important;
     }
     
-    /* Desktop sidebar as quick access panel */
+    /* Desktop sidebar as professional quick access panel */
     .sidebar {
         position: fixed !important;
         left: 0 !important;
         top: 0 !important;
-        width: 320px !important;
+        width: 300px !important;
         height: 100vh !important;
-        background: rgba(15, 32, 39, 0.95) !important;
+        background: linear-gradient(135deg, rgba(15, 32, 39, 0.98) 0%, rgba(20, 37, 44, 0.98) 100%) !important;
         backdrop-filter: blur(25px) !important;
         border-right: 1px solid rgba(79, 195, 247, 0.3) !important;
         padding-top: 30px !important;
@@ -106,6 +109,84 @@
         transform: translateX(-100%) !important;
         overflow-y: auto !important;
     }
+    
+    /* Desktop sidebar active state */
+    .sidebar.active {
+        transform: translateX(0) !important;
+    }
+    
+    /* Desktop sidebar header */
+    .sidebar-header {
+        display: block !important;
+        text-align: center !important;
+        padding: 0 20px 25px 20px !important;
+        border-bottom: 1px solid rgba(79, 195, 247, 0.3) !important;
+        margin-bottom: 25px !important;
+    }
+    
+    .sidebar-header h3 {
+        color: #4fc3f7 !important;
+        font-size: 1.4em !important;
+        font-weight: 600 !important;
+        margin: 0 !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+    }
+    
+    /* Desktop sidebar navigation links */
+    .sidebar .nav-link {
+        display: block !important;
+        color: #ffffff !important;
+        padding: 16px 25px !important;
+        background: none !important;
+        border: none !important;
+        font-size: 1.1em !important;
+        font-weight: 500 !important;
+        margin-bottom: 8px !important;
+        border-radius: 10px !important;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+        position: relative !important;
+        overflow: hidden !important;
+        cursor: pointer !important;
+        text-align: left !important;
+        width: calc(100% - 20px) !important;
+        margin-left: 10px !important;
+        margin-right: 10px !important;
+        text-decoration: none !important;
+        border-left: 3px solid transparent !important;
+    }
+    
+    /* Desktop sidebar link hover effects */
+    .sidebar .nav-link:hover {
+        background: rgba(79, 195, 247, 0.15) !important;
+        transform: translateX(8px) !important;
+        box-shadow: 0 4px 15px rgba(79, 195, 247, 0.2) !important;
+        border-left: 3px solid rgba(79, 195, 247, 0.8) !important;
+        color: rgba(79, 195, 247, 0.9) !important;
+    }
+    
+    /* Desktop sidebar active link */
+    .sidebar .nav-link.active {
+        background: rgba(79, 195, 247, 0.2) !important;
+        border-left: 3px solid #4fc3f7 !important;
+        color: #4fc3f7 !important;
+        box-shadow: 0 2px 10px rgba(79, 195, 247, 0.3) !important;
+    }
+    
+    /* Ensure desktop navigation shows properly */
+    .nav-group {
+        display: flex !important;
+    }
+    
+    /* Reset any mobile-specific body styles on desktop */
+    body {
+        overflow: auto !important;
+    }
+    
+    /* When sidebar is open on desktop, prevent body scroll */
+    body.sidebar-open {
+        overflow: hidden !important;
+    }
+}
     
     /* Desktop sidebar active state */
     .sidebar.active {
@@ -251,83 +332,174 @@
         text-align: center !important;
     }
     
-    /* Mobile Hamburger Menu - Position after title */
+    /* Unified Mobile Hamburger Menu */
     .mobile-menu-toggle {
-        display: flex !important; /* Ensure it's visible on mobile */
+        display: flex !important;
         position: absolute !important;
         top: var(--mobile-space-md) !important;
         left: var(--mobile-space-md) !important;
-        z-index: 1002 !important; /* Higher than sidebar and backdrop */
-        background: var(--mobile-glass-bg) !important;
-        border: 1px solid var(--mobile-glass-border) !important;
-        border-radius: var(--mobile-radius-sm) !important;
+        z-index: 1002 !important;
+        background: rgba(15, 32, 39, 0.9) !important;
+        border: 1px solid rgba(79, 195, 247, 0.3) !important;
+        border-radius: 10px !important;
         padding: var(--mobile-space-sm) !important;
-        min-width: 44px !important;
-        min-height: 44px !important;
+        min-width: 48px !important;
+        min-height: 48px !important;
         backdrop-filter: blur(15px) !important;
         flex-direction: column !important;
         align-items: center !important;
         justify-content: center !important;
-        gap: 3px !important;
+        gap: 4px !important;
         cursor: pointer !important;
-        transition: all 0.3s ease !important;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(79, 195, 247, 0.1) inset !important;
     }
     
-    /* Hamburger menu hover effect */
+    /* Mobile hamburger hover effect */
     .mobile-menu-toggle:hover {
-        background: var(--mobile-glass-border) !important;
-        border-color: var(--mobile-accent-blue) !important;
-        transform: scale(1.05) !important;
-        box-shadow: 0 4px 12px rgba(79, 195, 247, 0.3) !important;
+        background: rgba(15, 32, 39, 0.95) !important;
+        border-color: rgba(79, 195, 247, 0.6) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(79, 195, 247, 0.3) inset !important;
     }
     
-    /* Hamburger bars styling for mobile */
+    /* Mobile hamburger active state */
+    .mobile-menu-toggle.active {
+        background: rgba(15, 32, 39, 0.98) !important;
+        border-color: rgba(79, 195, 247, 0.8) !important;
+        box-shadow: 0 6px 25px rgba(79, 195, 247, 0.4), 0 0 0 1px rgba(79, 195, 247, 0.5) inset !important;
+    }
+    
+    /* Unified hamburger bars styling for mobile */
     .mobile-menu-toggle .hamburger-bar {
-        width: 22px !important; /* Slightly wider for better visibility */
-        height: 3px !important; /* Slightly thicker */
-        background: var(--mobile-text-primary) !important;
-        border-radius: 2px !important; /* More rounded */
-        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important; /* Smooth transition */
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important; /* Add depth */
+        width: 22px !important;
+        height: 2.5px !important;
+        background: #ffffff !important;
+        border-radius: 2px !important;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
     }
     
-    /* Active hamburger state - X transformation */
+    /* Mobile hamburger animation - X transformation */
     .mobile-menu-toggle.active .hamburger-bar:nth-child(1) {
-        transform: rotate(45deg) translate(6px, 6px) !important;
-        background: var(--mobile-accent-blue) !important;
+        transform: translateY(6.5px) rotate(45deg) !important;
+        background: rgba(79, 195, 247, 1) !important;
     }
     
     .mobile-menu-toggle.active .hamburger-bar:nth-child(2) {
         opacity: 0 !important;
-        transform: scale(0) !important;
+        transform: scaleX(0) !important;
     }
     
     .mobile-menu-toggle.active .hamburger-bar:nth-child(3) {
-        transform: rotate(-45deg) translate(6px, -6px) !important;
-        background: var(--mobile-accent-blue) !important;
+        transform: translateY(-6.5px) rotate(-45deg) !important;
+        background: rgba(79, 195, 247, 1) !important;
     }
     
-    /* Active state styling for hamburger button */
-    .mobile-menu-toggle.active {
-        background: rgba(79, 195, 247, 0.2) !important;
-        border-color: var(--mobile-accent-blue) !important;
-        box-shadow: 0 0 20px rgba(79, 195, 247, 0.4) !important;
-    }
-    
-    /* Mobile Navigation - Below Title */
-    .nav-group {
-        display: none !important; /* Hide desktop nav on mobile since we use sidebar */
-    }
-    
-    /* Hide sidebar completely on mobile until activated */
-    .sidebar {
-        display: none !important;
-    }
-    
-    .sidebar.active,
-    .sidebar.mobile-open {
+    /* Mobile backdrop styling */
+    .mobile-backdrop {
         display: block !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        background: rgba(0, 0, 0, 0.6) !important;
+        backdrop-filter: blur(3px) !important;
+        z-index: 1000 !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .mobile-backdrop.active {
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    /* Mobile sidebar styling */
+    .sidebar {
+        position: fixed !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 280px !important;
+        height: 100vh !important;
+        background: linear-gradient(135deg, rgba(15, 32, 39, 0.98) 0%, rgba(20, 37, 44, 0.98) 100%) !important;
+        backdrop-filter: blur(25px) !important;
+        border-right: 1px solid rgba(79, 195, 247, 0.3) !important;
+        padding-top: 30px !important;
+        z-index: 1001 !important;
+        box-shadow: 4px 0 25px rgba(0, 0, 0, 0.4) !important;
+        transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+        transform: translateX(-100%) !important;
+        overflow-y: auto !important;
+    }
+    
+    .sidebar.active {
+        transform: translateX(0) !important;
+    }
+    
+    /* Mobile sidebar header */
+    .sidebar-header {
+        display: block !important;
+        text-align: center !important;
+        padding: 0 20px 25px 20px !important;
+        border-bottom: 1px solid rgba(79, 195, 247, 0.3) !important;
+        margin-bottom: 25px !important;
+    }
+    
+    .sidebar-header h3 {
+        color: #4fc3f7 !important;
+        font-size: 1.3em !important;
+        font-weight: 600 !important;
+        margin: 0 !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+    }
+    
+    /* Mobile sidebar navigation links */
+    .sidebar .nav-link {
+        display: block !important;
+        color: #ffffff !important;
+        padding: 18px 25px !important;
+        background: none !important;
+        border: none !important;
+        font-size: 1.1em !important;
+        font-weight: 500 !important;
+        margin-bottom: 8px !important;
+        border-radius: 10px !important;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+        position: relative !important;
+        overflow: hidden !important;
+        cursor: pointer !important;
+        text-align: left !important;
+        width: calc(100% - 20px) !important;
+        margin-left: 10px !important;
+        margin-right: 10px !important;
+        text-decoration: none !important;
+        border-left: 3px solid transparent !important;
+        min-height: 56px !important; /* Better touch target */
+    }
+    
+    /* Mobile sidebar link hover effects */
+    .sidebar .nav-link:hover {
+        background: rgba(79, 195, 247, 0.15) !important;
+        transform: translateX(8px) !important;
+        box-shadow: 0 4px 15px rgba(79, 195, 247, 0.2) !important;
+        border-left: 3px solid rgba(79, 195, 247, 0.8) !important;
+        color: rgba(79, 195, 247, 0.9) !important;
+    }
+    
+    /* Mobile sidebar active link */
+    .sidebar .nav-link.active {
+        background: rgba(79, 195, 247, 0.2) !important;
+        border-left: 3px solid #4fc3f7 !important;
+        color: #4fc3f7 !important;
+        box-shadow: 0 2px 10px rgba(79, 195, 247, 0.3) !important;
+    }
+    
+    /* Hide desktop navigation on mobile */
+    .nav-group {
+        display: none !important;
     }
     
     /* Mobile Login Button - Top Right */
