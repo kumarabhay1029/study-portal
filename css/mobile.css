@@ -1,0 +1,403 @@
+/* ==========================================================================
+   STUDY PORTAL - MOBILE STYLESHEET
+   Mobile-specific CSS for devices with same colors and textures as desktop
+   Use alongside main.css for responsive design
+   ========================================================================== */
+
+/* ==========================================================================
+   CSS CUSTOM PROPERTIES - MATCHING DESKTOP COLORS
+   ========================================================================== */
+
+:root {
+    /* Desktop Color Palette - Keep Same Visual Identity */
+    --mobile-primary-blue: #4fa0e2;
+    --mobile-accent-blue: rgba(79, 195, 247, 0.6);
+    --mobile-glass-bg: rgba(255, 255, 255, 0.1);
+    --mobile-glass-border: rgba(255, 255, 255, 0.2);
+    --mobile-text-primary: #ffffff;
+    --mobile-text-secondary: #e0e0e0;
+    
+    /* Mobile-Specific Spacing */
+    --mobile-space-xs: 0.5rem;
+    --mobile-space-sm: 1rem;
+    --mobile-space-md: 1.5rem;
+    --mobile-space-lg: 2rem;
+    
+    /* Mobile Typography */
+    --mobile-font-xs: 0.75rem;
+    --mobile-font-sm: 0.875rem;
+    --mobile-font-base: 1rem;
+    --mobile-font-lg: 1.125rem;
+    --mobile-font-xl: 1.25rem;
+    --mobile-font-2xl: 1.5rem;
+    
+    /* Mobile Border Radius */
+    --mobile-radius-sm: 8px;
+    --mobile-radius-md: 12px;
+    --mobile-radius-lg: 20px;
+}
+
+/* ==========================================================================
+   MOBILE STYLES (768px and below)
+   ========================================================================== */
+
+@media screen and (max-width: 768px) {
+    
+    /* Mobile Body Adjustments */
+    body {
+        font-size: var(--mobile-font-base);
+        /* Keep same background gradient from desktop */
+    }
+    
+    /* Mobile Main Bar */
+    .main-bar {
+        height: 160px !important;
+        padding: var(--mobile-space-lg) var(--mobile-space-md) !important;
+        flex-direction: column !important;
+        gap: var(--mobile-space-sm) !important;
+    }
+    
+    /* Mobile Portal Title */
+    .portal-title {
+        font-size: var(--mobile-font-xl) !important;
+        padding: var(--mobile-space-md) var(--mobile-space-lg) !important;
+        border-radius: var(--mobile-radius-lg) !important;
+        border: 3px solid var(--mobile-accent-blue) !important;
+        min-width: 280px !important;
+        margin: 0 !important;
+        /* Keep same glassmorphism effect */
+        background: var(--mobile-glass-bg) !important;
+        backdrop-filter: blur(15px) !important;
+    }
+    
+    /* Mobile Navigation */
+    .nav-group {
+        gap: var(--mobile-space-sm) !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+    }
+    
+    .nav-btn {
+        padding: var(--mobile-space-sm) var(--mobile-space-md) !important;
+        font-size: var(--mobile-font-sm) !important;
+        min-width: 80px !important;
+        margin: 2px !important;
+        /* Enhanced mobile touch targets */
+        min-height: 44px !important;
+        border-radius: var(--mobile-radius-md) !important;
+    }
+    
+    /* Mobile Login Button */
+    .login-btn {
+        position: absolute !important;
+        top: var(--mobile-space-md) !important;
+        right: var(--mobile-space-md) !important;
+        padding: var(--mobile-space-sm) var(--mobile-space-md) !important;
+        font-size: var(--mobile-font-sm) !important;
+        min-height: 44px !important;
+        border-radius: var(--mobile-radius-md) !important;
+    }
+    
+    /* Mobile Content Area */
+    .content-area {
+        margin-top: 160px !important;
+        padding: var(--mobile-space-md) !important;
+        margin-bottom: 70px !important;
+    }
+    
+    /* Mobile Hero Section */
+    .hero-section {
+        padding: var(--mobile-space-lg) var(--mobile-space-md) !important;
+        margin: var(--mobile-space-md) 0 !important;
+        text-align: center !important;
+    }
+    
+    .hero-section h1 {
+        font-size: var(--mobile-font-2xl) !important;
+        margin-bottom: var(--mobile-space-md) !important;
+    }
+    
+    .hero-section p {
+        font-size: var(--mobile-font-lg) !important;
+        line-height: 1.6 !important;
+    }
+    
+    /* Mobile Dashboard Grid */
+    .dashboard-grid {
+        grid-template-columns: 1fr !important;
+        gap: var(--mobile-space-lg) !important;
+    }
+    
+    /* Mobile Stats Section */
+    .stats-section {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)) !important;
+        gap: var(--mobile-space-md) !important;
+    }
+    
+    .stat-card {
+        padding: var(--mobile-space-md) !important;
+        min-height: 80px !important;
+        border-radius: var(--mobile-radius-md) !important;
+    }
+    
+    .stat-number {
+        font-size: var(--mobile-font-2xl) !important;
+    }
+    
+    .stat-label {
+        font-size: var(--mobile-font-sm) !important;
+    }
+    
+    /* Mobile Section Content */
+    .section-content {
+        padding: var(--mobile-space-md) !important;
+        margin: var(--mobile-space-sm) 0 !important;
+        border-radius: var(--mobile-radius-md) !important;
+    }
+    
+    .section-title {
+        font-size: var(--mobile-font-xl) !important;
+        margin-bottom: var(--mobile-space-md) !important;
+    }
+    
+    /* Mobile Quick Access Grid */
+    .quick-access-grid {
+        grid-template-columns: 1fr !important;
+        gap: var(--mobile-space-md) !important;
+    }
+    
+    .access-card {
+        padding: var(--mobile-space-md) !important;
+        border-radius: var(--mobile-radius-md) !important;
+        min-height: 60px !important;
+    }
+    
+    /* Mobile Member Cards */
+    .member-card {
+        padding: var(--mobile-space-md) !important;
+        border-radius: var(--mobile-radius-md) !important;
+    }
+    
+    .member-stats {
+        grid-template-columns: 1fr !important;
+        gap: var(--mobile-space-sm) !important;
+    }
+    
+    /* Mobile Notification Bar */
+    .notification-bar {
+        height: 60px !important;
+        font-size: var(--mobile-font-sm) !important;
+        padding: 0 var(--mobile-space-md) !important;
+    }
+    
+    .notification-content {
+        gap: var(--mobile-space-sm) !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+    }
+    
+    .notification-item {
+        gap: var(--mobile-space-xs) !important;
+        font-size: var(--mobile-font-sm) !important;
+        white-space: nowrap !important;
+    }
+    
+    .notification-close {
+        width: 24px !important;
+        height: 24px !important;
+        font-size: var(--mobile-font-xs) !important;
+        right: var(--mobile-space-sm) !important;
+    }
+    
+    /* Mobile Books Section */
+    .books-grid {
+        grid-template-columns: 1fr !important;
+        gap: var(--mobile-space-md) !important;
+    }
+    
+    .book-card {
+        padding: var(--mobile-space-md) !important;
+        border-radius: var(--mobile-radius-md) !important;
+    }
+    
+    .download-btn {
+        width: 100% !important;
+        padding: var(--mobile-space-md) !important;
+        font-size: var(--mobile-font-sm) !important;
+        margin-top: var(--mobile-space-sm) !important;
+        min-height: 44px !important;
+        border-radius: var(--mobile-radius-sm) !important;
+    }
+    
+    /* Mobile Semester Sections */
+    .semester-section {
+        margin: var(--mobile-space-md) 0 !important;
+        padding: var(--mobile-space-md) !important;
+        border-radius: var(--mobile-radius-md) !important;
+    }
+    
+    .semester-title {
+        font-size: var(--mobile-font-xl) !important;
+        margin-bottom: var(--mobile-space-md) !important;
+    }
+    
+    /* Mobile Year Navigation */
+    .year-navigation {
+        flex-direction: column !important;
+        gap: var(--mobile-space-sm) !important;
+        margin: var(--mobile-space-md) 0 !important;
+    }
+    
+    .year-nav-btn {
+        width: 100% !important;
+        padding: var(--mobile-space-md) !important;
+        font-size: var(--mobile-font-base) !important;
+        min-height: 50px !important;
+        border-radius: var(--mobile-radius-md) !important;
+    }
+}
+
+/* ==========================================================================
+   SMALL MOBILE STYLES (480px and below)
+   ========================================================================== */
+
+@media screen and (max-width: 480px) {
+    
+    /* Extra Small Mobile Adjustments */
+    .main-bar {
+        height: 150px !important;
+        padding: var(--mobile-space-md) var(--mobile-space-sm) !important;
+    }
+    
+    .portal-title {
+        font-size: var(--mobile-font-lg) !important;
+        padding: var(--mobile-space-sm) var(--mobile-space-md) !important;
+        min-width: 240px !important;
+    }
+    
+    .nav-btn {
+        padding: var(--mobile-space-xs) var(--mobile-space-sm) !important;
+        font-size: var(--mobile-font-xs) !important;
+        min-width: 70px !important;
+    }
+    
+    .login-btn {
+        padding: var(--mobile-space-xs) var(--mobile-space-sm) !important;
+        font-size: var(--mobile-font-xs) !important;
+    }
+    
+    .content-area {
+        margin-top: 150px !important;
+        padding: var(--mobile-space-sm) !important;
+    }
+    
+    .hero-section h1 {
+        font-size: var(--mobile-font-xl) !important;
+    }
+    
+    .hero-section p {
+        font-size: var(--mobile-font-base) !important;
+    }
+    
+    .stats-section {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)) !important;
+        gap: var(--mobile-space-sm) !important;
+    }
+    
+    .stat-card {
+        padding: var(--mobile-space-sm) !important;
+        min-height: 70px !important;
+    }
+    
+    .section-content {
+        padding: var(--mobile-space-sm) !important;
+    }
+    
+    .notification-bar {
+        height: 55px !important;
+        font-size: var(--mobile-font-xs) !important;
+        padding: 0 var(--mobile-space-sm) !important;
+    }
+}
+
+/* ==========================================================================
+   MOBILE ENHANCEMENTS - TOUCH & ACCESSIBILITY
+   ========================================================================== */
+
+@media screen and (max-width: 768px) {
+    
+    /* Enhanced Touch Targets */
+    button, .nav-btn, .login-btn, .download-btn, .access-card {
+        min-height: 44px !important;
+        touch-action: manipulation !important;
+    }
+    
+    /* Improved Text Readability */
+    body {
+        -webkit-text-size-adjust: 100% !important;
+        text-size-adjust: 100% !important;
+    }
+    
+    /* Mobile-Optimized Scrolling */
+    .content-area {
+        -webkit-overflow-scrolling: touch !important;
+        overflow-x: hidden !important;
+    }
+    
+    /* Mobile Form Improvements */
+    input, textarea, select {
+        font-size: var(--mobile-font-base) !important;
+        padding: var(--mobile-space-md) !important;
+        border-radius: var(--mobile-radius-sm) !important;
+        min-height: 44px !important;
+    }
+    
+    /* Mobile Modal Adjustments */
+    .login-modal .login-container {
+        width: 90vw !important;
+        max-width: 400px !important;
+        margin: var(--mobile-space-md) !important;
+        padding: var(--mobile-space-md) !important;
+        border-radius: var(--mobile-radius-lg) !important;
+    }
+    
+    /* Mobile Sidebar (if you have one) */
+    .sidebar {
+        width: 280px !important;
+        padding: var(--mobile-space-md) !important;
+    }
+    
+    .sidebar a {
+        padding: var(--mobile-space-md) !important;
+        font-size: var(--mobile-font-base) !important;
+        min-height: 50px !important;
+        border-radius: var(--mobile-radius-sm) !important;
+    }
+}
+
+/* ==========================================================================
+   MOBILE PERFORMANCE OPTIMIZATIONS
+   ========================================================================== */
+
+@media screen and (max-width: 768px) {
+    
+    /* Reduced animations for mobile performance */
+    * {
+        animation-duration: 0.2s !important;
+        transition-duration: 0.2s !important;
+    }
+    
+    /* Simplified shadows for mobile */
+    .section-content, .stat-card, .access-card, .book-card {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+    }
+    
+    /* Optimized background effects for mobile */
+    body::before {
+        opacity: 0.5 !important;
+    }
+    
+    body::after {
+        display: none !important; /* Hide floating particles on mobile */
+    }
+}
