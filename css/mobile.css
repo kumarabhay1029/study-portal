@@ -4,6 +4,21 @@
    Use alongside main.css for responsive design
    ========================================================================== */
 
+/* Hide mobile-only elements on desktop */
+@media screen and (min-width: 769px) {
+    .mobile-menu-toggle {
+        display: none !important;
+    }
+    
+    .mobile-backdrop {
+        display: none !important;
+    }
+    
+    .sidebar {
+        display: block !important; /* Show sidebar normally on desktop */
+    }
+}
+
 /* ==========================================================================
    CSS CUSTOM PROPERTIES - MATCHING DESKTOP COLORS
    ========================================================================== */
@@ -78,6 +93,7 @@
     
     /* Mobile Hamburger Menu - Position after title */
     .mobile-menu-toggle {
+        display: flex !important; /* Ensure it's visible on mobile */
         position: absolute !important;
         top: var(--mobile-space-md) !important;
         left: var(--mobile-space-md) !important;
@@ -88,12 +104,22 @@
         padding: var(--mobile-space-sm) !important;
         min-width: 44px !important;
         min-height: 44px !important;
-        backdrop-filter: blur(10px) !important;
-        display: flex !important;
+        backdrop-filter: blur(15px) !important;
         flex-direction: column !important;
         align-items: center !important;
         justify-content: center !important;
         gap: 3px !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+    }
+    
+    /* Hamburger menu hover effect */
+    .mobile-menu-toggle:hover {
+        background: var(--mobile-glass-border) !important;
+        border-color: var(--mobile-accent-blue) !important;
+        transform: scale(1.05) !important;
+        box-shadow: 0 4px 12px rgba(79, 195, 247, 0.2) !important;
     }
     
     /* Hamburger bars styling for mobile */
@@ -487,34 +513,82 @@
     
     /* Mobile Sidebar (if you have one) */
     .sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        left: -280px !important; /* Hidden by default */
         width: 280px !important;
+        height: 100vh !important;
         padding: var(--mobile-space-md) !important;
         background: var(--mobile-glass-bg) !important;
         backdrop-filter: blur(15px) !important;
         border-right: 1px solid var(--mobile-glass-border) !important;
+        z-index: 1001 !important;
+        transition: left 0.3s ease !important;
+        overflow-y: auto !important;
     }
     
-    .sidebar a {
+    /* Show sidebar when mobile menu is open */
+    .sidebar.mobile-open {
+        left: 0 !important;
+    }
+    
+    /* Mobile backdrop for sidebar */
+    .mobile-backdrop {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        background: rgba(0, 0, 0, 0.5) !important;
+        backdrop-filter: blur(5px) !important;
+        z-index: 1000 !important;
+        display: none !important;
+        transition: opacity 0.3s ease !important;
+    }
+    
+    /* Show backdrop when mobile menu is open */
+    .mobile-backdrop.show {
+        display: block !important;
+    }
+    
+    /* Mobile Sidebar Header */
+    .sidebar-header {
+        padding: var(--mobile-space-lg) var(--mobile-space-md) var(--mobile-space-md) !important;
+        border-bottom: 1px solid var(--mobile-glass-border) !important;
+        margin-bottom: var(--mobile-space-md) !important;
+    }
+    
+    .sidebar-header h3 {
+        color: var(--mobile-text-primary) !important;
+        font-size: var(--mobile-font-xl) !important;
+        margin: 0 !important;
+        text-align: center !important;
+    }
+    
+    /* Mobile Sidebar Navigation Links */
+    .sidebar .nav-link {
+        display: block !important;
+        width: 100% !important;
         padding: var(--mobile-space-md) !important;
         font-size: var(--mobile-font-base) !important;
         min-height: 50px !important;
         border-radius: var(--mobile-radius-sm) !important;
         background: var(--mobile-glass-bg) !important;
         border: 1px solid transparent !important;
+        color: var(--mobile-text-primary) !important;
+        text-align: left !important;
         margin-bottom: var(--mobile-space-xs) !important;
         transition: all 0.3s ease !important;
+        cursor: pointer !important;
+        text-decoration: none !important;
     }
     
-    .sidebar a:hover, .sidebar a.active {
+    .sidebar .nav-link:hover, 
+    .sidebar .nav-link.active {
         background: var(--mobile-glass-border) !important;
         border-color: var(--mobile-accent-blue) !important;
+        color: var(--mobile-accent-blue) !important;
         transform: translateX(5px) !important;
-    }
-    
-    /* Mobile backdrop for sidebar */
-    .mobile-backdrop {
-        background: rgba(0, 0, 0, 0.5) !important;
-        backdrop-filter: blur(5px) !important;
     }
 }
 
