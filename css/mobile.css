@@ -145,25 +145,67 @@
         position: absolute !important;
         top: var(--mobile-space-md) !important;
         right: var(--mobile-space-md) !important;
-        padding: var(--mobile-space-sm) var(--mobile-space-md) !important;
+        padding: var(--mobile-space-sm) !important;
         font-size: var(--mobile-font-xs) !important;
         min-height: 44px !important;
-        min-width: 60px !important;
-        border-radius: var(--mobile-radius-sm) !important;
+        min-width: 44px !important;
+        border-radius: var(--mobile-radius-md) !important;
         background: var(--mobile-glass-bg) !important;
         border: 1px solid var(--mobile-glass-border) !important;
-        backdrop-filter: blur(10px) !important;
+        backdrop-filter: blur(15px) !important;
         z-index: 999 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
     }
     
-    /* Mobile Login Button Text - Smaller for mobile */
+    /* Mobile Login Button Hover Effect */
+    .login-btn:hover {
+        background: var(--mobile-glass-border) !important;
+        border-color: var(--mobile-accent-blue) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 4px 12px rgba(79, 195, 247, 0.2) !important;
+    }
+    
+    /* Mobile Login Button Text - Hidden for mobile */
     .login-btn .btn-text {
-        display: none !important; /* Hide text on mobile, keep only icon */
+        display: none !important;
     }
     
+    /* Mobile Login Button Icon - Enhanced */
     .login-btn .btn-icon {
-        font-size: var(--mobile-font-lg) !important;
+        font-size: var(--mobile-font-xl) !important;
         margin: 0 !important;
+        color: var(--mobile-text-primary) !important;
+        transition: all 0.3s ease !important;
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3)) !important;
+    }
+    
+    /* Profile icon hover effect */
+    .login-btn:hover .btn-icon {
+        color: var(--mobile-accent-blue) !important;
+        transform: scale(1.1) !important;
+    }
+    
+    /* When logged in - profile button styling */
+    .login-btn.logged-in {
+        background: linear-gradient(135deg, var(--mobile-glass-bg), var(--mobile-glass-border)) !important;
+        border-color: var(--mobile-accent-blue) !important;
+    }
+    
+    .login-btn.logged-in .btn-icon {
+        color: var(--mobile-accent-blue) !important;
+    }
+    
+    .login-btn.logged-in:hover {
+        background: linear-gradient(135deg, var(--mobile-accent-blue), var(--mobile-primary-blue)) !important;
+        transform: translateY(-2px) scale(1.05) !important;
+    }
+    
+    .login-btn.logged-in:hover .btn-icon {
+        color: var(--mobile-text-primary) !important;
     }
     
     /* Mobile Content Area */
