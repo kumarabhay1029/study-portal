@@ -50,37 +50,37 @@
          ========================================================================== -->
     
     <!-- Mobile hamburger menu toggle button (top-left corner) -->
-    <button class="mobile-menu-toggle" onclick="toggleMobileMenu()" id="mobileMenuToggle">
+    <button class="mobile-menu-toggle" onclick="toggleMobileMenu()" id="mobileMenuToggle" aria-label="Toggle mobile menu" aria-expanded="false">
         <div class="hamburger-bar"></div>
         <div class="hamburger-bar"></div>
         <div class="hamburger-bar"></div>
     </button>
 
     <!-- Mobile menu backdrop overlay (appears when sidebar is open) -->
-    <div class="mobile-backdrop" id="mobileBackdrop" onclick="closeMobileMenu()"></div>
+    <div class="mobile-backdrop" id="mobileBackdrop" onclick="closeMobileMenu()" aria-hidden="true"></div>
 
     <!-- ==========================================================================
          SIDEBAR NAVIGATION
          ========================================================================== -->
     
     <!-- Left sidebar navigation (hidden by default, slides in on mobile) -->
-    <div class="sidebar" id="sidebar">
+    <nav class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
         <!-- Sidebar header with portal branding -->
         <div class="sidebar-header">
             <h3>📖 Study Portal</h3>
         </div>
         
         <!-- Navigation links - each calls showSection() function to switch content -->
-        <button class="nav-link" onclick="showSection('home')" data-section="home">🏠 Home</button>
-        <button class="nav-link" onclick="showSection('dashboard')" data-section="dashboard">📊 Dashboard</button>
-        <button class="nav-link" onclick="showSection('books')" data-section="books">📚 Books</button>
-        <button class="nav-link" onclick="showSection('assignments')" data-section="assignments">📝 Assignments</button>
-        <button class="nav-link" onclick="showSection('notes')" data-section="notes">📋 Notes</button>
-        <button class="nav-link" onclick="showSection('projects')" data-section="projects">🚀 Projects</button>
-        <button class="nav-link" onclick="showSection('research')" data-section="research">📄 Research Papers</button>
-        <button class="nav-link" onclick="showSection('members')" data-section="members">👥 Members</button>
-        <button class="nav-link" onclick="showSection('community')" data-section="community">🤝 Community</button>
-    </div>
+        <button class="nav-link" onclick="showSection('home')" data-section="home" aria-label="Go to Home section">🏠 Home</button>
+        <button class="nav-link" onclick="showSection('dashboard')" data-section="dashboard" aria-label="Go to Dashboard section">📊 Dashboard</button>
+        <button class="nav-link" onclick="showSection('books')" data-section="books" aria-label="Go to Books section">📚 Books</button>
+        <button class="nav-link" onclick="showSection('assignments')" data-section="assignments" aria-label="Go to Assignments section">📝 Assignments</button>
+        <button class="nav-link" onclick="showSection('notes')" data-section="notes" aria-label="Go to Notes section">📋 Notes</button>
+        <button class="nav-link" onclick="showSection('projects')" data-section="projects" aria-label="Go to Projects section">🚀 Projects</button>
+        <button class="nav-link" onclick="showSection('research')" data-section="research" aria-label="Go to Research Papers section">📄 Research Papers</button>
+        <button class="nav-link" onclick="showSection('members')" data-section="members" aria-label="Go to Members section">👥 Members</button>
+        <button class="nav-link" onclick="showSection('community')" data-section="community" aria-label="Go to Community section">🤝 Community</button>
+    </nav>
 
     <!-- ==========================================================================
          TOP NAVIGATION BAR
@@ -108,7 +108,7 @@
 
     <!-- Login button (positioned absolutely in top-right corner) -->
     <button class="login-btn" id="main-login-btn" onclick="if(typeof handleLogin === 'function'){handleLogin()}else{document.getElementById('loginModal').classList.add('active')}" title="Login to your account">
-        <span class="btn-icon">�</span>
+        <span class="btn-icon">👤</span>
         <span class="btn-text">Login</span>
     </button>
 
@@ -349,7 +349,7 @@
                                 <h5>BCS-012</h5>
                                 <p>Basic Mathematics</p>
                             </div>
-                            <a href="https://egyankosh.ac.in/handle/123456789/442" target="_blank" class="download-btn">
+                            <a href="https://egyankosh.ac.in/handle/123456789/72432" target="_blank" class="download-btn">
                                 📥 Download PDF
                             </a>
                         </div>
