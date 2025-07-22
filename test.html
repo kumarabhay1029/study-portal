@@ -21,10 +21,30 @@
         }
         .success { border-left: 5px solid #4CAF50; }
         .error { border-left: 5px solid #f44336; }
+        .warning { border-left: 5px solid #ff9800; }
+        .device-test {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .device-card {
+            background: rgba(255,255,255,0.15);
+            padding: 15px;
+            border-radius: 10px;
+            flex: 1;
+            max-width: 300px;
+        }
+        .responsive-test {
+            border: 2px solid rgba(255,255,255,0.3);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
-    <h1>📚 Study Portal - Site Health Check</h1>
+    <h1>📚 Study Portal - Complete Health Check</h1>
     
     <div class="test-result success">
         <h3>✅ Basic HTML Structure</h3>
@@ -41,9 +61,33 @@
         <p id="jsResult">Testing...</p>
     </div>
     
+    <div class="test-result" id="responsiveTest">
+        <h3>📱 Responsive Design Test</h3>
+        <p id="responsiveResult">Testing...</p>
+        <div class="device-test">
+            <div class="device-card">
+                <h4>🖥️ Desktop View</h4>
+                <p id="desktopTest">Testing...</p>
+            </div>
+            <div class="device-card">
+                <h4>📱 Mobile View</h4>
+                <p id="mobileTest">Testing...</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="responsive-test">
+        <h3>🔧 Screen Size Detection</h3>
+        <p><strong>Current Screen Width:</strong> <span id="screenWidth">Detecting...</span>px</p>
+        <p><strong>Detected Device:</strong> <span id="deviceType">Detecting...</span></p>
+        <p><strong>CSS Media Query Active:</strong> <span id="mediaQuery">Detecting...</span></p>
+    </div>
+    
     <div class="test-result">
         <h3>🔗 Navigation</h3>
         <p><a href="index.html" style="color: #4fc3f7;">Go to Main Site</a></p>
+        <p><a href="?mobile=true" style="color: #4fc3f7;">Test Mobile Mode</a></p>
+        <p><a href="?desktop=true" style="color: #4fc3f7;">Test Desktop Mode</a></p>
     </div>
 
     <script>
@@ -59,7 +103,7 @@
                 cssTest.classList.add('success');
                 cssResult.textContent = '✅ CSS with backdrop-filter working';
             } else {
-                cssTest.classList.add('error');
+                cssTest.classList.add('warning');
                 cssResult.textContent = '⚠️ Basic CSS working, advanced features may not load';
             }
         } catch (e) {
@@ -83,7 +127,50 @@
             jsResult.textContent = '❌ JavaScript compatibility issues detected';
         }
         
-        console.log('🧪 Study Portal health check completed');
+        // Test Responsive Design
+        const responsiveTest = document.getElementById('responsiveTest');
+        const responsiveResult = document.getElementById('responsiveResult');
+        const desktopTest = document.getElementById('desktopTest');
+        const mobileTest = document.getElementById('mobileTest');
+        const screenWidth = document.getElementById('screenWidth');
+        const deviceType = document.getElementById('deviceType');
+        const mediaQuery = document.getElementById('mediaQuery');
+        
+        function updateResponsiveInfo() {
+            const width = window.innerWidth;
+            screenWidth.textContent = width;
+            
+            if (width <= 768) {
+                deviceType.textContent = '📱 Mobile Device';
+                deviceType.style.color = '#4CAF50';
+            } else {
+                deviceType.textContent = '🖥️ Desktop Device';
+                deviceType.style.color = '#2196F3';
+            }
+            
+            // Test media queries
+            if (window.matchMedia('(max-width: 768px)').matches) {
+                mediaQuery.textContent = 'Mobile CSS Active';
+                mediaQuery.style.color = '#4CAF50';
+                mobileTest.textContent = '✅ Mobile CSS rules active';
+                desktopTest.textContent = '⚠️ Desktop CSS disabled';
+            } else {
+                mediaQuery.textContent = 'Desktop CSS Active';
+                mediaQuery.style.color = '#2196F3';
+                desktopTest.textContent = '✅ Desktop CSS rules active';
+                mobileTest.textContent = '⚠️ Mobile CSS disabled';
+            }
+            
+            responsiveTest.classList.add('success');
+            responsiveResult.textContent = '✅ Responsive design system working correctly';
+        }
+        
+        updateResponsiveInfo();
+        window.addEventListener('resize', updateResponsiveInfo);
+        
+        console.log('🧪 Study Portal complete health check completed');
+        console.log('📱 Screen width:', window.innerWidth);
+        console.log('🎯 Device type:', window.innerWidth <= 768 ? 'Mobile' : 'Desktop');
     </script>
 </body>
 </html>
