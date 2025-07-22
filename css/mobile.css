@@ -37,13 +37,34 @@
         box-shadow: 0 6px 20px rgba(79, 195, 247, 0.3) !important;
     }
     
+    /* Desktop hamburger active state */
+    .mobile-menu-toggle.active {
+        background: rgba(79, 195, 247, 0.3) !important;
+        border-color: rgba(79, 195, 247, 0.7) !important;
+        box-shadow: 0 6px 25px rgba(79, 195, 247, 0.4) !important;
+    }
+    
     /* Hamburger bars for desktop */
     .mobile-menu-toggle .hamburger-bar {
         width: 24px !important;
         height: 3px !important;
         background: #ffffff !important;
         border-radius: 2px !important;
-        transition: all 0.3s ease !important;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+    }
+    
+    /* Desktop hamburger animation - enhanced for desktop */
+    .mobile-menu-toggle.active .hamburger-bar:nth-child(1) {
+        transform: translateY(7px) rotate(45deg) !important;
+    }
+    
+    .mobile-menu-toggle.active .hamburger-bar:nth-child(2) {
+        opacity: 0 !important;
+        transform: scaleX(0) !important;
+    }
+    
+    .mobile-menu-toggle.active .hamburger-bar:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg) !important;
     }
     
     /* Desktop backdrop styling */
