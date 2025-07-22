@@ -49,58 +49,126 @@
         /* Keep same background gradient from desktop */
     }
     
-    /* Mobile Main Bar */
+    /* Mobile Main Bar - Fixed Layout Structure */
     .main-bar {
-        height: 160px !important;
-        padding: var(--mobile-space-lg) var(--mobile-space-md) !important;
+        height: 180px !important;
+        padding: var(--mobile-space-md) !important;
         flex-direction: column !important;
         gap: var(--mobile-space-sm) !important;
+        position: relative !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
     }
     
-    /* Mobile Portal Title */
+    /* Mobile Portal Title - Top Position */
     .portal-title {
-        font-size: var(--mobile-font-xl) !important;
-        padding: var(--mobile-space-md) var(--mobile-space-lg) !important;
-        border-radius: var(--mobile-radius-lg) !important;
-        border: 3px solid var(--mobile-accent-blue) !important;
-        min-width: 280px !important;
-        margin: 0 !important;
+        font-size: var(--mobile-font-lg) !important;
+        padding: var(--mobile-space-sm) var(--mobile-space-md) !important;
+        border-radius: var(--mobile-radius-md) !important;
+        border: 2px solid var(--mobile-accent-blue) !important;
+        min-width: 250px !important;
+        margin: var(--mobile-space-sm) 0 0 0 !important;
         /* Keep same glassmorphism effect */
         background: var(--mobile-glass-bg) !important;
         backdrop-filter: blur(15px) !important;
+        order: 1 !important;
+        width: auto !important;
+        text-align: center !important;
     }
     
-    /* Mobile Navigation */
+    /* Mobile Hamburger Menu - Position after title */
+    .mobile-menu-toggle {
+        position: absolute !important;
+        top: var(--mobile-space-md) !important;
+        left: var(--mobile-space-md) !important;
+        z-index: 1000 !important;
+        background: var(--mobile-glass-bg) !important;
+        border: 1px solid var(--mobile-glass-border) !important;
+        border-radius: var(--mobile-radius-sm) !important;
+        padding: var(--mobile-space-sm) !important;
+        min-width: 44px !important;
+        min-height: 44px !important;
+        backdrop-filter: blur(10px) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 3px !important;
+    }
+    
+    /* Hamburger bars styling for mobile */
+    .mobile-menu-toggle .hamburger-bar {
+        width: 20px !important;
+        height: 2px !important;
+        background: var(--mobile-text-primary) !important;
+        border-radius: 1px !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    /* Active hamburger state */
+    .mobile-menu-toggle.active .hamburger-bar:nth-child(1) {
+        transform: rotate(45deg) translate(6px, 6px) !important;
+    }
+    
+    .mobile-menu-toggle.active .hamburger-bar:nth-child(2) {
+        opacity: 0 !important;
+    }
+    
+    .mobile-menu-toggle.active .hamburger-bar:nth-child(3) {
+        transform: rotate(-45deg) translate(6px, -6px) !important;
+    }
+    
+    /* Mobile Navigation - Below Title */
     .nav-group {
-        gap: var(--mobile-space-sm) !important;
+        gap: var(--mobile-space-xs) !important;
         flex-wrap: wrap !important;
         justify-content: center !important;
+        order: 3 !important;
+        width: 100% !important;
+        margin-top: var(--mobile-space-sm) !important;
     }
     
     .nav-btn {
-        padding: var(--mobile-space-sm) var(--mobile-space-md) !important;
-        font-size: var(--mobile-font-sm) !important;
-        min-width: 80px !important;
+        padding: var(--mobile-space-xs) var(--mobile-space-sm) !important;
+        font-size: var(--mobile-font-xs) !important;
+        min-width: 70px !important;
         margin: 2px !important;
         /* Enhanced mobile touch targets */
-        min-height: 44px !important;
-        border-radius: var(--mobile-radius-md) !important;
+        min-height: 40px !important;
+        border-radius: var(--mobile-radius-sm) !important;
+        background: var(--mobile-glass-bg) !important;
+        border: 1px solid var(--mobile-glass-border) !important;
     }
     
-    /* Mobile Login Button */
+    /* Mobile Login Button - Top Right */
     .login-btn {
         position: absolute !important;
         top: var(--mobile-space-md) !important;
         right: var(--mobile-space-md) !important;
         padding: var(--mobile-space-sm) var(--mobile-space-md) !important;
-        font-size: var(--mobile-font-sm) !important;
+        font-size: var(--mobile-font-xs) !important;
         min-height: 44px !important;
-        border-radius: var(--mobile-radius-md) !important;
+        min-width: 60px !important;
+        border-radius: var(--mobile-radius-sm) !important;
+        background: var(--mobile-glass-bg) !important;
+        border: 1px solid var(--mobile-glass-border) !important;
+        backdrop-filter: blur(10px) !important;
+        z-index: 999 !important;
+    }
+    
+    /* Mobile Login Button Text - Smaller for mobile */
+    .login-btn .btn-text {
+        display: none !important; /* Hide text on mobile, keep only icon */
+    }
+    
+    .login-btn .btn-icon {
+        font-size: var(--mobile-font-lg) !important;
+        margin: 0 !important;
     }
     
     /* Mobile Content Area */
     .content-area {
-        margin-top: 160px !important;
+        margin-top: 180px !important;
         padding: var(--mobile-space-md) !important;
         margin-bottom: 70px !important;
     }
@@ -265,29 +333,43 @@
     
     /* Extra Small Mobile Adjustments */
     .main-bar {
-        height: 150px !important;
-        padding: var(--mobile-space-md) var(--mobile-space-sm) !important;
+        height: 170px !important;
+        padding: var(--mobile-space-sm) !important;
     }
     
     .portal-title {
-        font-size: var(--mobile-font-lg) !important;
-        padding: var(--mobile-space-sm) var(--mobile-space-md) !important;
-        min-width: 240px !important;
+        font-size: var(--mobile-font-base) !important;
+        padding: var(--mobile-space-xs) var(--mobile-space-sm) !important;
+        min-width: 200px !important;
+        margin-top: var(--mobile-space-xs) !important;
+    }
+    
+    .mobile-menu-toggle {
+        top: var(--mobile-space-sm) !important;
+        left: var(--mobile-space-sm) !important;
+        padding: var(--mobile-space-xs) !important;
+        min-width: 40px !important;
+        min-height: 40px !important;
     }
     
     .nav-btn {
         padding: var(--mobile-space-xs) var(--mobile-space-sm) !important;
         font-size: var(--mobile-font-xs) !important;
-        min-width: 70px !important;
+        min-width: 60px !important;
+        min-height: 36px !important;
     }
     
     .login-btn {
         padding: var(--mobile-space-xs) var(--mobile-space-sm) !important;
         font-size: var(--mobile-font-xs) !important;
+        min-width: 50px !important;
+        min-height: 40px !important;
+        top: var(--mobile-space-sm) !important;
+        right: var(--mobile-space-sm) !important;
     }
     
     .content-area {
-        margin-top: 150px !important;
+        margin-top: 170px !important;
         padding: var(--mobile-space-sm) !important;
     }
     
@@ -365,6 +447,9 @@
     .sidebar {
         width: 280px !important;
         padding: var(--mobile-space-md) !important;
+        background: var(--mobile-glass-bg) !important;
+        backdrop-filter: blur(15px) !important;
+        border-right: 1px solid var(--mobile-glass-border) !important;
     }
     
     .sidebar a {
@@ -372,6 +457,22 @@
         font-size: var(--mobile-font-base) !important;
         min-height: 50px !important;
         border-radius: var(--mobile-radius-sm) !important;
+        background: var(--mobile-glass-bg) !important;
+        border: 1px solid transparent !important;
+        margin-bottom: var(--mobile-space-xs) !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .sidebar a:hover, .sidebar a.active {
+        background: var(--mobile-glass-border) !important;
+        border-color: var(--mobile-accent-blue) !important;
+        transform: translateX(5px) !important;
+    }
+    
+    /* Mobile backdrop for sidebar */
+    .mobile-backdrop {
+        background: rgba(0, 0, 0, 0.5) !important;
+        backdrop-filter: blur(5px) !important;
     }
 }
 
