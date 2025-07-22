@@ -4,77 +4,142 @@
    Use alongside main.css for responsive design
    ========================================================================== */
 
-/* Hide mobile-only elements on desktop */
+/* Desktop Quick Access Menu - Keep hamburger as quick access */
 @media screen and (min-width: 769px) {
-    /* Completely hide mobile hamburger menu on desktop */
+    /* Style hamburger menu as quick access on desktop */
     .mobile-menu-toggle {
-        display: none !important;
-        visibility: hidden !important;
+        display: flex !important;
+        position: fixed !important;
+        top: 20px !important;
+        left: 20px !important;
+        z-index: 1002 !important;
+        background: rgba(255, 255, 255, 0.15) !important;
+        backdrop-filter: blur(15px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        border-radius: 12px !important;
+        padding: 12px !important;
+        width: 50px !important;
+        height: 50px !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 4px !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
     }
     
-    /* Hide mobile backdrop on desktop */
+    /* Desktop hamburger hover effect */
+    .mobile-menu-toggle:hover {
+        background: rgba(79, 195, 247, 0.2) !important;
+        border-color: rgba(79, 195, 247, 0.5) !important;
+        transform: scale(1.05) !important;
+        box-shadow: 0 6px 20px rgba(79, 195, 247, 0.3) !important;
+    }
+    
+    /* Hamburger bars for desktop */
+    .mobile-menu-toggle .hamburger-bar {
+        width: 24px !important;
+        height: 3px !important;
+        background: #ffffff !important;
+        border-radius: 2px !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    /* Desktop backdrop styling */
     .mobile-backdrop {
-        display: none !important;
-        visibility: hidden !important;
-    }
-    
-    /* Reset sidebar to normal desktop behavior */
-    .sidebar {
-        position: static !important;
-        left: auto !important;
-        width: auto !important;
-        height: auto !important;
-        padding: 0 !important;
-        background: none !important;
-        backdrop-filter: none !important;
-        border: none !important;
-        box-shadow: none !important;
-        z-index: auto !important;
-        transition: none !important;
-        overflow: visible !important;
         display: block !important;
-        transform: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        background: rgba(0, 0, 0, 0.4) !important;
+        backdrop-filter: blur(3px) !important;
+        z-index: 1000 !important;
+        transition: all 0.3s ease !important;
     }
     
-    /* Reset sidebar header for desktop */
+    /* Desktop backdrop active state */
+    .mobile-backdrop.active {
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    /* Desktop sidebar as quick access panel */
+    .sidebar {
+        position: fixed !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 320px !important;
+        height: 100vh !important;
+        background: rgba(15, 32, 39, 0.95) !important;
+        backdrop-filter: blur(25px) !important;
+        border-right: 1px solid rgba(79, 195, 247, 0.3) !important;
+        padding-top: 30px !important;
+        z-index: 1001 !important;
+        box-shadow: 4px 0 25px rgba(0, 0, 0, 0.4) !important;
+        transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+        transform: translateX(-100%) !important;
+        overflow-y: auto !important;
+    }
+    
+    /* Desktop sidebar active state */
+    .sidebar.active {
+        transform: translateX(0) !important;
+    }
+    
+    /* Desktop sidebar header */
     .sidebar-header {
-        display: none !important; /* Hide mobile header on desktop */
+        display: block !important;
+        text-align: center !important;
+        padding: 0 20px 25px 20px !important;
+        border-bottom: 1px solid rgba(79, 195, 247, 0.3) !important;
+        margin-bottom: 25px !important;
     }
     
-    /* Reset sidebar navigation links for desktop */
+    .sidebar-header h3 {
+        color: #4fc3f7 !important;
+        font-size: 1.4em !important;
+        font-weight: 600 !important;
+        margin: 0 !important;
+    }
+    
+    /* Desktop sidebar navigation links */
     .sidebar .nav-link {
-        position: static !important;
-        padding: 0 !important;
+        display: block !important;
+        color: #ffffff !important;
+        padding: 16px 25px !important;
         background: none !important;
         border: none !important;
-        color: inherit !important;
-        transform: none !important;
-        box-shadow: none !important;
-        font-size: inherit !important;
-        font-weight: inherit !important;
-        min-height: auto !important;
-        border-radius: 0 !important;
-        margin: 0 !important;
-        transition: none !important;
-        display: inline-block !important;
-        width: auto !important;
-        text-align: inherit !important;
-        overflow: visible !important;
+        font-size: 1.1em !important;
+        font-weight: 500 !important;
+        margin-bottom: 8px !important;
+        border-radius: 10px !important;
+        transition: all 0.3s ease !important;
+        position: relative !important;
+        overflow: hidden !important;
+        cursor: pointer !important;
+        text-align: left !important;
+        width: 100% !important;
+        text-decoration: none !important;
     }
     
-    /* Reset sidebar link spans for desktop */
-    .sidebar .nav-link span {
-        position: static !important;
-        z-index: auto !important;
-        transform: none !important;
-        text-shadow: none !important;
-        transition: none !important;
+    /* Desktop sidebar link hover effects */
+    .sidebar .nav-link:hover {
+        background: rgba(79, 195, 247, 0.2) !important;
+        transform: translateX(8px) !important;
+        box-shadow: 0 4px 15px rgba(79, 195, 247, 0.2) !important;
+        border-left: 4px solid rgba(79, 195, 247, 0.8) !important;
     }
     
-    /* Reset sidebar pseudo-elements for desktop */
-    .sidebar .nav-link::before,
-    .sidebar::after {
-        display: none !important;
+    /* Desktop sidebar active link */
+    .sidebar .nav-link.active {
+        background: rgba(79, 195, 247, 0.3) !important;
+        border-left: 4px solid #4fc3f7 !important;
+        color: #4fc3f7 !important;
     }
     
     /* Ensure desktop navigation shows properly */
@@ -85,6 +150,11 @@
     /* Reset any mobile-specific body styles on desktop */
     body {
         overflow: auto !important;
+    }
+    
+    /* When sidebar is open on desktop, prevent body scroll */
+    body.sidebar-open {
+        overflow: hidden !important;
     }
 }
 

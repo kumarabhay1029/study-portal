@@ -1167,7 +1167,7 @@ function updateActiveNavigation(sectionName) {
 }
 
 /**
- * Toggle mobile menu visibility
+ * Toggle mobile menu visibility - works on both mobile and desktop as quick access
  */
 function toggleMobileMenu() {
     console.log('🍔 Hamburger menu toggle clicked');
@@ -1175,11 +1175,13 @@ function toggleMobileMenu() {
     const sidebar = document.querySelector('.sidebar');
     const overlay = document.querySelector('.mobile-backdrop');
     const hamburgerBtn = document.querySelector('.mobile-menu-toggle');
+    const isDesktop = window.innerWidth > 768;
     
     console.log('📱 Elements found:', {
         sidebar: !!sidebar,
         overlay: !!overlay,
-        hamburgerBtn: !!hamburgerBtn
+        hamburgerBtn: !!hamburgerBtn,
+        isDesktop: isDesktop
     });
     
     if (sidebar && overlay) {
@@ -1189,30 +1191,42 @@ function toggleMobileMenu() {
         // Animate hamburger button
         if (hamburgerBtn) {
             hamburgerBtn.classList.toggle('active');
+            hamburgerBtn.setAttribute('aria-expanded', sidebar.classList.contains('active'));
         }
         
-        // Prevent body scroll when menu is open
+        // Handle body scroll prevention
         if (sidebar.classList.contains('active')) {
             document.body.style.overflow = 'hidden';
-            console.log('✅ Mobile menu opened');
+            if (isDesktop) {
+                document.body.classList.add('sidebar-open');
+                console.log('✅ Desktop quick access opened');
+            } else {
+                console.log('✅ Mobile menu opened');
+            }
         } else {
             document.body.style.overflow = '';
-            console.log('✅ Mobile menu closed');
+            document.body.classList.remove('sidebar-open');
+            if (isDesktop) {
+                console.log('✅ Desktop quick access closed');
+            } else {
+                console.log('✅ Mobile menu closed');
+            }
         }
     } else {
-        console.error('❌ Mobile menu elements not found');
+        console.error('❌ Menu elements not found');
     }
 }
 
 /**
- * Close mobile menu
+ * Close mobile menu - works on both mobile and desktop
  */
 function closeMobileMenu() {
-    console.log('🍔 Closing mobile menu');
+    console.log('🍔 Closing menu');
     
     const sidebar = document.querySelector('.sidebar');
     const overlay = document.querySelector('.mobile-backdrop');
     const hamburgerBtn = document.querySelector('.mobile-menu-toggle');
+    const isDesktop = window.innerWidth > 768;
     
     if (sidebar && overlay) {
         sidebar.classList.remove('active');
@@ -1221,10 +1235,17 @@ function closeMobileMenu() {
         // Reset hamburger button animation
         if (hamburgerBtn) {
             hamburgerBtn.classList.remove('active');
+            hamburgerBtn.setAttribute('aria-expanded', 'false');
         }
         
         document.body.style.overflow = '';
-        console.log('✅ Mobile menu closed');
+        document.body.classList.remove('sidebar-open');
+        
+        if (isDesktop) {
+            console.log('✅ Desktop quick access closed');
+        } else {
+            console.log('✅ Mobile menu closed');
+        }
     }
 }
 
