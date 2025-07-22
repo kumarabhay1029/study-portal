@@ -46,6 +46,23 @@ body {
     font-size: 1rem; /* Use rem units for consistent scaling */
 }
 
+/* Desktop elements - ensure they're visible by default */
+.main-bar,
+.sidebar,
+.content-area,
+.notification-bar,
+.books-section,
+.year-navigation,
+.year-container {
+    display: block;
+}
+
+/* Mobile elements - hidden by default */
+.mobile-landing,
+.mobile-app {
+    display: none;
+}
+
 /* ==========================================================================
    ANIMATED BACKGROUND EFFECTS
    ========================================================================== */
@@ -2643,10 +2660,40 @@ body::after {
 }
 
 /* ==================================================
+   DESKTOP-FIRST RESPONSIVE DESIGN
+   ================================================== */
+
+/* Desktop view - default display */
+@media screen and (min-width: 769px) {
+    /* Ensure desktop elements are visible */
+    .main-bar,
+    .sidebar,
+    .content-area,
+    .notification-bar,
+    .books-section,
+    .year-navigation,
+    .year-container {
+        display: block !important;
+    }
+    
+    /* Hide mobile elements on desktop */
+    .mobile-landing,
+    .mobile-app,
+    .mobile-section-view {
+        display: none !important;
+    }
+    
+    /* Keep mobile menu toggle visible but position it properly */
+    .mobile-menu-toggle {
+        display: flex;
+    }
+}
+
+/* ==================================================
    MOBILE-FIRST PROGRESSIVE INTERFACE
    ================================================== */
 
-/* Base mobile styles - hide everything except login initially */
+/* Base mobile styles - hide desktop elements, show mobile */
 @media screen and (max-width: 768px) {
     /* Prevent zoom and enhance touch experience */
     * {
@@ -2657,16 +2704,19 @@ body::after {
         box-sizing: border-box;
     }
     
-    /* Hide all desktop elements initially */
+    /* Hide desktop elements for mobile ONLY - not on desktop */
     .main-bar,
-    .sidebar,
-    .mobile-menu-toggle,
     .content-area,
     .notification-bar,
     .books-section,
     .year-navigation,
     .year-container {
-        display: none !important;
+        display: none;
+    }
+    
+    /* Keep sidebar toggle visible for mobile menu */
+    .mobile-menu-toggle {
+        display: flex;
     }
     
     /* Enhanced Mobile container setup */

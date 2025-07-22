@@ -2252,7 +2252,13 @@ class MobileInterface {
     }
     
     listenForLogin() {
-        // Override the existing login success handler
+        // Only override login on mobile devices
+        if (window.innerWidth > 768) {
+            console.log('🖥️ Desktop detected - keeping original login function');
+            return;
+        }
+        
+        // Override the existing login success handler for mobile only
         const originalLoginUser = window.loginUser;
         
         if (!originalLoginUser) {
@@ -2264,12 +2270,16 @@ class MobileInterface {
             return;
         }
         
+        // Store original function and create mobile wrapper
+        window.originalDesktopLoginUser = originalLoginUser;
+        
         window.loginUser = async (event) => {
             try {
+                // Call original login function first
                 const result = await originalLoginUser(event);
                 
-                // Check if login was successful
-                if (window.auth && window.auth.currentUser) {
+                // Only handle mobile interface if on mobile and login was successful
+                if (window.innerWidth <= 768 && window.auth && window.auth.currentUser) {
                     console.log('✅ Mobile interface detected successful login');
                     
                     // Close login modal
@@ -3409,23 +3419,31 @@ class MobileInterface {
     }
 }
 
-// Initialize mobile interface when DOM is ready
+// Initialize mobile interface when DOM is ready - ONLY ON MOBILE
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('📱 Initializing mobile interface on DOM ready...');
-    window.mobileInterface = new MobileInterface();
+    if (window.innerWidth <= 768) {
+        console.log('📱 Mobile device detected - Initializing mobile interface...');
+        window.mobileInterface = new MobileInterface();
+    } else {
+        console.log('🖥️ Desktop device detected - Skipping mobile interface initialization');
+    }
 });
 
-// Also initialize if DOM is already ready
+// Also initialize if DOM is already ready - ONLY ON MOBILE
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-        if (!window.mobileInterface) {
-            console.log('📱 Initializing mobile interface (DOM was loading)...');
+        if (!window.mobileInterface && window.innerWidth <= 768) {
+            console.log('📱 Mobile device - Initializing mobile interface (DOM was loading)...');
             window.mobileInterface = new MobileInterface();
         }
     });
 } else {
-    console.log('📱 Initializing mobile interface (DOM already ready)...');
-    window.mobileInterface = new MobileInterface();
+    if (window.innerWidth <= 768) {
+        console.log('📱 Mobile device - Initializing mobile interface (DOM already ready)...');
+        window.mobileInterface = new MobileInterface();
+    } else {
+        console.log('🖥️ Desktop device - Mobile interface not needed');
+    }
 }
 
 console.log('✅ Study Portal Bundle Loaded Successfully!');
