@@ -3395,7 +3395,8 @@ body::after {
             color: #f0f0f0;
         }
     }
-}
+    
+    .mobile-landing {
         text-align: center;
         position: relative;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -3863,7 +3864,6 @@ body::after {
         outline: 2px solid rgba(79, 195, 247, 0.25);
         outline-offset: 2px;
     }
-}
 
 /* ==================================================
    TABLET BRIDGE (768px - 1024px)
