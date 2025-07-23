@@ -2,35 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <meta name="format-detection" content="telephone=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    
-    <!-- Performance optimizations -->
-    <meta name="theme-color" content="#0f2027">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
-    <!-- Prevent FOUC (Flash of Unstyled Content) -->
-    <style>
-        body { 
-            opacity: 0; 
-            background: #0f2027;
-            transition: opacity 0.3s ease;
-        }
-        body.loaded { 
-            opacity: 1; 
-        }
-        .main-bar, .content-area { 
-            visibility: hidden; 
-        }
-        body.loaded .main-bar, 
-        body.loaded .content-area { 
-            visibility: visible; 
-        }
-    </style>
-    
     <title>Study Portal - Your Academic Resource Hub</title>
     <meta name="description" content="Comprehensive academic resource hub for BCA studies. Access study materials, assignments, notes, and collaborative projects.">
     
@@ -38,111 +12,193 @@
     <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-storage-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore-compat.js"></script>
     
-    <!-- Firebase Configuration -->
+    <!-- Firebase Configuration (Secure) -->
     <script src="js/firebase-config.js"></script>
     
-    <!-- Cross-Browser Compatibility Scripts -->
+    <!-- Edge Browser Compatibility -->
+    <script>
+        // Edge browser compatibility fixes
+        if (!window.Promise) {
+            document.write('<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"><\/script>');
+        }
+        if (!window.fetch) {
+            document.write('<script src="https://cdn.jsdelivr.net/npm/whatwg-fetch@3.6.2/dist/fetch.umd.js"><\/script>');
+        }
+    </script>
+    
+    <!-- Cross-Browser Compatibility Script -->
     <script src="js/edge-compatibility.js"></script>
+    
+    <!-- STUDY PORTAL BUNDLE - Secure single solution -->
     <script src="js/study-portal-bundle.js"></script>
     
     <!-- Custom Stylesheets -->
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="css/sections.css">
+    
+    <!-- Mobile and Desktop responsive CSS -->
     <link rel="stylesheet" href="css/mobile.css">
-    <link rel="stylesheet" href="css/mobile-performance.css">
     
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📖</text></svg>">
 </head>
 
 <body>
-    <!-- Mobile Menu Components -->
+    <!-- ==========================================================================
+         MOBILE MENU COMPONENTS
+         ========================================================================== -->
+    
+    <!-- Mobile hamburger menu toggle button (top-left corner) -->
     <button class="mobile-menu-toggle" onclick="toggleMobileMenu()" id="mobileMenuToggle" aria-label="Toggle mobile menu" aria-expanded="false">
         <div class="hamburger-bar"></div>
         <div class="hamburger-bar"></div>
         <div class="hamburger-bar"></div>
     </button>
 
+    <!-- Mobile menu backdrop overlay (appears when sidebar is open) -->
     <div class="mobile-backdrop" id="mobileBackdrop" onclick="closeMobileMenu()" aria-hidden="true"></div>
 
-    <!-- Sidebar Navigation -->
+    <!-- ==========================================================================
+         SIDEBAR NAVIGATION
+         ========================================================================== -->
+    
+    <!-- Left sidebar navigation (hidden by default, slides in on mobile) -->
     <nav class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+        <!-- Sidebar header with portal branding -->
         <div class="sidebar-header">
             <h3>📖 Study Portal</h3>
         </div>
-        <a href="#" onclick="showSection('home')" class="active">🏠 Home</a>
-        <a href="#" onclick="showSection('dashboard')">📊 Dashboard</a>
-        <a href="books.html">📚 Study Books</a>
-        <a href="#" onclick="showSection('notes')">📋 Notes</a>
-        <a href="#" onclick="showSection('assignments')">📝 Assignments</a>
-        <a href="#" onclick="showSection('projects')">🚀 Projects</a>
-        <a href="#" onclick="showSection('research')">📄 Research</a>
-        <a href="#" onclick="showSection('members')">👥 Members</a>
-        <a href="#" onclick="showSection('community')">🤝 Community</a>
+        
+        <!-- Navigation links - each calls showSection() function to switch content -->
+        <button class="nav-link" onclick="showSection('home')" data-section="home" aria-label="Go to Home section">
+            <span>🏠 Home</span>
+        </button>
+        <button class="nav-link" onclick="showSection('dashboard')" data-section="dashboard" aria-label="Go to Dashboard section">
+            <span>📊 Dashboard</span>
+        </button>
+        <button class="nav-link" onclick="showSection('books')" data-section="books" aria-label="Go to Books section">
+            <span>📚 Books</span>
+        </button>
+        <button class="nav-link" onclick="showSection('assignments')" data-section="assignments" aria-label="Go to Assignments section">
+            <span>📝 Assignments</span>
+        </button>
+        <button class="nav-link" onclick="showSection('notes')" data-section="notes" aria-label="Go to Notes section">
+            <span>📋 Notes</span>
+        </button>
+        <button class="nav-link" onclick="showSection('projects')" data-section="projects" aria-label="Go to Projects section">
+            <span>🚀 Projects</span>
+        </button>
+        <button class="nav-link" onclick="showSection('research')" data-section="research" aria-label="Go to Research Papers section">
+            <span>📄 Research Papers</span>
+        </button>
+        <button class="nav-link" onclick="showSection('members')" data-section="members" aria-label="Go to Members section">
+            <span>👥 Members</span>
+        </button>
+        <button class="nav-link" onclick="showSection('community')" data-section="community" aria-label="Go to Community section">
+            <span>🤝 Community</span>
+        </button>
     </nav>
 
-    <!-- Main Navigation Bar -->
+    <!-- ==========================================================================
+         TOP NAVIGATION BAR
+         ========================================================================== -->
+    
+    <!-- Main horizontal navigation bar -->
     <div class="main-bar">
-        <div class="main-bar-content">
-            <div class="logo-section">
-                <h1>📖 Study Portal</h1>
-                <p>Your Academic Resource Hub</p>
-            </div>
-            <div class="nav-actions">
-                <button class="login-btn" onclick="handleLogin()">🔐 Login</button>
-            </div>
+        <!-- Portal title with icon and gradient text effect -->
+        <div class="portal-title">
+            <span class="title-icon">📖</span>
+            <span class="title-text">Study Portal</span>
         </div>
+        
+        <!-- Navigation buttons (desktop view) - hidden on mobile -->
+        <nav class="nav-group">
+            <button class="nav-btn" onclick="showSection('home')" data-section="home">🏠 Home</button>
+            <button class="nav-btn" onclick="showSection('dashboard')" data-section="dashboard">📊 Dashboard</button>
+            <button class="nav-btn" onclick="showSection('books')" data-section="books">📚 Books</button>
+            <button class="nav-btn" onclick="showSection('assignments')" data-section="assignments">📝 Assignments</button>
+            <button class="nav-btn" onclick="showSection('notes')" data-section="notes">📋 Notes</button>
+            <button class="nav-btn" onclick="showSection('projects')" data-section="projects">🚀 Projects</button>
+            <button class="nav-btn" onclick="showSection('research')" data-section="research">📄 Research</button>
+        </nav>
     </div>
 
-    <!-- Main Content Area -->
+    <!-- Login button (positioned absolutely in top-right corner) -->
+    <button class="login-btn" id="main-login-btn" onclick="if(typeof handleLogin === 'function'){handleLogin()}else{document.getElementById('loginModal').classList.add('active')}" title="Login to your account">
+        <span class="btn-icon">👤</span>
+        <span class="btn-text">Login</span>
+    </button>
+
+    <!-- Content Area -->
     <div class="content-area">
-        <!-- Home Section -->
+        <!-- Home Section - Landing page with hero and statistics -->
         <div id="home-section" class="section-container active">
+            <!-- Hero section - main welcome area with call-to-action -->
             <div class="hero-section">
-                <div class="hero-content">
-                    <h2>🎓 Welcome to Your Study Portal</h2>
-                    <p class="hero-description">Your one-stop destination for all BCA academic resources, collaborative learning, and educational materials.</p>
+                <h1>🎓 Welcome to Study Portal</h1>
+                <p>Your comprehensive academic resource hub for BCA studies. Access study materials, assignments, notes, and collaborative projects all in one convenient, modern platform.</p>
+                <button class="cta-button" onclick="showSection('dashboard')">
+                    📊 Get Started
+                </button>
+            </div>
+
+            <div class="stats-section">
+                <div class="stat-card">
+                    <div class="stat-number">100+</div>
+                    <div class="stat-label">Study Materials</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">150+</div>
+                    <div class="stat-label">Assignments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">200+</div>
+                    <div class="stat-label">Notes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Projects</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">75+</div>
+                    <div class="stat-label">Research Papers</div>
                 </div>
             </div>
 
             <div class="quick-access-grid">
                 <div class="access-card">
                     <h3>📚 Study Materials</h3>
-                    <p>Access comprehensive study materials, textbooks, reference guides, and e-books for all BCA subjects.</p>
-                    <button class="card-button" onclick="window.location.href='books.html'">
+                    <p>Access comprehensive study materials, textbooks, reference guides, and e-books for all BCA subjects. Stay updated with the latest curriculum.</p>
+                    <button class="card-button" onclick="showSection('books')">
                         Browse Materials
                     </button>
                 </div>
-                
                 <div class="access-card">
                     <h3>📝 Assignments</h3>
-                    <p>Download assignment questions, submit your completed work, and track your progress.</p>
+                    <p>Download assignment questions, submit your completed work, and track your progress. Get timely reminders for submission deadlines.</p>
                     <button class="card-button" onclick="showSection('assignments')">
                         View Assignments
                     </button>
                 </div>
-                
                 <div class="access-card">
                     <h3>📋 Notes</h3>
-                    <p>Quick reference notes and summaries for all subjects. Created by experts and fellow students.</p>
+                    <p>Quick reference notes and summaries for all subjects. Created by experts and fellow students to help you understand complex topics.</p>
                     <button class="card-button" onclick="showSection('notes')">
                         Access Notes
                     </button>
                 </div>
-                
                 <div class="access-card">
                     <h3>🚀 Projects</h3>
-                    <p>Explore project ideas, collaborate with fellow students, and showcase your work.</p>
+                    <p>Explore project ideas, collaborate with fellow students, and showcase your work. Find inspiration for your next academic project.</p>
                     <button class="card-button" onclick="showSection('projects')">
                         Explore Projects
                     </button>
                 </div>
-                
                 <div class="access-card">
                     <h3>📄 Research Papers</h3>
-                    <p>Access topic-wise research papers, academic publications, and scholarly articles.</p>
+                    <p>Access topic-wise research papers, academic publications, and scholarly articles. Stay updated with latest research in computer science and technology.</p>
                     <button class="card-button" onclick="showSection('research')">
                         Browse Papers
                     </button>
@@ -193,212 +249,1657 @@
             </div>
         </div>
 
-        <!-- Notes Section -->
-        <div id="notes-section" class="section-container">
-            <h2 class="section-title">📋 Student Notes</h2>
+        <!-- Books Section -->
+        <div id="books-section" class="section-container">
+            <h2 class="section-title">📚 BCA Study Materials & Books</h2>
             
-            <div class="content-tabs">
-                <button class="tab-btn active" onclick="showNotesTab('browse')">📚 Browse Notes</button>
-                <button class="tab-btn" onclick="showNotesTab('submit')">📝 Submit Notes</button>
-            </div>
-            
-            <div id="notes-browse-tab" class="tab-content active">
-                <div class="section-content">
-                    <h3>📚 Available Notes</h3>
-                    <p>Browse through curated notes submitted by students and approved by our team.</p>
-                    
-                    <div class="content-filters">
-                        <select id="subjectFilter" onchange="filterNotes()">
-                            <option value="all">📋 All Subjects</option>
-                            <option value="programming">💻 Programming</option>
-                            <option value="database">🗄️ Database</option>
-                            <option value="networking">🌐 Networking</option>
-                            <option value="mathematics">🔢 Mathematics</option>
-                        </select>
-                        
-                        <select id="semesterFilterNotes" onchange="filterNotes()">
-                            <option value="all">🎓 All Semesters</option>
-                            <option value="1">📗 Semester 1</option>
-                            <option value="2">📘 Semester 2</option>
-                            <option value="3">📙 Semester 3</option>
-                            <option value="4">📕 Semester 4</option>
-                        </select>
+            <!-- Enhanced Books Header -->
+            <div class="books-header">
+                <div class="books-intro">
+                    <p>Complete collection of BCA textbooks and study materials for all 6 semesters. All books are sourced from IGNOU's official repository (eGyankosh).</p>
+                </div>
+                
+                <!-- Year Navigation -->
+                <div class="year-navigation">
+                    <button class="year-nav-btn active" onclick="showYear('first-year')" data-year="first-year">
+                        🎓 First Year
+                    </button>
+                    <button class="year-nav-btn" onclick="showYear('second-year')" data-year="second-year">
+                        📚 Second Year
+                    </button>
+                    <button class="year-nav-btn" onclick="showYear('third-year')" data-year="third-year">
+                        🚀 Third Year
+                    </button>
+                </div>
+                
+                <!-- Books Statistics -->
+                <div class="books-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">38+</span>
+                        <span class="stat-label">Total Books</span>
                     </div>
-                    
-                    <div class="notes-grid">
-                        <div class="note-card programming" data-subject="programming" data-semester="1">
-                            <div class="note-header">
-                                <span class="note-subject">Programming</span>
-                                <span class="note-semester">Sem 1</span>
+                    <div class="stat-item">
+                        <span class="stat-number">6</span>
+                        <span class="stat-label">Semesters</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">Free Access</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- First Year (Semester 1 & 2) -->
+            <div class="year-container active" id="first-year">
+                <div class="year-header">
+                    <h3 class="year-title">🎓 First Year - Foundation</h3>
+                    <p class="year-description">Build your programming foundations with core computer science concepts</p>
+                </div>
+                
+                <!-- Semester 1 -->
+                <div class="semester-section">
+                    <div class="semester-header">
+                        <h4 class="semester-title">📘 Semester 1</h4>
+                        <span class="semester-badge">6 Subjects</span>
+                    </div>
+                    <div class="books-grid">
+                        <div class="book-card core">
+                            <div class="book-header">
+                                <span class="book-category">Environment</span>
+                                <span class="book-credits">4 Credits</span>
                             </div>
-                            <h4>C++ Basics</h4>
-                            <p>Comprehensive notes covering basic concepts of C++ programming.</p>
-                            <div class="note-footer">
-                                <span class="note-author">By: Student A</span>
-                                <button class="download-btn">📥 Download</button>
+                            <div class="book-info">
+                                <h5>BEVAE-181</h5>
+                                <p>Environmental Studies</p>
                             </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/61136" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
                         </div>
                         
-                        <div class="note-card database" data-subject="database" data-semester="2">
-                            <div class="note-header">
-                                <span class="note-subject">Database</span>
-                                <span class="note-semester">Sem 2</span>
+                        <div class="book-card core">
+                            <div class="book-header">
+                                <span class="book-category">English</span>
+                                <span class="book-credits">6 Credits</span>
                             </div>
-                            <h4>SQL Queries</h4>
-                            <p>Essential SQL queries and database operations with examples.</p>
-                            <div class="note-footer">
-                                <span class="note-author">By: Student B</span>
-                                <button class="download-btn">📥 Download</button>
+                            <div class="book-info">
+                                <h5>BEGLA-136</h5>
+                                <p>English at Workplace</p>
                             </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/56579" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card programming">
+                            <div class="book-header">
+                                <span class="book-category">Computer</span>
+                                <span class="book-credits">4 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>BCS-111</h5>
+                                <p>Computer Basics and PC Software</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/434" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card lab">
+                            <div class="book-header">
+                                <span class="book-category">Lab</span>
+                                <span class="book-credits">2 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>BCSL-013</h5>
+                                <p>Computer Basics and PC Software Lab</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/442" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card mathematics">
+                            <div class="book-header">
+                                <span class="book-category">Mathematics</span>
+                                <span class="book-credits">6 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>BCS-012</h5>
+                                <p>Basic Mathematics</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/72432" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Semester 2 -->
+                <div class="semester-section">
+                    <div class="semester-header">
+                        <h4 class="semester-title">📗 Semester 2</h4>
+                        <span class="semester-badge">6 Subjects</span>
+                    </div>
+                    <div class="books-grid">
+                        <div class="book-card core">
+                            <div class="book-header">
+                                <span class="book-category">English</span>
+                                <span class="book-credits">6 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>FEG-02</h5>
+                                <p>Foundation in English-2</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/422" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card programming">
+                            <div class="book-header">
+                                <span class="book-category">Hardware</span>
+                                <span class="book-credits">4 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>MCS-202</h5>
+                                <p>Computer Organisation</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/73833" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card programming">
+                            <div class="book-header">
+                                <span class="book-category">Systems</span>
+                                <span class="book-credits">4 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>MCS-203</h5>
+                                <p>Operating Systems</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/72496" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card lab">
+                            <div class="book-header">
+                                <span class="book-category">Lab</span>
+                                <span class="book-credits">2 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>MCSL-204</h5>
+                                <p>Windows & Linux Lab</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/72667" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card lab">
+                            <div class="book-header">
+                                <span class="book-category">Lab</span>
+                                <span class="book-credits">2 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>MCSL-205</h5>
+                                <p>C & Python Lab</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/72733" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card programming">
+                            <div class="book-header">
+                                <span class="book-category">Programming</span>
+                                <span class="book-credits">6 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>MCS-201</h5>
+                                <p>Programming in C & Python</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/72701" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <div id="notes-submit-tab" class="tab-content">
-                <div class="section-content">
-                    <h3>📝 Submit Your Notes</h3>
-                    <p>Share your knowledge with fellow students by submitting your notes.</p>
+
+            <!-- Second Year (Semester 3 & 4) -->
+            <div class="year-container" id="second-year">
+                <div class="year-header">
+                    <h3 class="year-title">📚 Second Year - Core Development</h3>
+                    <p class="year-description">Master data structures, algorithms, and object-oriented programming</p>
+                </div>
+                
+                <!-- Semester 3 -->
+                <div class="semester-section">
+                    <div class="semester-header">
+                        <h4 class="semester-title">📕 Semester 3</h4>
+                        <span class="semester-badge">6 Subjects</span>
+                    </div>
+                    <div class="books-grid">
+                        <div class="book-card programming">
+                            <div class="book-header">
+                                <span class="book-category">Algorithms</span>
+                                <span class="book-credits">6 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>MCS-208</h5>
+                                <p>Data Structure and Algorithms</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/83084" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card lab">
+                            <div class="book-header">
+                                <span class="book-category">Lab</span>
+                                <span class="book-credits">2 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>MCSL-209</h5>
+                                <p>Data Structure and Algorithms Lab</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/86221" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card programming">
+                            <div class="book-header">
+                                <span class="book-category">Database</span>
+                                <span class="book-credits">6 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>MCS-207</h5>
+                                <p>Database Management Systems</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/86026" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card programming">
+                            <div class="book-header">
+                                <span class="book-category">Programming</span>
+                                <span class="book-credits">4 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>BCS-131</h5>
+                                <p>Programming in C++</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/460" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card lab">
+                            <div class="book-header">
+                                <span class="book-category">Lab</span>
+                                <span class="book-credits">2 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>BCSL-135</h5>
+                                <p>DBMS And C++ Lab</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/463" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card mathematics">
+                            <div class="book-header">
+                                <span class="book-category">Mathematics</span>
+                                <span class="book-credits">4 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>BCS-040</h5>
+                                <p>Statistical Techniques</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/464" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Semester 4 -->
+                <div class="semester-section">
+                    <div class="semester-header">
+                        <h4 class="semester-title">📙 Semester 4</h4>
+                        <span class="semester-badge">6 Subjects</span>
+                    </div>
+                    <div class="books-grid">
+                        <div class="book-card programming">
+                            <div class="book-header">
+                                <span class="book-category">Java</span>
+                                <span class="book-credits">6 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>MCS-206</h5>
+                                <p>Object Oriented Programming using Java</p>
+                            </div>
+                            <a href="http://egyankosh.ac.in/handle/123456789/79806" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card lab coming-soon">
+                            <div class="book-header">
+                                <span class="book-category">Lab</span>
+                                <span class="book-credits">2 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>BCSL-146</h5>
+                                <p>Object Oriented Programming using Java Lab</p>
+                            </div>
+                            <a href="#" class="download-btn disabled" title="Coming Soon">
+                                📥 Coming Soon
+                            </a>
+                        </div>
+                        
+                        <div class="book-card programming">
+                            <div class="book-header">
+                                <span class="book-category">Web</span>
+                                <span class="book-credits">4 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>BCS-053</h5>
+                                <p>Web Programming</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/51958" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card lab coming-soon">
+                            <div class="book-header">
+                                <span class="book-category">Lab</span>
+                                <span class="book-credits">2 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>BCSL-147</h5>
+                                <p>Web Programming Lab</p>
+                            </div>
+                            <a href="#" class="download-btn disabled" title="Coming Soon">
+                                📥 Coming Soon
+                            </a>
+                        </div>
+                        
+                        <div class="book-card programming">
+                            <div class="book-header">
+                                <span class="book-category">Networks</span>
+                                <span class="book-credits">4 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>BCS-041</h5>
+                                <p>Fundamentals of Computer Networks</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/466" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card core">
+                            <div class="book-header">
+                                <span class="book-category">Finance</span>
+                                <span class="book-credits">6 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>BCOC-131</h5>
+                                <p>Finance Accounting</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/52493" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Third Year (Semester 5 & 6) -->
+            <div class="year-container" id="third-year">
+                <div class="year-header">
+                    <h3 class="year-title">🚀 Third Year - Specialization</h3>
+                    <p class="year-description">Advanced topics, project work, and industry-relevant skills</p>
+                </div>
+                
+                <!-- Semester 5 -->
+                <div class="semester-section">
+                    <div class="semester-header">
+                        <h4 class="semester-title">📔 Semester 5</h4>
+                        <span class="semester-badge">6 Subjects</span>
+                    </div>
+                    <div class="books-grid">
+                        <div class="book-card programming">
+                            <div class="book-header">
+                                <span class="book-category">Engineering</span>
+                                <span class="book-credits">4 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>BCS-151</h5>
+                                <p>Introduction to Software Engineering</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/52136" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card programming">
+                            <div class="book-header">
+                                <span class="book-category">Algorithms</span>
+                                <span class="book-credits">4 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>BCS-042</h5>
+                                <p>Introduction to Algorithm Design</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/467" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card lab coming-soon">
+                            <div class="book-header">
+                                <span class="book-category">Lab</span>
+                                <span class="book-credits">2 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>BCSL-159</h5>
+                                <p>Introduction to Algorithm Design Lab</p>
+                            </div>
+                            <a href="#" class="download-btn disabled" title="Coming Soon">
+                                📥 Coming Soon
+                            </a>
+                        </div>
+                        
+                        <div class="book-card programming">
+                            <div class="book-header">
+                                <span class="book-category">E-Commerce</span>
+                                <span class="book-credits">4 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>BCOS-184</h5>
+                                <p>E-Commerce</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/72073" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card programming">
+                            <div class="book-header">
+                                <span class="book-category">Security</span>
+                                <span class="book-credits">4 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>MSEI-023</h5>
+                                <p>Cyber Security</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/48331" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card programming">
+                            <div class="book-header">
+                                <span class="book-category">Analytics</span>
+                                <span class="book-credits">4 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>BECS-184</h5>
+                                <p>Data Analysis</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/70600" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Semester 6 -->
+                <div class="semester-section">
+                    <div class="semester-header">
+                        <h4 class="semester-title">📓 Semester 6</h4>
+                        <span class="semester-badge">3 Subjects</span>
+                    </div>
+                    <div class="books-grid">
+                        <div class="book-card core">
+                            <div class="book-header">
+                                <span class="book-category">Business</span>
+                                <span class="book-credits">4 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>BCOS-185</h5>
+                                <p>Entrepreneurship</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/79259" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card programming">
+                            <div class="book-header">
+                                <span class="book-category">Forensics</span>
+                                <span class="book-credits">4 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>MSEI-027</h5>
+                                <p>Digital Forensics</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/50888" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card project coming-soon">
+                            <div class="book-header">
+                                <span class="book-category">Project</span>
+                                <span class="book-credits">8 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h5>BCSP</h5>
+                                <p>BCA Project</p>
+                            </div>
+                            <a href="#" class="download-btn disabled" title="Help Coming Soon">
+                                🎯 Help Coming Soon
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enhanced Footer with Quick Actions -->
+            <div class="books-footer">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h4>📚 Quick Access</h4>
+                        <div class="quick-links">
+                            <button class="quick-link-btn" onclick="downloadAllBooks('programming')">
+                                💻 Programming Books
+                            </button>
+                            <button class="quick-link-btn" onclick="downloadAllBooks('lab')">
+                                🔬 Lab Manuals
+                            </button>
+                            <button class="quick-link-btn" onclick="downloadAllBooks('mathematics')">
+                                📊 Mathematics
+                            </button>
+                        </div>
+                    </div>
                     
-                    <form class="submit-form" onsubmit="submitNote(event)">
-                        <div class="form-group">
-                            <label for="noteTitle">📄 Note Title:</label>
-                            <input type="text" id="noteTitle" required placeholder="Enter note title">
+                    <div class="footer-section">
+                        <h4>📝 Important Notes</h4>
+                        <ul class="footer-notes">
+                            <li>All books are sourced from IGNOU's official eGyankosh repository</li>
+                            <li>PDF format ensures easy reading and printing</li>
+                            <li>Lab manuals are updated periodically - check for latest versions</li>
+                            <li>Project assistance (BCSP) help will come soon</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>🎯 Study Tips</h4>
+                        <div class="study-tips">
+                            <div class="tip-card">
+                                <span class="tip-icon">⏰</span>
+                                <p>Download books before semester starts</p>
+                            </div>
+                            <div class="tip-card">
+                                <span class="tip-icon">📖</span>
+                                <p>Read theory books alongside lab practice</p>
+                            </div>
+                            <div class="tip-card">
+                                <span class="tip-icon">🎯</span>
+                                <p>Focus on programming concepts in early semesters</p>
+                            </div>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="noteSubject">📚 Subject:</label>
-                            <select id="noteSubject" required>
-                                <option value="">Select Subject</option>
-                                <option value="programming">💻 Programming</option>
-                                <option value="database">🗄️ Database</option>
-                                <option value="networking">🌐 Networking</option>
-                                <option value="mathematics">🔢 Mathematics</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="noteFile">📎 Upload File:</label>
-                            <input type="file" id="noteFile" accept=".pdf,.doc,.docx" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="noteDescription">📝 Description:</label>
-                            <textarea id="noteDescription" placeholder="Brief description of your notes" rows="4"></textarea>
-                        </div>
-                        
-                        <button type="submit" class="submit-btn">📤 Submit Notes</button>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Assignments Section -->
         <div id="assignments-section" class="section-container">
-            <h2 class="section-title">📝 Assignments</h2>
-            <div class="section-content">
-                <p>Access and submit your assignments here.</p>
-                <div class="assignments-grid">
-                    <div class="assignment-card">
-                        <h3>Assignment 1 - Programming</h3>
-                        <p>C++ Programming Fundamentals</p>
-                        <div class="assignment-meta">
-                            <span>Due: Jan 30, 2025</span>
-                            <span>Status: Pending</span>
-                        </div>
-                        <button class="download-btn">📥 Download</button>
+            <div class="assignments-header">
+                <h2 class="section-title">📝 Assignments Hub</h2>
+                <p class="section-description">Manage your assignments, track submissions, and stay on top of deadlines with our comprehensive assignment management system.</p>
+            </div>
+
+            <!-- Assignment Stats Dashboard -->
+            <div class="assignment-stats">
+                <div class="stat-card pending">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-info">
+                        <div class="stat-number">4</div>
+                        <div class="stat-label">Pending</div>
                     </div>
+                </div>
+                <div class="stat-card completed">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-info">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                </div>
+                <div class="stat-card upcoming">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-info">
+                        <div class="stat-number">3</div>
+                        <div class="stat-label">Upcoming</div>
+                    </div>
+                </div>
+                <div class="stat-card total">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-info">
+                        <div class="stat-number">19</div>
+                        <div class="stat-label">Total</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assignment Categories -->
+            <div class="assignment-categories">
+                <h3 class="category-title">📋 Assignment Categories</h3>
+                <div class="category-grid">
+                    <div class="category-card theory">
+                        <div class="category-header">
+                            <span class="category-icon">📚</span>
+                            <h4>Theory Assignments</h4>
+                        </div>
+                        <p>Research papers, essays, and theoretical analysis assignments for all subjects.</p>
+                        <div class="category-stats">
+                            <span class="pending-count">2 pending</span>
+                            <span class="total-count">8 total</span>
+                        </div>
+                    </div>
+                    
+                    <div class="category-card practical">
+                        <div class="category-header">
+                            <span class="category-icon">💻</span>
+                            <h4>Practical Assignments</h4>
+                        </div>
+                        <p>Programming tasks, lab work, and hands-on implementation projects.</p>
+                        <div class="category-stats">
+                            <span class="pending-count">2 pending</span>
+                            <span class="total-count">11 total</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Current Assignments List -->
+            <div class="current-assignments">
+                <h3 class="section-subtitle">🎯 Current Assignments</h3>
+                <div class="assignment-list">
+                    <div class="assignment-item urgent">
+                        <div class="assignment-info">
+                            <h4>MCS-208 Data Structures Assignment</h4>
+                            <p>Implement binary search tree and AVL tree with complete documentation</p>
+                            <div class="assignment-meta">
+                                <span class="subject-tag programming">Programming</span>
+                                <span class="assignment-type">Practical</span>
+                            </div>
+                        </div>
+                        <div class="assignment-deadline">
+                            <span class="deadline-label">Due:</span>
+                            <span class="deadline-date urgent">Jan 30, 2025</span>
+                            <span class="days-left">5 days left</span>
+                        </div>
+                        <div class="assignment-actions">
+                            <button class="action-btn download">📥 Download</button>
+                            <button class="action-btn submit">📤 Submit</button>
+                        </div>
+                    </div>
+
+                    <div class="assignment-item normal">
+                        <div class="assignment-info">
+                            <h4>BCS-053 Web Programming Assignment</h4>
+                            <p>Create responsive website using HTML5, CSS3, and JavaScript</p>
+                            <div class="assignment-meta">
+                                <span class="subject-tag web">Web Technology</span>
+                                <span class="assignment-type">Practical</span>
+                            </div>
+                        </div>
+                        <div class="assignment-deadline">
+                            <span class="deadline-label">Due:</span>
+                            <span class="deadline-date">Feb 15, 2025</span>
+                            <span class="days-left">21 days left</span>
+                        </div>
+                        <div class="assignment-actions">
+                            <button class="action-btn download">📥 Download</button>
+                            <button class="action-btn submit">📤 Submit</button>
+                        </div>
+                    </div>
+
+                    <div class="assignment-item normal">
+                        <div class="assignment-info">
+                            <h4>MCS-207 Database Management Systems</h4>
+                            <p>Design and implement a complete database system with normalization</p>
+                            <div class="assignment-meta">
+                                <span class="subject-tag database">Database</span>
+                                <span class="assignment-type">Theory + Practical</span>
+                            </div>
+                        </div>
+                        <div class="assignment-deadline">
+                            <span class="deadline-label">Due:</span>
+                            <span class="deadline-date">Mar 10, 2025</span>
+                            <span class="days-left">44 days left</span>
+                        </div>
+                        <div class="assignment-actions">
+                            <button class="action-btn download">📥 Download</button>
+                            <button class="action-btn submit">📤 Submit</button>
+                        </div>
+                    </div>
+
+                    <div class="assignment-item upcoming">
+                        <div class="assignment-info">
+                            <h4>BCS-042 Algorithm Design Assignment</h4>
+                            <p>Analyze time complexity and implement advanced sorting algorithms</p>
+                            <div class="assignment-meta">
+                                <span class="subject-tag algorithms">Algorithms</span>
+                                <span class="assignment-type">Theory + Practical</span>
+                            </div>
+                        </div>
+                        <div class="assignment-deadline">
+                            <span class="deadline-label">Due:</span>
+                            <span class="deadline-date">Apr 5, 2025</span>
+                            <span class="days-left">70 days left</span>
+                        </div>
+                        <div class="assignment-actions">
+                            <button class="action-btn download">📥 Download</button>
+                            <button class="action-btn submit disabled">📤 Not Available</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submission Guidelines -->
+            <div class="submission-guidelines">
+                <h3 class="section-subtitle">📋 Submission Guidelines</h3>
+                <div class="guidelines-content">
+                    <div class="guideline-section">
+                        <h4>📄 Format Requirements</h4>
+                        <ul>
+                            <li>All assignments must be submitted in PDF format</li>
+                            <li>Include proper cover page with student details</li>
+                            <li>Use standard fonts (Arial 12pt or Times New Roman 12pt)</li>
+                            <li>Maintain proper page margins (1 inch on all sides)</li>
+                        </ul>
+                    </div>
+                    <div class="guideline-section">
+                        <h4>💻 Programming Assignments</h4>
+                        <ul>
+                            <li>Submit source code with proper comments</li>
+                            <li>Include screenshots of program execution</li>
+                            <li>Provide detailed explanation of algorithm used</li>
+                            <li>Test with multiple input scenarios</li>
+                        </ul>
+                    </div>
+                    <div class="guideline-section">
+                        <h4>⏰ Submission Process</h4>
+                        <ul>
+                            <li>Submit assignments through the portal before deadline</li>
+                            <li>Late submissions may result in grade penalties</li>
+                            <li>Keep backup copies of all submitted work</li>
+                            <li>Verify submission confirmation email</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="assignment-actions-panel">
+                <h3 class="section-subtitle">🚀 Quick Actions</h3>
+                <div class="quick-actions-grid">
+                    <button class="quick-action-btn primary" onclick="alert('Assignment submission portal will open here!')">
+                        <span class="action-icon">📤</span>
+                        <span class="action-text">Submit Assignment</span>
+                    </button>
+                    <button class="quick-action-btn secondary" onclick="alert('Assignment calendar will open here!')">
+                        <span class="action-icon">📅</span>
+                        <span class="action-text">View Calendar</span>
+                    </button>
+                    <button class="quick-action-btn secondary" onclick="alert('Download all assignments feature coming soon!')">
+                        <span class="action-icon">�</span>
+                        <span class="action-text">Download All</span>
+                    </button>
+                    <button class="quick-action-btn secondary" onclick="alert('Assignment help and guidelines!')">
+                        <span class="action-icon">❓</span>
+                        <span class="action-text">Get Help</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notes Section -->
+        <div id="notes-section" class="section-container">
+            <div class="notes-header">
+                <h2 class="section-title">📋 Study Notes Hub</h2>
+                <p class="section-description">Access comprehensive study notes, quick references, and summaries for all BCA subjects. Created by experts and fellow students to help you excel in your studies.</p>
+            </div>
+
+            <!-- Notes Statistics -->
+            <div class="notes-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">📚</div>
+                    <div class="stat-info">
+                        <div class="stat-number">250+</div>
+                        <div class="stat-label">Total Notes</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📖</div>
+                    <div class="stat-info">
+                        <div class="stat-number">18</div>
+                        <div class="stat-label">Subjects</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-info">
+                        <div class="stat-number">6</div>
+                        <div class="stat-label">Semesters</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-info">
+                        <div class="stat-number">95%</div>
+                        <div class="stat-label">Accuracy</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subject-wise Notes Organization -->
+            <div class="notes-organization">
+                <h3 class="section-subtitle">📚 Subject-wise Notes Collection</h3>
+                <div class="subject-notes-grid">
+                    <!-- Programming Notes -->
+                    <div class="subject-note-card programming">
+                        <div class="note-card-header">
+                            <span class="subject-icon">💻</span>
+                            <h4>Programming</h4>
+                        </div>
+                        <div class="note-topics">
+                            <div class="topic-item">
+                                <span class="topic-title">C Programming</span>
+                                <span class="note-count">15 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">Python Programming</span>
+                                <span class="note-count">18 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">C++ Programming</span>
+                                <span class="note-count">12 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">Java Programming</span>
+                                <span class="note-count">20 notes</span>
+                            </div>
+                        </div>
+                        <button class="view-notes-btn">📖 View All Programming Notes</button>
+                    </div>
+
+                    <!-- Data Structures & Algorithms -->
+                    <div class="subject-note-card algorithms">
+                        <div class="note-card-header">
+                            <span class="subject-icon">🔗</span>
+                            <h4>Data Structures & Algorithms</h4>
+                        </div>
+                        <div class="note-topics">
+                            <div class="topic-item">
+                                <span class="topic-title">Arrays & Linked Lists</span>
+                                <span class="note-count">10 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">Stacks & Queues</span>
+                                <span class="note-count">8 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">Trees & Graphs</span>
+                                <span class="note-count">14 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">Sorting & Searching</span>
+                                <span class="note-count">12 notes</span>
+                            </div>
+                        </div>
+                        <button class="view-notes-btn">🔍 View DSA Notes</button>
+                    </div>
+
+                    <!-- Database Management -->
+                    <div class="subject-note-card database">
+                        <div class="note-card-header">
+                            <span class="subject-icon">🗄️</span>
+                            <h4>Database Management</h4>
+                        </div>
+                        <div class="note-topics">
+                            <div class="topic-item">
+                                <span class="topic-title">SQL Fundamentals</span>
+                                <span class="note-count">16 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">Database Design</span>
+                                <span class="note-count">12 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">Normalization</span>
+                                <span class="note-count">8 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">Advanced Queries</span>
+                                <span class="note-count">10 notes</span>
+                            </div>
+                        </div>
+                        <button class="view-notes-btn">🗃️ View Database Notes</button>
+                    </div>
+
+                    <!-- Web Technologies -->
+                    <div class="subject-note-card web">
+                        <div class="note-card-header">
+                            <span class="subject-icon">🌐</span>
+                            <h4>Web Technologies</h4>
+                        </div>
+                        <div class="note-topics">
+                            <div class="topic-item">
+                                <span class="topic-title">HTML5 & CSS3</span>
+                                <span class="note-count">14 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">JavaScript</span>
+                                <span class="note-count">18 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">PHP & MySQL</span>
+                                <span class="note-count">12 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">Web Frameworks</span>
+                                <span class="note-count">9 notes</span>
+                            </div>
+                        </div>
+                        <button class="view-notes-btn">🌍 View Web Notes</button>
+                    </div>
+
+                    <!-- Mathematics -->
+                    <div class="subject-note-card mathematics">
+                        <div class="note-card-header">
+                            <span class="subject-icon">📊</span>
+                            <h4>Mathematics</h4>
+                        </div>
+                        <div class="note-topics">
+                            <div class="topic-item">
+                                <span class="topic-title">Discrete Mathematics</span>
+                                <span class="note-count">20 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">Statistics</span>
+                                <span class="note-count">15 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">Linear Algebra</span>
+                                <span class="note-count">12 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">Probability</span>
+                                <span class="note-count">10 notes</span>
+                            </div>
+                        </div>
+                        <button class="view-notes-btn">📈 View Math Notes</button>
+                    </div>
+
+                    <!-- Computer Networks -->
+                    <div class="subject-note-card networks">
+                        <div class="note-card-header">
+                            <span class="subject-icon">🌐</span>
+                            <h4>Computer Networks</h4>
+                        </div>
+                        <div class="note-topics">
+                            <div class="topic-item">
+                                <span class="topic-title">Network Fundamentals</span>
+                                <span class="note-count">12 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">TCP/IP Protocol</span>
+                                <span class="note-count">8 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">Network Security</span>
+                                <span class="note-count">10 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">Wireless Networks</span>
+                                <span class="note-count">6 notes</span>
+                            </div>
+                        </div>
+                        <button class="view-notes-btn">🔗 View Network Notes</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Updates & Quick Access -->
+            <div class="notes-updates">
+                <h3 class="section-subtitle">🆕 Recent Updates & Quick Access</h3>
+                <div class="updates-grid">
+                    <div class="update-card new">
+                        <div class="update-header">
+                            <span class="update-icon">🆕</span>
+                            <h4>New Notes Added</h4>
+                        </div>
+                        <div class="update-list">
+                            <div class="update-item">MCS-208: Advanced Tree Algorithms</div>
+                            <div class="update-item">BCS-053: Modern CSS Techniques</div>
+                            <div class="update-item">MCS-207: Database Optimization</div>
+                            <div class="update-item">BCS-042: Dynamic Programming</div>
+                        </div>
+                        <span class="update-time">Added this week</span>
+                    </div>
+
+                    <div class="update-card popular">
+                        <div class="update-header">
+                            <span class="update-icon">🔥</span>
+                            <h4>Most Downloaded</h4>
+                        </div>
+                        <div class="update-list">
+                            <div class="update-item">Java Programming Basics</div>
+                            <div class="update-item">SQL Query Examples</div>
+                            <div class="update-item">Data Structures Cheat Sheet</div>
+                            <div class="update-item">Web Development Guide</div>
+                        </div>
+                        <span class="update-time">This month's favorites</span>
+                    </div>
+
+                    <div class="update-card tools">
+                        <div class="update-header">
+                            <span class="update-icon">🛠️</span>
+                            <h4>Study Tools</h4>
+                        </div>
+                        <div class="tools-list">
+                            <button class="tool-btn">📋 Create Notes</button>
+                            <button class="tool-btn">🔍 Search Notes</button>
+                            <button class="tool-btn">📥 Download All</button>
+                            <button class="tool-btn">📤 Share Notes</button>
+                        </div>
+                        <span class="update-time">Access powerful tools</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes Access Panel -->
+            <div class="notes-access-panel">
+                <h3 class="section-subtitle">🎯 Quick Actions</h3>
+                <div class="access-buttons">
+                    <button class="access-btn primary" onclick="alert('Notes browser will open here!')">
+                        <span class="btn-icon">📖</span>
+                        <span class="btn-text">Browse All Notes</span>
+                    </button>
+                    <button class="access-btn secondary" onclick="alert('Advanced search feature will open!')">
+                        <span class="btn-icon">🔍</span>
+                        <span class="btn-text">Search Notes</span>
+                    </button>
+                    <button class="access-btn secondary" onclick="alert('Upload notes feature coming soon!')">
+                        <span class="btn-icon">📤</span>
+                        <span class="btn-text">Upload Notes</span>
+                    </button>
+                    <button class="access-btn secondary" onclick="alert('Favorites and bookmarks!')">
+                        <span class="btn-icon">⭐</span>
+                        <span class="btn-text">My Favorites</span>
+                    </button>
                 </div>
             </div>
         </div>
 
         <!-- Projects Section -->
         <div id="projects-section" class="section-container">
-            <h2 class="section-title">🚀 Projects</h2>
-            <div class="section-content">
-                <p>Explore project ideas and collaborate with fellow students.</p>
+            <div class="projects-header">
+                <h2 class="section-title">🚀 Projects Hub</h2>
+                <p class="section-description">Explore innovative project ideas, collaborate with fellow students, and showcase your work. Find inspiration and resources for your next academic or personal project.</p>
+            </div>
+
+            <!-- Project Categories -->
+            <div class="project-categories">
+                <h3 class="section-subtitle">🎯 Project Categories</h3>
+                <div class="category-filter-tabs">
+                    <button class="filter-tab active" data-category="all">🌟 All Projects</button>
+                    <button class="filter-tab" data-category="web">🌐 Web Development</button>
+                    <button class="filter-tab" data-category="desktop">💻 Desktop Applications</button>
+                    <button class="filter-tab" data-category="mobile">📱 Mobile Apps</button>
+                    <button class="filter-tab" data-category="ai">🤖 AI/ML Projects</button>
+                    <button class="filter-tab" data-category="database">🗄️ Database Projects</button>
+                </div>
+            </div>
+
+            <!-- Featured Projects -->
+            <div class="featured-projects">
+                <h3 class="section-subtitle">⭐ Featured Projects</h3>
                 <div class="projects-grid">
-                    <div class="project-card">
-                        <h3>Student Management System</h3>
-                        <p>A comprehensive system to manage student records and academic data.</p>
-                        <div class="project-tech">
-                            <span class="tech-tag">C++</span>
-                            <span class="tech-tag">Database</span>
+                    <!-- Library Management System -->
+                    <div class="project-card featured web database" data-category="web database">
+                        <div class="project-header">
+                            <div class="project-badge featured">⭐ Featured</div>
+                            <div class="project-difficulty intermediate">🟡 Intermediate</div>
                         </div>
-                        <button class="view-btn">👁️ View Details</button>
+                        <div class="project-content">
+                            <h4 class="project-title">📚 Library Management System</h4>
+                            <p class="project-description">Complete web-based library management system with book cataloging, member management, and automated fine calculation.</p>
+                            <div class="project-tech-stack">
+                                <span class="tech-tag">HTML5</span>
+                                <span class="tech-tag">CSS3</span>
+                                <span class="tech-tag">JavaScript</span>
+                                <span class="tech-tag">PHP</span>
+                                <span class="tech-tag">MySQL</span>
+                            </div>
+                        </div>
+                        <div class="project-footer">
+                            <div class="project-stats">
+                                <span class="stat">👨‍💻 15 contributors</span>
+                                <span class="stat">⭐ 4.8 rating</span>
+                            </div>
+                            <div class="project-actions">
+                                <button class="project-btn primary">🔍 View Details</button>
+                                <button class="project-btn secondary">📥 Download</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Student Information System -->
+                    <div class="project-card web database" data-category="web database">
+                        <div class="project-header">
+                            <div class="project-difficulty beginner">🟢 Beginner</div>
+                        </div>
+                        <div class="project-content">
+                            <h4 class="project-title">🎓 Student Information System</h4>
+                            <p class="project-description">Comprehensive student management system with attendance tracking, grade management, and parent portal features.</p>
+                            <div class="project-tech-stack">
+                                <span class="tech-tag">React</span>
+                                <span class="tech-tag">Node.js</span>
+                                <span class="tech-tag">MongoDB</span>
+                                <span class="tech-tag">Express</span>
+                            </div>
+                        </div>
+                        <div class="project-footer">
+                            <div class="project-stats">
+                                <span class="stat">👨‍💻 8 contributors</span>
+                                <span class="stat">⭐ 4.6 rating</span>
+                            </div>
+                            <div class="project-actions">
+                                <button class="project-btn primary">🔍 View Details</button>
+                                <button class="project-btn secondary">📥 Download</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- E-commerce Website -->
+                    <div class="project-card advanced web" data-category="web">
+                        <div class="project-header">
+                            <div class="project-difficulty advanced">🔴 Advanced</div>
+                        </div>
+                        <div class="project-content">
+                            <h4 class="project-title">🛒 E-commerce Website</h4>
+                            <p class="project-description">Full-featured online shopping platform with payment gateway integration, admin panel, and inventory management.</p>
+                            <div class="project-tech-stack">
+                                <span class="tech-tag">Vue.js</span>
+                                <span class="tech-tag">Laravel</span>
+                                <span class="tech-tag">PostgreSQL</span>
+                                <span class="tech-tag">Stripe API</span>
+                            </div>
+                        </div>
+                        <div class="project-footer">
+                            <div class="project-stats">
+                                <span class="stat">👨‍💻 22 contributors</span>
+                                <span class="stat">⭐ 4.9 rating</span>
+                            </div>
+                            <div class="project-actions">
+                                <button class="project-btn primary">🔍 View Details</button>
+                                <button class="project-btn secondary">📥 Download</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Task Management System -->
+                    <div class="project-card desktop" data-category="desktop">
+                        <div class="project-header">
+                            <div class="project-difficulty intermediate">🟡 Intermediate</div>
+                        </div>
+                        <div class="project-content">
+                            <h4 class="project-title">✅ Task Management System</h4>
+                            <p class="project-description">Desktop application for project and task management with team collaboration features and time tracking.</p>
+                            <div class="project-tech-stack">
+                                <span class="tech-tag">Java</span>
+                                <span class="tech-tag">JavaFX</span>
+                                <span class="tech-tag">SQLite</span>
+                                <span class="tech-tag">Maven</span>
+                            </div>
+                        </div>
+                        <div class="project-footer">
+                            <div class="project-stats">
+                                <span class="stat">👨‍💻 12 contributors</span>
+                                <span class="stat">⭐ 4.7 rating</span>
+                            </div>
+                            <div class="project-actions">
+                                <button class="project-btn primary">🔍 View Details</button>
+                                <button class="project-btn secondary">📥 Download</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Weather Monitoring System -->
+                    <div class="project-card ai" data-category="ai">
+                        <div class="project-header">
+                            <div class="project-difficulty advanced">🔴 Advanced</div>
+                        </div>
+                        <div class="project-content">
+                            <h4 class="project-title">🌤️ Weather Prediction System</h4>
+                            <p class="project-description">AI-powered weather monitoring and prediction system using machine learning algorithms and real-time data.</p>
+                            <div class="project-tech-stack">
+                                <span class="tech-tag">Python</span>
+                                <span class="tech-tag">TensorFlow</span>
+                                <span class="tech-tag">Flask</span>
+                                <span class="tech-tag">APIs</span>
+                            </div>
+                        </div>
+                        <div class="project-footer">
+                            <div class="project-stats">
+                                <span class="stat">👨‍💻 18 contributors</span>
+                                <span class="stat">⭐ 4.8 rating</span>
+                            </div>
+                            <div class="project-actions">
+                                <button class="project-btn primary">🔍 View Details</button>
+                                <button class="project-btn secondary">📥 Download</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Online Quiz Application -->
+                    <div class="project-card web" data-category="web">
+                        <div class="project-header">
+                            <div class="project-difficulty beginner">🟢 Beginner</div>
+                        </div>
+                        <div class="project-content">
+                            <h4 class="project-title">📝 Online Quiz Platform</h4>
+                            <p class="project-description">Interactive quiz application with timer functionality, score tracking, and detailed performance analytics.</p>
+                            <div class="project-tech-stack">
+                                <span class="tech-tag">HTML5</span>
+                                <span class="tech-tag">CSS3</span>
+                                <span class="tech-tag">JavaScript</span>
+                                <span class="tech-tag">JSON</span>
+                            </div>
+                        </div>
+                        <div class="project-footer">
+                            <div class="project-stats">
+                                <span class="stat">👨‍💻 6 contributors</span>
+                                <span class="stat">⭐ 4.5 rating</span>
+                            </div>
+                            <div class="project-actions">
+                                <button class="project-btn primary">🔍 View Details</button>
+                                <button class="project-btn secondary">📥 Download</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Collaboration -->
+            <div class="project-collaboration">
+                <h3 class="section-subtitle">🤝 Collaboration Hub</h3>
+                <div class="collaboration-grid">
+                    <div class="collaboration-card">
+                        <div class="collab-header">
+                            <span class="collab-icon">💡</span>
+                            <h4>Project Ideas</h4>
+                        </div>
+                        <p>Explore innovative project concepts and get inspiration for your next development endeavor.</p>
+                        <button class="collab-btn">🔍 Browse Ideas</button>
+                    </div>
+
+                    <div class="collaboration-card">
+                        <div class="collab-header">
+                            <span class="collab-icon">👥</span>
+                            <h4>Find Teammates</h4>
+                        </div>
+                        <p>Connect with like-minded developers and form teams for collaborative project development.</p>
+                        <button class="collab-btn">🤝 Join Teams</button>
+                    </div>
+
+                    <div class="collaboration-card">
+                        <div class="collab-header">
+                            <span class="collab-icon">🏆</span>
+                            <h4>Showcase Work</h4>
+                        </div>
+                        <p>Display your completed projects and get feedback from the community to improve your skills.</p>
+                        <button class="collab-btn">🎯 Submit Project</button>
+                    </div>
+
+                    <div class="collaboration-card">
+                        <div class="collab-header">
+                            <span class="collab-icon">📚</span>
+                            <h4>Learning Resources</h4>
+                        </div>
+                        <p>Access tutorials, documentation, and guides to enhance your project development skills.</p>
+                        <button class="collab-btn">📖 Learn More</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Submission -->
+            <div class="project-submission">
+                <h3 class="section-subtitle">📤 Project Submission</h3>
+                <div class="submission-content">
+                    <div class="submission-info">
+                        <h4>🎯 Ready to Share Your Project?</h4>
+                        <p>Submit your completed projects and contribute to our growing repository. Help fellow students learn and get recognition for your work.</p>
+                        
+                        <div class="submission-guidelines">
+                            <h5>📋 Submission Guidelines:</h5>
+                            <ul>
+                                <li>Include complete source code and documentation</li>
+                                <li>Provide clear installation and setup instructions</li>
+                                <li>Add screenshots and demo videos if applicable</li>
+                                <li>Specify technology stack and requirements</li>
+                                <li>Include project description and features list</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="submission-actions">
+                        <button class="submit-btn primary" onclick="alert('Project submission form will open here!')">
+                            <span class="btn-icon">📤</span>
+                            <span class="btn-text">Submit Your Project</span>
+                        </button>
+                        <button class="submit-btn secondary" onclick="alert('Submission guidelines will open!')">
+                            <span class="btn-icon">📋</span>
+                            <span class="btn-text">View Guidelines</span>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Research Section -->
+        <!-- Research Papers Section -->
         <div id="research-section" class="section-container">
             <h2 class="section-title">📄 Research Papers</h2>
+            
+            <!-- Term/Semester Wise Organization -->
             <div class="section-content">
-                <p>Access academic research papers and publications.</p>
-                <div class="research-grid">
-                    <div class="research-card">
-                        <h3>Machine Learning in Education</h3>
-                        <p>A comprehensive study on AI applications in educational systems.</p>
-                        <div class="research-meta">
-                            <span>Published: 2024</span>
-                            <span>Category: AI/ML</span>
+                <h3>📚 Term-wise Research Papers</h3>
+                <p>Access research papers organized by academic terms and semesters for systematic study progression.</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 20px;">
+                    <!-- First Year -->
+                    <div style="background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.05) 100%); padding: 20px; border-radius: 15px; border: 1px solid rgba(76, 175, 80, 0.2);">
+                        <h4 style="color: #4caf50; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                            🥇 First Year
+                        </h4>
+                        <div style="margin-bottom: 10px;">
+                            <strong>Semester 1:</strong> Foundation papers (15 papers)
                         </div>
-                        <button class="download-btn">📥 Download PDF</button>
+                        <div>
+                            <strong>Semester 2:</strong> Core concepts (18 papers)
+                        </div>
                     </div>
+
+                    <!-- Second Year -->
+                    <div style="background: linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(33, 150, 243, 0.05) 100%); padding: 20px; border-radius: 15px; border: 1px solid rgba(33, 150, 243, 0.2);">
+                        <h4 style="color: #2196f3; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                            🥈 Second Year
+                        </h4>
+                        <div style="margin-bottom: 10px;">
+                            <strong>Semester 3:</strong> Advanced topics (22 papers)
+                        </div>
+                        <div>
+                            <strong>Semester 4:</strong> Specialization (20 papers)
+                        </div>
+                    </div>
+
+                    <!-- Third Year -->
+                    <div style="background: linear-gradient(135deg, rgba(255, 152, 0, 0.1) 0%, rgba(255, 152, 0, 0.05) 100%); padding: 20px; border-radius: 15px; border: 1px solid rgba(255, 152, 0, 0.2);">
+                        <h4 style="color: #ff9800; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                            🥉 Third Year
+                        </h4>
+                        <div style="margin-bottom: 10px;">
+                            <strong>Semester 5:</strong> Research methods (25 papers)
+                        </div>
+                        <div>
+                            <strong>Semester 6:</strong> Industry projects (18 papers)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Topic-wise Research Categories -->
+            <div class="section-content">
+                <h3>🔍 Topic-wise Research Categories</h3>
+                <p>Browse research papers by specific topics and domains. All papers are peer-reviewed and sourced from reputable journals and conferences.</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 20px;">
+                    <div style="background: rgba(156, 39, 176, 0.1); padding: 15px; border-radius: 10px; text-align: center; border: 1px solid rgba(156, 39, 176, 0.2);">
+                        <h4 style="color: #9c27b0; margin-bottom: 10px;">🤖 AI & Machine Learning</h4>
+                        <p style="font-size: 0.9em; margin: 0; color: #666;">Neural networks, deep learning, computer vision, NLP</p>
+                        <small style="color: #9c27b0; font-weight: 500;">120+ papers</small>
+                    </div>
+                    
+                    <div style="background: rgba(244, 67, 54, 0.1); padding: 15px; border-radius: 10px; text-align: center; border: 1px solid rgba(244, 67, 54, 0.2);">
+                        <h4 style="color: #f44336; margin-bottom: 10px;">🔒 Cybersecurity</h4>
+                        <p style="font-size: 0.9em; margin: 0; color: #666;">Network security, cryptography, ethical hacking</p>
+                        <small style="color: #f44336; font-weight: 500;">85+ papers</small>
+                    </div>
+                    
+                    <div style="background: rgba(33, 150, 243, 0.1); padding: 15px; border-radius: 10px; text-align: center; border: 1px solid rgba(33, 150, 243, 0.2);">
+                        <h4 style="color: #2196f3; margin-bottom: 10px;">📊 Data Science</h4>
+                        <p style="font-size: 0.9em; margin: 0; color: #666;">Big data analytics, data mining, statistics</p>
+                        <small style="color: #2196f3; font-weight: 500;">95+ papers</small>
+                    </div>
+                    
+                    <div style="background: rgba(76, 175, 80, 0.1); padding: 15px; border-radius: 10px; text-align: center; border: 1px solid rgba(76, 175, 80, 0.2);">
+                        <h4 style="color: #4caf50; margin-bottom: 10px;">🌐 Web Technologies</h4>
+                        <p style="font-size: 0.9em; margin: 0; color: #666;">Frontend, backend, frameworks, APIs</p>
+                        <small style="color: #4caf50; font-weight: 500;">70+ papers</small>
+                    </div>
+                    
+                    <div style="background: rgba(255, 152, 0, 0.1); padding: 15px; border-radius: 10px; text-align: center; border: 1px solid rgba(255, 152, 0, 0.2);">
+                        <h4 style="color: #ff9800; margin-bottom: 10px;">⚡ Algorithms & DS</h4>
+                        <p style="font-size: 0.9em; margin: 0; color: #666;">Algorithm design, complexity analysis, optimization</p>
+                        <small style="color: #ff9800; font-weight: 500;">110+ papers</small>
+                    </div>
+                    
+                    <div style="background: rgba(96, 125, 139, 0.1); padding: 15px; border-radius: 10px; text-align: center; border: 1px solid rgba(96, 125, 139, 0.2);">
+                        <h4 style="color: #607d8b; margin-bottom: 10px;">💾 Systems & OS</h4>
+                        <p style="font-size: 0.9em; margin: 0; color: #666;">Operating systems, distributed systems, cloud</p>
+                        <small style="color: #607d8b; font-weight: 500;">65+ papers</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Research Access & Tools -->
+            <div class="section-content">
+                <h3>📋 Research Access & Tools</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+                    <div style="background: linear-gradient(135deg, rgba(63, 81, 181, 0.1) 0%, rgba(63, 81, 181, 0.05) 100%); padding: 20px; border-radius: 15px; border: 1px solid rgba(63, 81, 181, 0.2);">
+                        <h4 style="color: #3f51b5; margin-bottom: 15px;">📖 Browse Papers</h4>
+                        <p style="margin-bottom: 15px; color: #666;">Access organized research papers by topic or semester</p>
+                        <button class="cta-button" onclick="alert('Research papers browser will open here!')" style="width: 100%;">
+                            Browse Collection
+                        </button>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(139, 69, 19, 0.1) 0%, rgba(139, 69, 19, 0.05) 100%); padding: 20px; border-radius: 15px; border: 1px solid rgba(139, 69, 19, 0.2);">
+                        <h4 style="color: #8b4513; margin-bottom: 15px;">🔍 Search Papers</h4>
+                        <p style="margin-bottom: 15px; color: #666;">Find specific research papers by keywords or authors</p>
+                        <button class="cta-button" onclick="alert('Research search feature will be implemented!')" style="width: 100%;">
+                            Search Now
+                        </button>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(0, 150, 136, 0.1) 0%, rgba(0, 150, 136, 0.05) 100%); padding: 20px; border-radius: 15px; border: 1px solid rgba(0, 150, 136, 0.2);">
+                        <h4 style="color: #009688; margin-bottom: 15px;">💡 Research Tips</h4>
+                        <p style="margin-bottom: 15px; color: #666;">Learn how to read, cite, and write research papers</p>
+                        <button class="cta-button" onclick="alert('Research guidance section will open!')" style="width: 100%;">
+                            Get Tips
+                        </button>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 25px; padding: 20px; background: linear-gradient(135deg, rgba(103, 58, 183, 0.1) 0%, rgba(103, 58, 183, 0.05) 100%); border-radius: 15px; border: 1px solid rgba(103, 58, 183, 0.2);">
+                    <h4 style="color: #673ab7; margin-bottom: 10px;">📚 Latest Additions</h4>
+                    <p style="margin: 0; color: #666;">New research papers are added weekly. Check back regularly for the latest publications in computer science and technology.</p>
                 </div>
             </div>
         </div>
 
         <!-- Members Section -->
         <div id="members-section" class="section-container">
-            <h2 class="section-title">👥 Community Members</h2>
-            <div class="section-content">
-                <p>Connect with fellow students and faculty members.</p>
-                <div class="members-grid">
-                    <div class="member-card">
-                        <div class="member-avatar">👤</div>
-                        <h3>Student Name</h3>
-                        <p>BCA Student</p>
-                        <button class="connect-btn">🤝 Connect</button>
+            <div class="members-section">
+                <h2 class="section-title">👥 Member Details</h2>
+                <div class="member-card">
+                    <div class="member-stats">
+                        <div class="member-top">
+                            <strong>Total:</strong> <span id="totalMembers">25</span> members
+                        </div>
+                        <div class="member-top">
+                            <strong>Active:</strong> <span id="activeMembers">18</span> online
+                        </div>
                     </div>
+
+                    <div class="member-info">
+                        <p><strong>Offline:</strong> <span id="offlineMembers">7</span> members</p>
+                        <p><strong>Most Active Time:</strong> <span id="activeTime">8 PM IST</span></p>
+                        <p><strong>Avg. Session:</strong> <span id="avgSession">42 mins</span></p>
+                    </div>
+
+                    <button class="show-btn" onclick="openMemberPanel()" aria-label="Show member list">Show Members</button>
                 </div>
             </div>
         </div>
 
         <!-- Community Section -->
         <div id="community-section" class="section-container">
-            <h2 class="section-title">🤝 Community</h2>
-            <div class="section-content">
-                <p>Join discussions, share knowledge, and collaborate with the community.</p>
-                <div class="community-features">
-                    <div class="feature-card">
-                        <h3>💬 Discussion Forums</h3>
-                        <p>Engage in academic discussions and get help from peers.</p>
-                        <button class="feature-btn">Join Discussions</button>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <h3>📚 Study Groups</h3>
-                        <p>Form or join study groups for collaborative learning.</p>
-                        <button class="feature-btn">Find Groups</button>
-                    </div>
+            <div class="community-section">
+                <h2 class="section-title">🤝 Join Our Community</h2>
+                <p>Fill out the form below to become a member and stay updated with events, projects, and opportunities.</p>
+                <div class="form-frame">
+                    <iframe 
+                        src="https://forms.gle/hD8X82EYMkPp9p499" 
+                        width="100%" 
+                        height="600" 
+                        frameborder="0" 
+                        marginheight="0" 
+                        marginwidth="0">
+                        Loading...
+                    </iframe>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Main Portal Footer -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <!-- Portal Info Section -->
+                <div class="footer-section about">
+                    <div class="footer-logo">
+                        <h3>📖 Study Portal</h3>
+                        <p class="footer-tagline">Your Academic Resource Hub</p>
+                    </div>
+                    <p class="footer-description">
+                        A comprehensive platform designed for BCA students to access study materials, manage assignments, 
+                        collaborate on projects, and enhance their academic journey with modern tools and resources.
+                    </p>
+                    <div class="footer-stats">
+                        <div class="footer-stat">
+                            <span class="stat-number">250+</span>
+                            <span class="stat-label">Study Materials</span>
+                        </div>
+                        <div class="footer-stat">
+                            <span class="stat-number">38+</span>
+                            <span class="stat-label">Books</span>
+                        </div>
+                        <div class="footer-stat">
+                            <span class="stat-number">75+</span>
+                            <span class="stat-label">Projects</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Links Section -->
+                <div class="footer-section links">
+                    <h4>🔗 Quick Links</h4>
+                    <div class="footer-links">
+                        <a href="#" onclick="showSection('books')" class="footer-link">📚 Study Books</a>
+                        <a href="#" onclick="showSection('assignments')" class="footer-link">📝 Assignments</a>
+                        <a href="#" onclick="showSection('notes')" class="footer-link">📋 Notes</a>
+                        <a href="#" onclick="showSection('projects')" class="footer-link">🚀 Projects</a>
+                        <a href="#" onclick="showSection('research')" class="footer-link">📄 Research Papers</a>
+                        <a href="#" onclick="showSection('community')" class="footer-link">🤝 Community</a>
+                    </div>
+                </div>
+
+                <!-- Academic Resources Section -->
+                <div class="footer-section resources">
+                    <h4>📚 Academic Resources</h4>
+                    <div class="footer-links">
+                        <a href="https://egyankosh.ac.in/" target="_blank" class="footer-link">📖 eGyankosh (IGNOU)</a>
+                        <a href="#" onclick="alert('Academic calendar coming soon!')" class="footer-link">📅 Academic Calendar</a>
+                        <a href="#" onclick="alert('Study guides coming soon!')" class="footer-link">📋 Study Guides</a>
+                        <a href="#" onclick="alert('Exam info coming soon!')" class="footer-link">🎯 Exam Information</a>
+                        <a href="#" onclick="alert('Help center coming soon!')" class="footer-link">❓ Help Center</a>
+                        <a href="#" onclick="alert('FAQ coming soon!')" class="footer-link">💬 FAQ</a>
+                    </div>
+                </div>
+
+                <!-- Contact & Legal Section -->
+                <div class="footer-section contact">
+                    <h4>📞 Contact & Legal</h4>
+                    <div class="footer-links">
+                        <a href="#" onclick="alert('Contact form coming soon!')" class="footer-link">✉️ Contact Us</a>
+                        <a href="#" onclick="alert('Support coming soon!')" class="footer-link">🛠️ Technical Support</a>
+                        <a href="privacy-policy.html" class="footer-link">🔒 Privacy Policy</a>
+                        <a href="terms-of-use.html" class="footer-link">📋 Terms of Use</a>
+                        <a href="#" onclick="alert('Feedback form coming soon!')" class="footer-link">💭 Feedback</a>
+                        <a href="#" onclick="alert('Bug report coming soon!')" class="footer-link">🐛 Report Bug</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <div class="copyright">
+                        <p>&copy; 2025 Study Portal. All rights reserved. | Built with ❤️ for BCA Students</p>
+                        <p class="tech-info">Powered by GitHub Pages | Modern Web Technologies</p>
+                    </div>
+                    <div class="footer-actions">
+                        <button class="footer-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Back to top">
+                            ⬆️ Back to Top
+                        </button>
+                        <button class="footer-btn" onclick="showSection('home')" title="Go to homepage">
+                            🏠 Home
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
     <!-- Login Modal -->
     <div id="loginModal" class="login-modal">
         <div class="login-container">
             <div class="login-header">
-                <h2>🔐 Portal Access</h2>
+                <h2>🔐 Study Portal Login</h2>
                 <button class="close-btn" onclick="closeLoginModal()">×</button>
             </div>
             
             <div class="login-tabs">
-                <button class="tab-btn active" onclick="showAuthTab('login')">🔑 Login</button>
-                <button class="tab-btn" onclick="showAuthTab('register')">📝 Register</button>
+                <button class="tab-btn active" onclick="showAuthTab('login')" id="loginTabBtn">Login</button>
+                <button class="tab-btn" onclick="showAuthTab('register')" id="registerTabBtn">Register</button>
+                <button class="tab-btn" onclick="showAuthTab('forgot')" id="forgotTabBtn">Reset</button>
             </div>
             
             <!-- Login Form -->
@@ -408,13 +1909,15 @@
                     <div class="input-group">
                         <label for="loginEmail">📧 Email:</label>
                         <input type="email" id="loginEmail" required placeholder="Enter your email" autocomplete="email">
+                        <div class="input-validation" id="loginEmailValidation"></div>
                     </div>
                     <div class="input-group">
                         <label for="loginPassword">🔒 Password:</label>
                         <div class="password-input-container">
                             <input type="password" id="loginPassword" required placeholder="Enter your password" autocomplete="current-password">
-                            <button type="button" class="password-toggle" onclick="togglePasswordVisibility('loginPassword')">👁️</button>
+                            <button type="button" class="password-toggle" onclick="togglePasswordVisibility('loginPassword')" title="Show/Hide Password">👁️</button>
                         </div>
+                        <div class="input-validation" id="loginPasswordValidation"></div>
                     </div>
                     <div class="input-group checkbox-group">
                         <label class="checkbox-label">
@@ -440,30 +1943,40 @@
                     <div class="input-group">
                         <label for="registerName">👤 Full Name:</label>
                         <input type="text" id="registerName" required placeholder="Enter your full name" autocomplete="name">
+                        <div class="input-validation" id="registerNameValidation"></div>
                     </div>
                     <div class="input-group">
                         <label for="registerEmail">📧 Email:</label>
                         <input type="email" id="registerEmail" required placeholder="Enter your email" autocomplete="email">
+                        <div class="input-validation" id="registerEmailValidation"></div>
                     </div>
                     <div class="input-group">
                         <label for="registerPassword">🔒 Password:</label>
                         <div class="password-input-container">
-                            <input type="password" id="registerPassword" required minlength="6" placeholder="Create a strong password" autocomplete="new-password">
-                            <button type="button" class="password-toggle" onclick="togglePasswordVisibility('registerPassword')">👁️</button>
+                            <input type="password" id="registerPassword" required minlength="6" placeholder="Create a strong password (min 6 characters)" autocomplete="new-password">
+                            <button type="button" class="password-toggle" onclick="togglePasswordVisibility('registerPassword')" title="Show/Hide Password">👁️</button>
                         </div>
+                        <div class="password-strength" id="passwordStrength">
+                            <div class="strength-bar">
+                                <div class="strength-fill" id="strengthFill"></div>
+                            </div>
+                            <div class="strength-text" id="strengthText">Password strength will appear here</div>
+                        </div>
+                        <div class="input-validation" id="registerPasswordValidation"></div>
                     </div>
                     <div class="input-group">
                         <label for="confirmPassword">🔒 Confirm Password:</label>
                         <div class="password-input-container">
                             <input type="password" id="confirmPassword" required placeholder="Confirm your password" autocomplete="new-password">
-                            <button type="button" class="password-toggle" onclick="togglePasswordVisibility('confirmPassword')">👁️</button>
+                            <button type="button" class="password-toggle" onclick="togglePasswordVisibility('confirmPassword')" title="Show/Hide Password">👁️</button>
                         </div>
+                        <div class="input-validation" id="confirmPasswordValidation"></div>
                     </div>
                     <div class="input-group checkbox-group">
                         <label class="checkbox-label">
                             <input type="checkbox" id="agreeTerms" required>
                             <span class="checkmark"></span>
-                            I agree to the <a href="terms-of-use.html" target="_blank">Terms of Service</a> and <a href="privacy-policy.html" target="_blank">Privacy Policy</a>
+                            I agree to the <button type="button" class="link-btn" onclick="showTerms()">Terms of Service</button> and <button type="button" class="link-btn" onclick="showPrivacy()">Privacy Policy</button>
                         </label>
                     </div>
                     <button type="submit" class="auth-btn primary" id="registerBtn">
@@ -482,14 +1995,21 @@
                 <form id="forgotForm" onsubmit="resetPassword(event)">
                     <div class="input-group">
                         <label for="forgotEmail">📧 Email Address:</label>
-                        <input type="email" id="forgotEmail" required placeholder="Enter your registered email" autocomplete="email">
+                        <input type="email" id="forgotEmail" required placeholder="Enter your registered email address" autocomplete="email">
+                        <div class="input-validation" id="forgotEmailValidation"></div>
                     </div>
                     <button type="submit" class="auth-btn primary" id="forgotBtn">
                         📧 Send Reset Link
                     </button>
                 </form>
+                <div class="auth-help">
+                    <p class="help-text">
+                        💡 <strong>Tip:</strong> Check your spam folder if you don't receive the email within a few minutes.
+                    </p>
+                </div>
                 <p class="auth-link">
-                    <button type="button" class="link-btn" onclick="showAuthTab('login')">← Back to Login</button>
+                    <button type="button" class="link-btn" onclick="showAuthTab('login')">← Back to Login</button> | 
+                    <button type="button" class="link-btn" onclick="showAuthTab('register')">Create New Account</button>
                 </p>
             </div>
         </div>
@@ -508,22 +2028,29 @@
                     <h3 id="profileName">User Name</h3>
                     <p id="profileEmail">user@example.com</p>
                     <p id="profileStatus">Email not verified</p>
+                    <small id="profileSession" style="color: #666; margin-top: 10px; display: block;">Session info loading...</small>
                 </div>
                 <div class="profile-actions">
-                    <button class="auth-btn logout-btn" onclick="logout()" id="profileLogoutBtn">
-                        🚪 Sign Out
+                    <button class="auth-btn logout-btn" onclick="logout(); console.log('Logout button clicked!');" id="profileLogoutBtn">
+                        <span class="btn-icon">🚪</span>
+                        <span class="btn-text">Sign Out</span>
+                        <span class="btn-loading" style="display: none;">
+                            <span class="loading-spinner"></span>
+                            Signing out...
+                        </span>
                     </button>
-                    <button class="auth-btn secondary" onclick="closeProfileModal()">
-                        ✕ Close
+                    <button class="auth-btn secondary" onclick="closeProfileModal(); console.log('Close button clicked!');">
+                        <span class="btn-icon">✕</span>
+                        <span class="btn-text">Close</span>
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Notification Bar -->
+    <!-- Enhanced Notification Bar -->
     <div class="notification-bar">
-        <button class="notification-close" onclick="closeNotification()">×</button>
+        <button class="notification-close" onclick="closeNotification()" title="Close notifications">×</button>
         <div class="notification-content">
             <div class="notification-item">
                 <span class="icon">🔔</span>
@@ -539,280 +2066,121 @@
                 <span class="icon">📝</span>
                 <span>New notes uploaded for MCS-101</span>
             </div>
+            <span class="notification-separator">|</span>
+            <div class="notification-item">
+                <span class="icon">🎉</span>
+                <span>Study groups now available in Community section</span>
+            </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="site-footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>📖 Study Portal</h3>
-                <p>Your comprehensive academic resource hub for BCA studies and collaborative learning.</p>
-            </div>
-            <div class="footer-section">
-                <h4>Quick Links</h4>
-                <ul class="footer-links">
-                    <li><a href="#" onclick="showSection('home')">🏠 Home</a></li>
-                    <li><a href="#" onclick="showSection('dashboard')">📊 Dashboard</a></li>
-                    <li><a href="books.html">📚 Books</a></li>
-                    <li><a href="#" onclick="showSection('notes')">📋 Notes</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Community</h4>
-                <ul class="footer-links">
-                    <li><a href="#" onclick="showSection('projects')">🚀 Projects</a></li>
-                    <li><a href="#" onclick="showSection('research')">📄 Research</a></li>
-                    <li><a href="#" onclick="showSection('members')">👥 Members</a></li>
-                    <li><a href="#" onclick="showSection('community')">🤝 Community</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Legal</h4>
-                <ul class="footer-links">
-                    <li><a href="privacy-policy.html">🔒 Privacy Policy</a></li>
-                    <li><a href="terms-of-use.html">📜 Terms of Use</a></li>
-                    <li><a href="#" onclick="showSection('home')">ℹ️ About</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2025 Study Portal. All rights reserved. | Made with ❤️ for students</p>
-        </div>
-    </footer>
-
-    <!-- JavaScript -->
-    <script src="js/notes-manager.js"></script>
+    <!-- Firebase Configuration -->
+    <script src="js/firebase-config-enhanced.js"></script>
     
-    <!-- Main Application Logic -->
+    <!-- Main Application Scripts -->
+    <script src="js/app.js"></script>
+    <!-- TEMPORARILY DISABLED TO PREVENT CONFLICTS WITH auth-stable.js -->
+    <!-- <script src="js/auth-enhanced.js"></script> -->
+    
+    <!-- GitHub Pages Compatible Login System Check -->
     <script>
-        // Initialize the portal
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 Study Portal initialized');
-            document.body.classList.add('loaded');
-        });
-
-        // Section Management
-        function showSection(sectionName) {
-            // Hide all sections
-            const sections = document.querySelectorAll('.section-container');
-            sections.forEach(section => {
-                section.classList.remove('active');
-            });
+        console.log('🔧 GitHub Pages Login System Check Starting...');
+        
+        // Immediate check for function availability
+        function checkAuthSystem() {
+            const requiredFunctions = ['handleLogin', 'openLoginModal', 'loginUser'];
+            const missing = [];
             
-            // Show selected section
-            const targetSection = document.getElementById(sectionName + '-section');
-            if (targetSection) {
-                targetSection.classList.add('active');
-            }
-            
-            // Update sidebar active state
-            const sidebarLinks = document.querySelectorAll('.sidebar a');
-            sidebarLinks.forEach(link => {
-                link.classList.remove('active');
-            });
-            
-            // Close mobile menu if open
-            closeMobileMenu();
-        }
-
-        // Mobile Menu Functions
-        function toggleMobileMenu() {
-            const sidebar = document.getElementById('sidebar');
-            const backdrop = document.getElementById('mobileBackdrop');
-            const toggle = document.getElementById('mobileMenuToggle');
-            
-            sidebar.classList.toggle('active');
-            backdrop.classList.toggle('active');
-            
-            const isExpanded = sidebar.classList.contains('active');
-            toggle.setAttribute('aria-expanded', isExpanded);
-        }
-
-        function closeMobileMenu() {
-            const sidebar = document.getElementById('sidebar');
-            const backdrop = document.getElementById('mobileBackdrop');
-            const toggle = document.getElementById('mobileMenuToggle');
-            
-            sidebar.classList.remove('active');
-            backdrop.classList.remove('active');
-            toggle.setAttribute('aria-expanded', 'false');
-        }
-
-        // Authentication Functions
-        function handleLogin() {
-            const modal = document.getElementById('loginModal');
-            if (modal) {
-                modal.classList.add('active');
-                showAuthTab('login');
-            }
-        }
-
-        function closeLoginModal() {
-            const modal = document.getElementById('loginModal');
-            if (modal) {
-                modal.classList.remove('active');
-            }
-        }
-
-        function showAuthTab(tabName) {
-            // Hide all tab contents
-            const tabContents = document.querySelectorAll('#loginModal .tab-content');
-            tabContents.forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            // Remove active from all tab buttons
-            const tabBtns = document.querySelectorAll('#loginModal .tab-btn');
-            tabBtns.forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // Show selected tab
-            const targetTab = document.getElementById(tabName + 'Tab');
-            if (targetTab) {
-                targetTab.classList.add('active');
-            }
-            
-            // Activate corresponding tab button
-            const activeBtn = document.querySelector(`#loginModal .tab-btn[onclick="showAuthTab('${tabName}')"]`);
-            if (activeBtn) {
-                activeBtn.classList.add('active');
-            }
-        }
-
-        function loginUser(event) {
-            event.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            
-            console.log('Login attempt:', email);
-            // Add your login logic here
-            
-            // For demo purposes
-            alert('Login functionality will be implemented with Firebase');
-        }
-
-        function registerUser(event) {
-            event.preventDefault();
-            const name = document.getElementById('registerName').value;
-            const email = document.getElementById('registerEmail').value;
-            const password = document.getElementById('registerPassword').value;
-            
-            console.log('Register attempt:', email);
-            // Add your registration logic here
-            
-            // For demo purposes
-            alert('Registration functionality will be implemented with Firebase');
-        }
-
-        function resetPassword(event) {
-            event.preventDefault();
-            const email = document.getElementById('forgotEmail').value;
-            
-            console.log('Password reset request:', email);
-            // Add your password reset logic here
-            
-            // For demo purposes
-            alert('Password reset functionality will be implemented with Firebase');
-        }
-
-        function togglePasswordVisibility(inputId) {
-            const input = document.getElementById(inputId);
-            const button = input.nextElementSibling;
-            
-            if (input.type === 'password') {
-                input.type = 'text';
-                button.textContent = '🙈';
-            } else {
-                input.type = 'password';
-                button.textContent = '👁️';
-            }
-        }
-
-        // Notes Functions
-        function showNotesTab(tabName) {
-            const tabs = document.querySelectorAll('#notes-section .tab-content');
-            tabs.forEach(tab => tab.classList.remove('active'));
-            
-            const tabBtns = document.querySelectorAll('#notes-section .tab-btn');
-            tabBtns.forEach(btn => btn.classList.remove('active'));
-            
-            document.getElementById('notes-' + tabName + '-tab').classList.add('active');
-            document.querySelector(`[onclick="showNotesTab('${tabName}')"]`).classList.add('active');
-        }
-
-        function filterNotes() {
-            const subjectFilter = document.getElementById('subjectFilter').value;
-            const semesterFilter = document.getElementById('semesterFilterNotes').value;
-            
-            const notes = document.querySelectorAll('.note-card');
-            notes.forEach(note => {
-                const noteSubject = note.dataset.subject;
-                const noteSemester = note.dataset.semester;
-                
-                const subjectMatch = subjectFilter === 'all' || noteSubject === subjectFilter;
-                const semesterMatch = semesterFilter === 'all' || noteSemester === semesterFilter;
-                
-                if (subjectMatch && semesterMatch) {
-                    note.style.display = 'block';
-                } else {
-                    note.style.display = 'none';
+            requiredFunctions.forEach(func => {
+                if (typeof window[func] !== 'function') {
+                    missing.push(func);
                 }
             });
-        }
-
-        function submitNote(event) {
-            event.preventDefault();
-            const title = document.getElementById('noteTitle').value;
-            const subject = document.getElementById('noteSubject').value;
-            const file = document.getElementById('noteFile').files[0];
-            const description = document.getElementById('noteDescription').value;
             
-            console.log('Note submission:', { title, subject, file, description });
-            alert('Note submission functionality will be implemented');
-        }
-
-        // Notification Functions
-        function closeNotification() {
-            const notification = document.querySelector('.notification-bar');
-            if (notification) {
-                notification.style.display = 'none';
+            if (missing.length > 0) {
+                console.error('❌ Missing functions:', missing);
+                return false;
+            } else {
+                console.log('✅ All auth functions available');
+                return true;
             }
         }
-
-        // Profile Functions
-        function closeProfileModal() {
-            const modal = document.getElementById('profileModal');
-            if (modal) {
-                modal.classList.remove('active');
-            }
-        }
-
-        function logout() {
-            console.log('Logout requested');
-            // Add logout logic here
-            alert('Logout functionality will be implemented');
-        }
-
-        // Close modals when clicking outside
-        window.addEventListener('click', function(event) {
-            const loginModal = document.getElementById('loginModal');
-            const profileModal = document.getElementById('profileModal');
+        
+        // Setup fallback for GitHub Pages
+        function setupFallback() {
+            console.log('🔧 Setting up GitHub Pages fallback...');
             
-            if (event.target === loginModal) {
-                closeLoginModal();
-            }
+            window.handleLogin = function() {
+                console.log('🔧 Fallback handleLogin called');
+                
+                // Try to load the modal directly
+                const modal = document.getElementById('loginModal');
+                if (modal) {
+                    modal.classList.add('active');
+                    console.log('✅ Modal opened via fallback');
+                } else {
+                    alert('Login system is loading. Please refresh the page and try again.');
+                }
+            };
             
-            if (event.target === profileModal) {
-                closeProfileModal();
-            }
-        });
-
-        // Loading animation
+            window.openLoginModal = function() {
+                const modal = document.getElementById('loginModal');
+                if (modal) {
+                    modal.classList.add('active');
+                    // Show login tab
+                    const loginTab = document.getElementById('loginTab');
+                    const loginContent = document.getElementById('loginContent');
+                    if (loginTab) loginTab.classList.add('active');
+                    if (loginContent) loginContent.classList.add('active');
+                }
+            };
+            
+            console.log('✅ Fallback functions installed');
+        }
+        
+        // Wait for all scripts to load
         window.addEventListener('load', function() {
-            document.body.classList.add('loaded');
+            console.log('🚀 Page loaded, checking auth system...');
+            
+            // Give scripts time to initialize
+            setTimeout(function() {
+                if (!checkAuthSystem()) {
+                    console.log('⚠️ Auth system not ready, setting up fallback...');
+                    setupFallback();
+                } else {
+                    console.log('✅ Auth system ready!');
+                }
+                
+                // Ensure login button works
+                const loginBtn = document.querySelector('.login-btn');
+                if (loginBtn) {
+                    console.log('🔧 Login button found, ensuring it works...');
+                    
+                    // Remove any existing listeners and add a robust one
+                    const newBtn = loginBtn.cloneNode(true);
+                    loginBtn.parentNode.replaceChild(newBtn, loginBtn);
+                    
+                    newBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        console.log('🔐 Login button clicked (GitHub Pages)');
+                        
+                        if (typeof handleLogin === 'function') {
+                            handleLogin();
+                        } else {
+                            console.log('🔧 Using fallback login');
+                            if (typeof window.handleLogin === 'function') {
+                                window.handleLogin();
+                            } else {
+                                alert('Login system is still loading. Please try again in a moment.');
+                            }
+                        }
+                    });
+                    
+                    console.log('✅ Login button event listener installed');
+                }
+            }, 1500); // Increased timeout for GitHub Pages
         });
     </script>
+    
 </body>
 </html>
