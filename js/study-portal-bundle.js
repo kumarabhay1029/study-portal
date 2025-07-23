@@ -1,51 +1,191 @@
 /**
  * 🚀 STUDY PORTAL - OPTIMIZED BUNDLE
  * Single bundled script combining:
- * - Firebase Configuration (Enhanced)
- * - Final Authentication System
+ * - Google Forms Integration
+ * - Navigation System
  * - Main Application Logic
  * 
  * Optimized for GitHub Pages deployment
- * Version: 1.0.0 - Performance Optimized
+ * Version: 2.0.0 - Google Forms Integration
  */
 
 console.log('🚀 Study Portal Bundle Loading...');
 
-// Debug mode - can be enabled by adding ?debug=true to URL
-const isDebugMode = new URLSearchParams(window.location.search).get('debug') === 'true';
-if (isDebugMode) {
-    console.log('🐛 Debug mode enabled');
-    window.studyPortalDebug = true;
-}
-
 /* ==========================================================================
-   FIREBASE CONFIGURATION - SECURE VERSION
+   GOOGLE FORMS INTEGRATION SYSTEM
    ========================================================================== */
 
-// Secure Firebase Configuration - API key loaded from separate file
-function getFirebaseConfig() {
-    // For GitHub Pages, load from the firebase-config.js file
-    if (window.firebaseConfig) {
-        console.log('✅ Firebase config loaded from firebase-config.js');
-        return window.firebaseConfig;
-    }
-    
-    // Check if config is available via environment variables (for local development)
-    if (typeof process !== 'undefined' && process.env) {
-        console.log('🔧 Loading Firebase config from environment variables');
-        return {
-            apiKey: process.env.FIREBASE_API_KEY,
-            authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-            projectId: process.env.FIREBASE_PROJECT_ID,
-            storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-            messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-            appId: process.env.FIREBASE_APP_ID
+class GoogleFormsManager {
+    constructor() {
+        // Google Form URLs - UPDATE THESE WITH YOUR ACTUAL FORM URLs
+        this.formUrls = {
+            notes: {
+                free: 'https://docs.google.com/forms/d/e/YOUR_FREE_NOTES_FORM_ID/viewform?embedded=true',
+                premium: 'https://docs.google.com/forms/d/e/YOUR_PREMIUM_NOTES_FORM_ID/viewform?embedded=true'
+            },
+            assignments: 'https://docs.google.com/forms/d/e/YOUR_ASSIGNMENTS_FORM_ID/viewform?embedded=true',
+            projects: 'https://docs.google.com/forms/d/e/YOUR_PROJECTS_FORM_ID/viewform?embedded=true',
+            research: 'https://docs.google.com/forms/d/e/YOUR_RESEARCH_FORM_ID/viewform?embedded=true'
         };
+        
+        this.init();
     }
     
-    // Fallback - should not happen in production
-    console.error('❌ No Firebase configuration found!');
-    return null;
+    init() {
+        console.log('📋 Google Forms Manager initialized');
+        this.setupEventListeners();
+    }
+    
+    setupEventListeners() {
+        // Add click handlers for form close buttons
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('close-form')) {
+                const formContainer = e.target.closest('.form-container');
+                if (formContainer) {
+                    this.closeForm(formContainer.id);
+                }
+            }
+        });
+    }
+    
+    // Notes Form Functions
+    openNotesForm() {
+        this.openForm('notes-form-container', 'notes-form-iframe', this.formUrls.notes.free);
+        this.showMessage('📝 Free notes submission form opened!', 'info');
+    }
+    
+    openPremiumNotesForm() {
+        this.openForm('notes-form-container', 'notes-form-iframe', this.formUrls.notes.premium);
+        this.showMessage('⭐ Premium notes submission form opened!', 'info');
+    }
+    
+    // Assignment Form Function
+    openAssignmentForm() {
+        this.openForm('assignments-form-container', 'assignments-form-iframe', this.formUrls.assignments);
+        this.showMessage('📤 Assignment submission form opened!', 'info');
+    }
+    
+    // Project Form Function
+    openProjectForm() {
+        this.openForm('projects-form-container', 'projects-form-iframe', this.formUrls.projects);
+        this.showMessage('🚀 Project submission form opened!', 'info');
+    }
+    
+    // Research Form Function
+    openResearchForm() {
+        this.openForm('research-form-container', 'research-form-iframe', this.formUrls.research);
+        this.showMessage('📝 Research paper submission form opened!', 'info');
+    }
+    
+    // Generic form opening function
+    openForm(containerId, iframeId, formUrl) {
+        const container = document.getElementById(containerId);
+        const iframe = document.getElementById(iframeId);
+        
+        if (container && iframe) {
+            // Set the form URL
+            iframe.src = formUrl;
+            
+            // Show the form container
+            container.style.display = 'block';
+            
+            // Smooth scroll to form
+            container.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start' 
+            });
+            
+            // Add loading state
+            iframe.onload = () => {
+                this.showMessage('✅ Form loaded successfully!', 'success');
+            };
+        } else {
+            this.showMessage('❌ Form could not be loaded. Please try again.', 'error');
+        }
+    }
+    
+    // Close form function
+    closeForm(containerId) {
+        const container = document.getElementById(containerId);
+        if (container) {
+            container.style.display = 'none';
+            const iframe = container.querySelector('iframe');
+            if (iframe) {
+                iframe.src = ''; // Clear iframe to stop loading
+            }
+            this.showMessage('📋 Form closed.', 'info');
+        }
+    }
+    
+    // Tab switching functions
+    showNotesTab(tabName) {
+        this.showContentTab('notes', tabName);
+    }
+    
+    showContentTab(section, tabName) {
+        // Hide all tabs for this section
+        const allTabs = document.querySelectorAll(`#${section}-section .tab-content`);
+        const allBtns = document.querySelectorAll(`#${section}-section .tab-btn`);
+        
+        allTabs.forEach(tab => tab.classList.remove('active'));
+        allBtns.forEach(btn => btn.classList.remove('active'));
+        
+        // Show selected tab
+        const selectedTab = document.getElementById(`${section}-${tabName}-tab`);
+        const selectedBtn = document.querySelector(`#${section}-section .tab-btn[onclick*="${tabName}"]`);
+        
+        if (selectedTab) selectedTab.classList.add('active');
+        if (selectedBtn) selectedBtn.classList.add('active');
+    }
+    
+    // Message display function
+    showMessage(message, type = 'info') {
+        // Create message element
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${type}`;
+        messageDiv.innerHTML = `
+            <span class="message-text">${message}</span>
+            <button class="message-close" onclick="this.parentElement.remove()">×</button>
+        `;
+        
+        // Add to page
+        document.body.appendChild(messageDiv);
+        
+        // Auto remove after 5 seconds
+        setTimeout(() => {
+            if (messageDiv.parentElement) {
+                messageDiv.remove();
+            }
+        }, 5000);
+    }
+    
+    // Content filtering (for browse tabs)
+    filterContent(section, filterType, value) {
+        const grid = document.getElementById(`${section}Grid`);
+        const cards = grid.querySelectorAll('.content-card');
+        
+        cards.forEach(card => {
+            const shouldShow = this.matchesFilter(card, filterType, value);
+            card.style.display = shouldShow ? 'block' : 'none';
+        });
+    }
+    
+    matchesFilter(card, filterType, value) {
+        if (!value) return true; // Show all if no filter
+        
+        const tag = card.querySelector('.content-tag')?.textContent.toLowerCase();
+        const title = card.querySelector('h4')?.textContent.toLowerCase();
+        const description = card.querySelector('.content-description')?.textContent.toLowerCase();
+        
+        switch (filterType) {
+            case 'subject':
+                return tag?.includes(value.toLowerCase());
+            case 'keyword':
+                return title?.includes(value.toLowerCase()) || description?.includes(value.toLowerCase());
+            default:
+                return true;
+        }
+    }
 }
 
 // Get configuration securely
@@ -1484,6 +1624,16 @@ window.submitContactForm = submitContactForm;
 window.showYear = showYear;
 window.downloadAllBooks = downloadAllBooks;
 
+// Google Forms functions
+window.openNotesForm = openNotesForm;
+window.openPremiumNotesForm = openPremiumNotesForm;
+window.openAssignmentForm = openAssignmentForm;
+window.openProjectForm = openProjectForm;
+window.openResearchForm = openResearchForm;
+window.closeForm = closeForm;
+window.showNotesTab = showNotesTab;
+window.showContentTab = showContentTab;
+
 // Debug and troubleshooting functions
 window.debugAuth = function() {
     console.log('🔍 === AUTHENTICATION SYSTEM DEBUG ===');
@@ -1771,6 +1921,51 @@ window.detectErrors = function() {
     
     return { errors, warnings };
 };
+
+/* ==========================================================================
+   GOOGLE FORMS GLOBAL FUNCTIONS
+   ========================================================================== */
+
+// Initialize Google Forms Manager
+let googleFormsManager;
+
+// Global functions for HTML onclick events
+function openNotesForm() {
+    googleFormsManager?.openNotesForm();
+}
+
+function openPremiumNotesForm() {
+    googleFormsManager?.openPremiumNotesForm();
+}
+
+function openAssignmentForm() {
+    googleFormsManager?.openAssignmentForm();
+}
+
+function openProjectForm() {
+    googleFormsManager?.openProjectForm();
+}
+
+function openResearchForm() {
+    googleFormsManager?.openResearchForm();
+}
+
+function closeForm(containerId) {
+    googleFormsManager?.closeForm(containerId);
+}
+
+function showNotesTab(tabName) {
+    googleFormsManager?.showNotesTab(tabName);
+}
+
+function showContentTab(section, tabName) {
+    googleFormsManager?.showContentTab(section, tabName);
+}
+
+// Initialize Google Forms Manager when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    googleFormsManager = new GoogleFormsManager();
+});
 
 console.log('✅ Study Portal Bundle Loaded Successfully!');
 console.log('🔧 Debug functions available: debugAuth(), testLogin(), testPasswordReset(), testRegistration(), testMobileMenu(), testAuthTabs(), detectErrors(), showPasswordResetHelp()');
