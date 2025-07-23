@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Books - Study Portal</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/books.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <link rel="stylesheet" href="css/mobile-performance.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📖</text></svg>">
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <div class="main-bar">
+        <div class="main-bar-content">
+            <div class="logo-section">
+                <button class="back-btn" onclick="goBack()" title="Go back to main portal">
+                    ← Back to Portal
+                </button>
+                <h1>📚 Study Books</h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- Books Content Container -->
+    <div class="content-area">
+        <div class="section-container">
+            <div class="books-section">
+                <div class="section-header">
+                    <h2>📚 Study Materials & Books</h2>
+                    <p class="section-description">Access comprehensive study materials, textbooks, and reference guides for all BCA subjects organized by semester.</p>
+                </div>
+
+                <!-- Content Filters -->
+                <div class="content-filters">
+                    <select id="semesterFilter" onchange="filterBooks()">
+                        <option value="all">🎓 All Semesters</option>
+                        <option value="semester-1">📗 Semester 1</option>
+                        <option value="semester-2">📘 Semester 2</option>
+                        <option value="semester-3">📙 Semester 3</option>
+                        <option value="semester-4">📕 Semester 4</option>
+                        <option value="semester-5">📓 Semester 5</option>
+                        <option value="semester-6">📔 Semester 6</option>
+                    </select>
+                    
+                    <select id="categoryFilter" onchange="filterBooks()">
+                        <option value="all">📋 All Categories</option>
+                        <option value="core">🎯 Core Subjects</option>
+                        <option value="programming">💻 Programming</option>
+                        <option value="mathematics">🔢 Mathematics</option>
+                        <option value="lab">🧪 Lab Work</option>
+                        <option value="elective">📖 Electives</option>
+                    </select>
+                </div>
+
+                <!-- Semester 1 -->
+                <div class="semester-section" data-semester="semester-1">
+                    <div class="semester-header">
+                        <h3 class="semester-title">📗 Semester 1</h3>
+                        <span class="semester-badge">5 Subjects</span>
+                    </div>
+                    <div class="books-grid">
+                        <div class="book-card core" data-category="core">
+                            <div class="book-header">
+                                <span class="book-category">Core</span>
+                                <span class="book-credits">4 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h4>FEG-02</h4>
+                                <p>Foundation Course in English-02</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/86026" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card core" data-category="core">
+                            <div class="book-header">
+                                <span class="book-category">Core</span>
+                                <span class="book-credits">6 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h4>MCS-011</h4>
+                                <p>Problem Solving and Programming</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/458" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card programming" data-category="programming">
+                            <div class="book-header">
+                                <span class="book-category">Programming</span>
+                                <span class="book-credits">4 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h4>BCS-131</h4>
+                                <p>Programming in C++</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/460" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card lab" data-category="lab">
+                            <div class="book-header">
+                                <span class="book-category">Lab</span>
+                                <span class="book-credits">2 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h4>BCSL-135</h4>
+                                <p>DBMS And C++ Lab</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/463" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card mathematics" data-category="mathematics">
+                            <div class="book-header">
+                                <span class="book-category">Mathematics</span>
+                                <span class="book-credits">4 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h4>BCS-040</h4>
+                                <p>Statistical Techniques</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/464" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Semester 2 -->
+                <div class="semester-section" data-semester="semester-2">
+                    <div class="semester-header">
+                        <h3 class="semester-title">📘 Semester 2</h3>
+                        <span class="semester-badge">6 Subjects</span>
+                    </div>
+                    <div class="books-grid">
+                        <div class="book-card core" data-category="core">
+                            <div class="book-header">
+                                <span class="book-category">Core</span>
+                                <span class="book-credits">4 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h4>ECO-01</h4>
+                                <p>Business Organisation</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/86036" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card programming" data-category="programming">
+                            <div class="book-header">
+                                <span class="book-category">Programming</span>
+                                <span class="book-credits">6 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h4>MCS-012</h4>
+                                <p>Computer Organisation and Assembly Language Programming</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/459" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card programming" data-category="programming">
+                            <div class="book-header">
+                                <span class="book-category">Programming</span>
+                                <span class="book-credits">4 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h4>BCS-042</h4>
+                                <p>Introduction to Algorithm Design</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/461" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card lab" data-category="lab">
+                            <div class="book-header">
+                                <span class="book-category">Lab</span>
+                                <span class="book-credits">2 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h4>BCSL-021</h4>
+                                <p>C Language Programming Lab</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/462" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card lab" data-category="lab">
+                            <div class="book-header">
+                                <span class="book-category">Lab</span>
+                                <span class="book-credits">2 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h4>BCSL-022</h4>
+                                <p>Assembly Language Programming Lab</p>
+                            </div>
+                            <a href="#" class="download-btn disabled" title="Coming Soon">
+                                📥 Coming Soon
+                            </a>
+                        </div>
+                        
+                        <div class="book-card programming" data-category="programming">
+                            <div class="book-header">
+                                <span class="book-category">Discrete Math</span>
+                                <span class="book-credits">4 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h4>BCS-041</h4>
+                                <p>Fundamentals of Computer Networks</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/465" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Semester 3 -->
+                <div class="semester-section" data-semester="semester-3">
+                    <div class="semester-header">
+                        <h3 class="semester-title">📙 Semester 3</h3>
+                        <span class="semester-badge">5 Subjects</span>
+                    </div>
+                    <div class="books-grid">
+                        <div class="book-card programming" data-category="programming">
+                            <div class="book-header">
+                                <span class="book-category">Programming</span>
+                                <span class="book-credits">6 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h4>MCS-013</h4>
+                                <p>Discrete Mathematics</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/86026" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card lab" data-category="lab">
+                            <div class="book-header">
+                                <span class="book-category">Lab</span>
+                                <span class="book-credits">2 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h4>BCSL-145</h4>
+                                <p>DBMS And C++ Lab</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/463" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card programming" data-category="programming">
+                            <div class="book-header">
+                                <span class="book-category">Programming</span>
+                                <span class="book-credits">4 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h4>BCS-131</h4>
+                                <p>Programming in C++</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/460" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card mathematics" data-category="mathematics">
+                            <div class="book-header">
+                                <span class="book-category">Mathematics</span>
+                                <span class="book-credits">4 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h4>BCS-040</h4>
+                                <p>Statistical Techniques</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/464" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Semester 4 -->
+                <div class="semester-section" data-semester="semester-4">
+                    <div class="semester-header">
+                        <h3 class="semester-title">📕 Semester 4</h3>
+                        <span class="semester-badge">6 Subjects</span>
+                    </div>
+                    <div class="books-grid">
+                        <div class="book-card programming" data-category="programming">
+                            <div class="book-header">
+                                <span class="book-category">Java</span>
+                                <span class="book-credits">6 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h4>MCS-206</h4>
+                                <p>Object Oriented Programming using Java</p>
+                            </div>
+                            <a href="http://egyankosh.ac.in/handle/123456789/79806" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card lab coming-soon" data-category="lab">
+                            <div class="book-header">
+                                <span class="book-category">Lab</span>
+                                <span class="book-credits">2 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h4>BCSL-146</h4>
+                                <p>Object Oriented Programming using Java Lab</p>
+                            </div>
+                            <a href="#" class="download-btn disabled" title="Coming Soon">
+                                📥 Coming Soon
+                            </a>
+                        </div>
+                        
+                        <div class="book-card programming" data-category="programming">
+                            <div class="book-header">
+                                <span class="book-category">Web</span>
+                                <span class="book-credits">4 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h4>BCS-053</h4>
+                                <p>Web Programming</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/51958" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card lab coming-soon" data-category="lab">
+                            <div class="book-header">
+                                <span class="book-category">Lab</span>
+                                <span class="book-credits">2 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h4>BCSL-054</h4>
+                                <p>Web Programming Lab</p>
+                            </div>
+                            <a href="#" class="download-btn disabled" title="Coming Soon">
+                                📥 Coming Soon
+                            </a>
+                        </div>
+                        
+                        <div class="book-card programming" data-category="programming">
+                            <div class="book-header">
+                                <span class="book-category">Database</span>
+                                <span class="book-credits">4 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h4>BCS-052</h4>
+                                <p>Network Programming and Administration</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/51957" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                        
+                        <div class="book-card mathematics" data-category="mathematics">
+                            <div class="book-header">
+                                <span class="book-category">Mathematics</span>
+                                <span class="book-credits">4 Credits</span>
+                            </div>
+                            <div class="book-info">
+                                <h4>BCS-051</h4>
+                                <p>Introduction to Software Engineering</p>
+                            </div>
+                            <a href="https://egyankosh.ac.in/handle/123456789/51956" target="_blank" class="download-btn">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Semesters can be added here following the same pattern -->
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>📖 Study Portal</h3>
+                <p>Your comprehensive academic resource hub for BCA studies.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html">🏠 Home</a></li>
+                    <li><a href="books.html">📚 Books</a></li>
+                    <li><a href="index.html#notes-section">📋 Notes</a></li>
+                    <li><a href="index.html#projects-section">🚀 Projects</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Study Portal. All rights reserved. | Made with ❤️ for students</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/books.js"></script>
+    <script>
+        // Additional inline scripts for books page functionality
+        
+        // Add loading animation
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.add('loaded');
+        });
+    </script>
+</body>
+</html>
