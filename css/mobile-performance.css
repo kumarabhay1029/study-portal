@@ -1,0 +1,180 @@
+/* ==========================================================================
+   STUDY PORTAL - MOBILE PERFORMANCE OPTIMIZATIONS
+   Lightweight mobile CSS to reduce lag and improve performance
+   ========================================================================== */
+
+/* ==========================================================================
+   MOBILE PERFORMANCE OPTIMIZATIONS
+   ========================================================================== */
+
+/* Disable expensive animations on mobile */
+@media screen and (max-width: 768px) {
+    
+    /* Disable animated background gradient on mobile for better performance */
+    body {
+        background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%) !important;
+        background-attachment: scroll !important; /* Prevent fixed attachment lag */
+        animation: none !important; /* Disable gradient animation */
+    }
+    
+    /* Disable floating particles on mobile */
+    body::before,
+    body::after {
+        display: none !important; /* Remove overlay effects */
+    }
+    
+    /* Reduce backdrop-filter blur for better performance */
+    .mobile-menu-toggle {
+        backdrop-filter: blur(5px) !important; /* Reduced from 15px */
+    }
+    
+    .sidebar {
+        backdrop-filter: blur(10px) !important; /* Reduced from 25px */
+    }
+    
+    .mobile-backdrop {
+        backdrop-filter: none !important; /* Remove expensive blur */
+        background: rgba(0, 0, 0, 0.7) !important; /* Use solid color instead */
+    }
+    
+    .portal-title {
+        backdrop-filter: blur(5px) !important; /* Reduced from 15px */
+    }
+    
+    .login-btn {
+        backdrop-filter: blur(5px) !important; /* Reduced blur */
+    }
+    
+    /* Simplify transitions for better performance */
+    * {
+        transition-duration: 0.2s !important; /* Faster transitions */
+    }
+    
+    /* Optimize will-change property for animated elements */
+    .sidebar,
+    .mobile-backdrop,
+    .mobile-menu-toggle {
+        will-change: transform, opacity !important;
+    }
+    
+    /* Force hardware acceleration for smooth animations */
+    .sidebar,
+    .mobile-backdrop,
+    .mobile-menu-toggle,
+    .hamburger-bar {
+        transform: translateZ(0) !important; /* Force GPU acceleration */
+    }
+    
+    /* Reduce box-shadows for better performance */
+    .mobile-menu-toggle {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important; /* Simplified shadow */
+    }
+    
+    .sidebar {
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.4) !important; /* Simplified shadow */
+    }
+    
+    /* Optimize text rendering */
+    body {
+        text-rendering: optimizeSpeed !important;
+        -webkit-font-smoothing: antialiased !important;
+        -moz-osx-font-smoothing: grayscale !important;
+    }
+    
+    /* Prevent layout shifts and improve CLS */
+    .main-bar {
+        contain: layout style !important;
+    }
+    
+    .sidebar {
+        contain: layout style !important;
+    }
+    
+    /* Reduce repaints by containing paint */
+    .section-container {
+        contain: paint !important;
+    }
+    
+    /* Disable hover effects on mobile to prevent sticky states */
+    .mobile-menu-toggle:hover,
+    .sidebar .nav-link:hover,
+    .login-btn:hover {
+        transform: none !important;
+        box-shadow: none !important;
+        background: inherit !important;
+    }
+    
+    /* Enable touch-action for better scroll performance */
+    body {
+        touch-action: pan-y !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+    
+    .sidebar {
+        touch-action: pan-y !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+    
+    /* Prevent flicker during orientation changes */
+    @media screen and (orientation: portrait) {
+        body {
+            -webkit-text-size-adjust: 100% !important;
+        }
+    }
+    
+    @media screen and (orientation: landscape) {
+        body {
+            -webkit-text-size-adjust: 100% !important;
+        }
+    }
+    
+    /* Reduce complexity of gradients */
+    .sidebar {
+        background: rgba(15, 32, 39, 0.95) !important; /* Solid color instead of gradient */
+    }
+    
+    .sidebar-header {
+        background: none !important; /* Remove gradient */
+    }
+    
+    /* Optimize font loading */
+    body {
+        font-display: swap !important;
+    }
+    
+    /* Reduce animation complexity */
+    .mobile-menu-toggle.active .hamburger-bar {
+        transition: transform 0.2s ease !important; /* Faster animation */
+    }
+    
+    /* Prevent accidental zooming */
+    input, select, textarea {
+        font-size: 16px !important; /* Prevent zoom on iOS */
+    }
+    
+    /* Optimize rendering for mobile browsers */
+    .sidebar,
+    .mobile-backdrop,
+    .main-bar {
+        -webkit-backface-visibility: hidden !important;
+        backface-visibility: hidden !important;
+        -webkit-perspective: 1000px !important;
+        perspective: 1000px !important;
+    }
+}
+
+/* ==========================================================================
+   REDUCE MOTION FOR USERS WHO PREFER IT
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    body {
+        animation: none !important;
+    }
+}

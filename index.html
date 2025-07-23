@@ -2,9 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=yes, viewport-fit=cover">
     <meta name="format-detection" content="telephone=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- Performance optimizations -->
+    <meta name="theme-color" content="#0f2027">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Prevent FOUC (Flash of Unstyled Content) -->
+    <style>
+        /* Critical CSS to prevent blinking */
+        body { 
+            opacity: 0; 
+            background: #0f2027;
+            transition: opacity 0.3s ease;
+        }
+        body.loaded { 
+            opacity: 1; 
+        }
+        /* Hide content until fully loaded */
+        .main-bar, .content-area { 
+            visibility: hidden; 
+        }
+        body.loaded .main-bar, 
+        body.loaded .content-area { 
+            visibility: visible; 
+        }
+    </style>
+    
     <title>Study Portal - Your Academic Resource Hub</title>
     <meta name="description" content="Comprehensive academic resource hub for BCA studies. Access study materials, assignments, notes, and collaborative projects.">
     
@@ -39,6 +67,9 @@
     
     <!-- Mobile and Desktop responsive CSS -->
     <link rel="stylesheet" href="css/mobile.css">
+    
+    <!-- Mobile Performance Optimizations -->
+    <link rel="stylesheet" href="css/mobile-performance.css">
     
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📖</text></svg>">
@@ -1406,6 +1437,25 @@
                     console.log('✅ Login button event listener installed');
                 }
             }, 1500); // Increased timeout for GitHub Pages
+        });
+        
+        // Performance optimization: Remove loading class when page is fully loaded
+        window.addEventListener('load', function() {
+            document.body.classList.add('loaded');
+            
+            // Optional: Remove performance-heavy animations after load for better scrolling
+            setTimeout(function() {
+                // Re-enable smooth animations after initial load
+                document.documentElement.style.setProperty('--animation-enabled', '1');
+            }, 1000);
+        });
+        
+        // Prevent blinking during page transitions
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add a small delay to ensure CSS is loaded
+            setTimeout(function() {
+                document.body.classList.add('loaded');
+            }, 100);
         });
     </script>
     
