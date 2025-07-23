@@ -8,6 +8,9 @@
 firebase-private-key.json
 serviceAccount.json
 
+# VS Code workspace settings
+.vscode/
+
 # Development and debugging files
 debug-*.js
 test-*.html

@@ -36,8 +36,9 @@
 ### Additional Files:
 - `privacy-policy.html` - Legal compliance page
 - `terms-of-use.html` - Terms of service page
-- `NOTES_ADMIN_GUIDE.md` - Admin guide for notes approval
-- `firebase-security-rules.js` - Security rules for Firebase
+- `firestore.rules` - Firestore security rules
+- `storage.rules` - Firebase Storage security rules
+- `FIREBASE_RULES_DEPLOYMENT.md` - Deployment guide for Firebase rules
 
 ## 🚀 **How to Use the Notes System**
 
