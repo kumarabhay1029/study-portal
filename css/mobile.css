@@ -1193,4 +1193,65 @@
     body::after {
         display: none !important; /* Hide floating particles on mobile */
     }
+    
+    /* Mobile Footer Responsive Styles */
+    .site-footer {
+        margin-top: 30px !important;
+        padding: 25px 0 15px !important;
+    }
+    
+    .footer-content {
+        padding: 0 15px !important;
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+        margin-bottom: 20px !important;
+    }
+    
+    .footer-section {
+        text-align: center !important;
+        padding: 15px 0 !important;
+        border-bottom: 1px solid rgba(79, 195, 247, 0.1) !important;
+    }
+    
+    .footer-section:last-child {
+        border-bottom: none !important;
+    }
+    
+    .footer-section h3 {
+        font-size: 1.2em !important;
+        margin-bottom: 12px !important;
+    }
+    
+    .footer-section h4 {
+        font-size: 1em !important;
+        margin-bottom: 12px !important;
+    }
+    
+    .footer-section .footer-links {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 8px !important;
+    }
+    
+    .footer-section .footer-links a {
+        font-size: 13px !important;
+        padding: 8px 16px !important;
+        border-radius: 15px !important;
+        background: rgba(79, 195, 247, 0.05) !important;
+        border: 1px solid rgba(79, 195, 247, 0.1) !important;
+        width: 180px !important;
+        text-align: center !important;
+    }
+    
+    .footer-section .footer-links a:hover {
+        transform: translateY(-1px) !important;
+        background: rgba(79, 195, 247, 0.1) !important;
+    }
+    
+    .footer-bottom p {
+        font-size: 12px !important;
+        padding: 0 10px !important;
+        line-height: 1.4 !important;
+    }
 }
