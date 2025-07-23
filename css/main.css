@@ -207,9 +207,9 @@ body::after {
     visibility: visible;
 }
 
-/* Hamburger menu button - always visible in top-left corner */
+/* Hamburger menu button - visible on both desktop and mobile */
 .mobile-menu-toggle {
-    display: flex;
+    display: flex; /* Always visible */
     position: fixed;
     top: 20px;
     left: 20px;
@@ -1291,6 +1291,13 @@ body::after {
 
 /* Tablet and smaller desktop styles (768px and below) */
 @media (max-width: 768px) {
+    /* Mobile hamburger menu inherits base styling */
+    
+    /* Hide desktop navigation on mobile */
+    .nav-group {
+        display: none;
+    }
+    
     /* Adjust main bar height for mobile */
     .main-bar {
         height: 170px;
@@ -1320,10 +1327,11 @@ body::after {
         text-align: center;
     }
 
-    /* Tighter navigation spacing */
+    /* Tighter navigation spacing - only for desktop mode above 768px */
     .nav-group {
         gap: 10px;
         margin-bottom: 15px;
+        display: none; /* Hidden on mobile */
     }
 
     /* Smaller navigation buttons */

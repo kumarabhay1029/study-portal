@@ -1156,7 +1156,7 @@ function showSection(sectionName) {
  */
 function updateActiveNavigation(sectionName) {
     // Remove active class from all nav items
-    document.querySelectorAll('.nav-btn, .sidebar a').forEach(item => {
+    document.querySelectorAll('.nav-btn, .nav-link').forEach(item => {
         item.classList.remove('active');
     });
 
