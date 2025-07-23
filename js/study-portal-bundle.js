@@ -1133,6 +1133,8 @@ let currentSection = 'home';
  * @param {string} sectionName - Name of the section to show
  */
 function showSection(sectionName) {
+    console.log(`🔄 Switching to section: ${sectionName}`);
+    
     // Hide all sections
     document.querySelectorAll('.section-container').forEach(section => {
         section.classList.remove('active');
@@ -1143,6 +1145,37 @@ function showSection(sectionName) {
     if (targetSection) {
         targetSection.classList.add('active');
         currentSection = sectionName;
+        
+        // Force scroll to top immediately, then smooth scroll
+        window.scrollTo(0, 0);
+        
+        // Small delay to ensure section is visible, then smooth scroll
+        setTimeout(() => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }, 50);
+        
+        console.log(`✅ Successfully switched to ${sectionName} section`);
+        
+        // Special handling for notes section
+        if (sectionName === 'notes') {
+            console.log('📋 Notes section activated - checking content...');
+            
+            // Ensure notes section is properly positioned
+            targetSection.style.marginTop = '0';
+            targetSection.style.paddingTop = '20px';
+            
+            // Check if notes manager is loaded
+            if (window.notesManager) {
+                console.log('✅ Notes manager is available');
+            } else {
+                console.log('⚠️ Notes manager not yet loaded');
+            }
+        }
+    } else {
+        console.error(`❌ Section not found: ${sectionName}-section`);
     }
 
     // Update navigation

@@ -8,6 +8,40 @@
 firebase-private-key.json
 serviceAccount.json
 
+# Development and debugging files
+debug-*.js
+test-*.html
+*-test.html
+simple-*.html
+
+# Temporary files
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# Build artifacts
+dist/
+build/
+.cache/
+
+# Logs
+*.log
+logs/
+
+# Node modules (if using npm in future)
+node_modules/
+
+# Backup files
+*.bak
+*.backup
+
 # Backup files
 *-backup.*
 *-old.*

@@ -1,0 +1,92 @@
+// Firebase Security Rules for Study Portal Notes Management
+// This file should be deployed to your Firebase Firestore project
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Notes Collection Rules
+    match /notes/{noteId} {
+      // Allow read access to approved notes only (for public viewing)
+      allow read: if resource.data.status == 'approved';
+      
+      // Allow create for note submissions (anyone can upload)
+      allow create: if request.auth != null
+        && request.resource.data.status == 'pending'
+        && request.resource.data.uploadDate == request.time
+        && validateNoteData(request.resource.data);
+      
+      // Allow update for admin operations (approve/reject)
+      allow update: if request.auth != null
+        && hasAdminRole(request.auth.uid)
+        && (
+          // Approval
+          (request.resource.data.status == 'approved' 
+           && resource.data.status == 'pending'
+           && request.resource.data.approvedDate == request.time)
+          ||
+          // Rejection
+          (request.resource.data.status == 'rejected'
+           && resource.data.status == 'pending'
+           && request.resource.data.rejectedDate == request.time)
+          ||
+          // Download count increment
+          (request.resource.data.downloadCount == resource.data.downloadCount + 1
+           && onlyDownloadCountChanged(request.resource.data, resource.data))
+        );
+      
+      // Allow delete for admin only
+      allow delete: if request.auth != null
+        && hasAdminRole(request.auth.uid);
+    }
+    
+    // Admin users collection (for role management)
+    match /admins/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if false; // Only allow admin creation through Firebase Admin SDK
+    }
+  }
+}
+
+// Helper Functions
+function validateNoteData(data) {
+  return data.keys().hasAll(['title', 'subject', 'semester', 'category', 'description', 'uploaderName', 'fileUrl', 'fileName', 'fileSize'])
+    && data.title is string && data.title.size() >= 5 && data.title.size() <= 100
+    && data.subject is string && data.subject.size() > 0
+    && data.semester is number && data.semester >= 1 && data.semester <= 6
+    && data.category is string && data.category in ['complete-notes', 'chapter-summary', 'exam-preparation', 'quick-reference', 'practical-guide', 'assignment-help']
+    && data.description is string && data.description.size() >= 20 && data.description.size() <= 500
+    && data.uploaderName is string && data.uploaderName.size() <= 50
+    && data.fileUrl is string && data.fileUrl.matches('https://firebasestorage.googleapis.com/.*')
+    && data.fileName is string && data.fileName.matches('.*\\.pdf$')
+    && data.fileSize is number && data.fileSize <= 10485760; // 10MB limit
+}
+
+function hasAdminRole(userId) {
+  // Check if user exists in admins collection
+  return exists(/databases/$(database)/documents/admins/$(userId));
+}
+
+function onlyDownloadCountChanged(newData, oldData) {
+  return newData.diff(oldData).affectedKeys().hasOnly(['downloadCount']);
+}
+
+// Firebase Storage Rules (separate file: storage.rules)
+/*
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Notes uploads - allow authenticated users to upload PDFs under 10MB
+    match /notes/{fileName} {
+      allow read: if true; // Public read for approved notes
+      allow create: if request.auth != null
+        && resource == null
+        && request.resource.size < 10 * 1024 * 1024  // 10MB limit
+        && request.resource.contentType == 'application/pdf'
+        && fileName.matches('.*\\.pdf$');
+      
+      allow delete: if request.auth != null; // Allow cleanup by authenticated users
+    }
+  }
+}
+*/

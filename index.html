@@ -40,6 +40,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore-compat.js"></script>
     
     <!-- Firebase Configuration (Secure) -->
     <script src="js/firebase-config.js"></script>
@@ -277,6 +278,224 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Notes Section -->
+        <div id="notes-section" class="section-container">
+            <h2 class="section-title">📋 Student-Made Notes</h2>
+            
+            <!-- Notes Browse Section -->
+            <div class="section-content notes-browse-section">
+                <div class="browse-header">
+                    <h3>📚 Browse Available Notes</h3>
+                    <div class="browse-filters">
+                        <select id="filterSubject" onchange="filterNotes()">
+                            <option value="">All Subjects</option>
+                            <option value="MCS-011">MCS-011</option>
+                            <option value="MCS-012">MCS-012</option>
+                            <option value="MCS-013">MCS-013</option>
+                            <option value="BCS-031">BCS-031</option>
+                            <option value="BCS-032">BCS-032</option>
+                        </select>
+                        <select id="filterSemester" onchange="filterNotes()">
+                            <option value="">All Semesters</option>
+                            <option value="1">Semester 1</option>
+                            <option value="2">Semester 2</option>
+                            <option value="3">Semester 3</option>
+                            <option value="4">Semester 4</option>
+                            <option value="5">Semester 5</option>
+                            <option value="6">Semester 6</option>
+                        </select>
+                        <select id="filterCategory" onchange="filterNotes()">
+                            <option value="">All Categories</option>
+                            <option value="complete-notes">Complete Notes</option>
+                            <option value="chapter-summary">Chapter Summary</option>
+                            <option value="exam-preparation">Exam Preparation</option>
+                            <option value="quick-reference">Quick Reference</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="notes-grid" id="notesGrid">
+                    <div class="loading-notes" id="loadingNotes">
+                        <div class="loading-spinner"></div>
+                        <p>Loading approved notes...</p>
+                    </div>
+                    
+                    <!-- Notes will be dynamically loaded here -->
+                </div>
+                
+                <div class="load-more">
+                    <button class="load-more-btn" id="loadMoreBtn" onclick="loadMoreNotes()" style="display: none;">
+                        📄 Load More Notes
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Notes Upload Section -->
+            <div class="section-content notes-upload-section">
+                <div class="upload-header">
+                    <h3>🎓 Share Your Notes</h3>
+                    <p>Upload your high-quality study notes to help fellow students. All notes are manually reviewed before publication.</p>
+                </div>
+                
+                <div class="upload-form" id="notesUploadForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="noteTitle">📝 Note Title</label>
+                            <input type="text" id="noteTitle" placeholder="e.g., Data Structures - Complete Guide" maxlength="100" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="noteSubject">📚 Subject</label>
+                            <select id="noteSubject" required>
+                                <option value="">Select Subject</option>
+                                <option value="MCS-011">MCS-011 - Problem Solving and Programming</option>
+                                <option value="MCS-012">MCS-012 - Computer Organization and Assembly Language Programming</option>
+                                <option value="MCS-013">MCS-013 - Discrete Mathematics</option>
+                                <option value="MCS-014">MCS-014 - Systems Analysis and Design</option>
+                                <option value="MCS-015">MCS-015 - Communication Skills</option>
+                                <option value="MCS-021">MCS-021 - Data and File Structures</option>
+                                <option value="MCS-022">MCS-022 - Operating System Concepts and Networking Management</option>
+                                <option value="MCS-023">MCS-023 - Introduction to Database Management Systems</option>
+                                <option value="MCS-024">MCS-024 - Object Oriented Technologies and Java Programming</option>
+                                <option value="ECO-01">ECO-01 - Business Organization</option>
+                                <option value="ECO-02">ECO-02 - Accountancy-1</option>
+                                <option value="FST-01">FST-01 - Foundation Course in Science and Technology</option>
+                                <option value="BCS-031">BCS-031 - Programming in C++</option>
+                                <option value="BCS-032">BCS-032 - Object Oriented Programming using C++</option>
+                                <option value="BCS-040">BCS-040 - Statistical Techniques</option>
+                                <option value="BCS-041">BCS-041 - Fundamentals of Computer Networks</option>
+                                <option value="BCS-042">BCS-042 - Introduction to Algorithm Design</option>
+                                <option value="MCSL-016">MCSL-016 - Internet Concepts and Web Design</option>
+                                <option value="MCSL-017">MCSL-017 - C and Assembly Language Programming</option>
+                                <option value="BCSL-021">BCSL-021 - C Language Programming</option>
+                                <option value="BCSL-022">BCSL-022 - Assembly Language Programming</option>
+                                <option value="BCSL-032">BCSL-032 - C++ Programming Laboratory</option>
+                                <option value="BCSL-033">BCSL-033 - Data and File Structure Laboratory</option>
+                                <option value="BCSL-034">BCSL-034 - DBMS Laboratory</option>
+                                <option value="BCSL-043">BCSL-043 - Java Programming</option>
+                                <option value="BCSL-044">BCSL-044 - Statistical Techniques</option>
+                                <option value="BCSL-045">BCSL-045 - Algorithm Design</option>
+                                <option value="BCS-051">BCS-051 - Introduction to Software Engineering</option>
+                                <option value="BCS-052">BCS-052 - Network Programming and Administration</option>
+                                <option value="BCS-053">BCS-053 - Web Programming</option>
+                                <option value="BCS-054">BCS-054 - Computer Oriented Numerical Techniques</option>
+                                <option value="BCS-055">BCS-055 - Business Communication</option>
+                                <option value="BCSL-056">BCSL-056 - Network Programming and Administration Lab</option>
+                                <option value="BCSL-057">BCSL-057 - Web Programming Lab</option>
+                                <option value="BCSL-058">BCSL-058 - Computer Oriented Numerical Techniques Lab</option>
+                                <option value="BCS-061">BCS-061 - TCP/IP Programming</option>
+                                <option value="BCS-062">BCS-062 - E-Commerce</option>
+                                <option value="BCSP-064">BCSP-064 - Project</option>
+                                <option value="Other">Other Subject</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="noteSemester">📅 Semester</label>
+                            <select id="noteSemester" required>
+                                <option value="">Select Semester</option>
+                                <option value="1">Semester 1</option>
+                                <option value="2">Semester 2</option>
+                                <option value="3">Semester 3</option>
+                                <option value="4">Semester 4</option>
+                                <option value="5">Semester 5</option>
+                                <option value="6">Semester 6</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="noteCategory">🏷️ Category</label>
+                            <select id="noteCategory" required>
+                                <option value="">Select Category</option>
+                                <option value="complete-notes">Complete Notes</option>
+                                <option value="chapter-summary">Chapter Summary</option>
+                                <option value="exam-preparation">Exam Preparation</option>
+                                <option value="quick-reference">Quick Reference</option>
+                                <option value="practical-guide">Practical Guide</option>
+                                <option value="assignment-help">Assignment Help</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="noteDescription">📄 Description</label>
+                        <textarea id="noteDescription" placeholder="Describe what your notes cover, key topics, and how they can help other students..." rows="4" maxlength="500" required></textarea>
+                        <div class="char-count">
+                            <span id="descCharCount">0</span>/500 characters
+                        </div>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="noteFile">📎 Upload Notes (PDF only, Max 10MB)</label>
+                        <div class="file-upload-area" id="fileUploadArea">
+                            <input type="file" id="noteFile" accept=".pdf" required>
+                            <div class="upload-placeholder">
+                                <span class="upload-icon">📁</span>
+                                <p>Click to select PDF file or drag & drop here</p>
+                                <small>Maximum file size: 10MB</small>
+                            </div>
+                            <div class="file-info" id="fileInfo" style="display: none;">
+                                <span class="file-name"></span>
+                                <span class="file-size"></span>
+                                <button type="button" class="remove-file" onclick="removeFile()">❌</button>
+                            </div>
+                        </div>
+                        <div class="upload-progress" id="uploadProgress" style="display: none;">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                            <span class="progress-text" id="progressText">0%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="uploaderName">👤 Your Name</label>
+                        <input type="text" id="uploaderName" placeholder="Enter your name (optional for recognition)" maxlength="50">
+                    </div>
+                    
+                    <div class="upload-actions">
+                        <button type="button" class="upload-btn" id="uploadBtn" onclick="uploadNote()">
+                            <span class="btn-icon">📤</span>
+                            <span class="btn-text">Submit for Review</span>
+                        </button>
+                        <button type="button" class="clear-btn" onclick="clearForm()">
+                            <span class="btn-icon">🗑️</span>
+                            <span class="btn-text">Clear Form</span>
+                        </button>
+                    </div>
+                    
+                    <div class="upload-guidelines">
+                        <h4>📋 Upload Guidelines</h4>
+                        <ul>
+                            <li>✅ Notes should be original and created by you</li>
+                            <li>✅ PDF format only, maximum 10MB file size</li>
+                            <li>✅ Clear, readable handwriting or typed content</li>
+                            <li>✅ Include proper subject codes and topic titles</li>
+                            <li>⚠️ All uploads are manually reviewed before publication</li>
+                            <li>⚠️ Review process typically takes 24-48 hours</li>
+                            <li>❌ No copyrighted material or direct textbook copies</li>
+                            <li>❌ Inappropriate content will be rejected</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Admin Panel (Hidden by default) -->
+            <div class="section-content admin-panel" id="adminPanel" style="display: none;">
+                <div class="admin-header">
+                    <h3>🛡️ Admin Panel - Notes Review</h3>
+                    <p>Review and approve student-submitted notes before they go live.</p>
+                </div>
+                
+                <div class="pending-notes" id="pendingNotes">
+                    <!-- Pending notes for review will appear here -->
+                </div>
+            </div>
+            
+            <!-- Upload Status Messages -->
+            <div class="status-messages" id="statusMessages"></div>
         </div>
 
         <!-- Books Section -->
@@ -922,30 +1141,6 @@
             </div>
         </div>
 
-        <!-- Notes Section -->
-        <div id="notes-section" class="section-container">
-            <h2 class="section-title">📋 Notes</h2>
-            <div class="section-content">
-                <h3>Study Notes Collection</h3>
-                <p>Access quick reference notes and summaries for all subjects. These notes are created by experts and fellow students.</p>
-                <ul>
-                    <li>C Programming - Basic to Advanced</li>
-                    <li>Python Programming - Complete Guide</li>
-                    <li>Data Structures - Concepts & Implementation</li>
-                    <li>Database Management - Theory & Practice</li>
-                    <li>Computer Networks - Fundamentals</li>
-                    <li>Mathematics - Discrete & Applied</li>
-                </ul>
-            </div>
-            <div class="section-content">
-                <h3>Recent Updates</h3>
-                <p>New notes for MCS-101 have been uploaded. Updated notes for Data Structures are now available with practical examples.</p>
-                <button class="cta-button" onclick="alert('Notes access feature will be implemented here!')">
-                    📖 Access Notes
-                </button>
-            </div>
-        </div>
-
         <!-- Projects Section -->
         <div id="projects-section" class="section-container">
             <h2 class="section-title">🚀 Projects</h2>
@@ -1498,6 +1693,12 @@
             }, 100);
         });
     </script>
+    
+    <!-- Notes Management System -->
+    <script src="js/notes-manager.js"></script>
+    
+    <!-- GitHub Pages Admin System -->
+    <script src="js/github-pages-admin.js"></script>
     
 </body>
 </html>
