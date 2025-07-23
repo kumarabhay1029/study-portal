@@ -31,7 +31,7 @@
 - `css/mobile.css` - Mobile-specific optimizations
 - `js/study-portal-bundle.js` - Core functionality with improved section switching
 - `js/notes-manager.js` - Notes upload and management system
-- `js/admin-utils.js` - Admin panel for notes approval
+- `js/github-pages-admin.js` - Admin panel for notes approval
 
 ### Additional Files:
 - `privacy-policy.html` - Legal compliance page

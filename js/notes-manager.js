@@ -14,6 +14,9 @@ class NotesManager {
         this.allNotes = [];
         this.filteredNotes = [];
         
+        // Add debounce timer for filtering
+        this.filterTimeout = null;
+        
         this.init();
     }
 
@@ -84,6 +87,29 @@ class NotesManager {
                 if (files.length > 0) {
                     fileInput.files = files;
                     this.handleFileSelect({ target: { files } });
+                }
+            });
+        }
+
+        // Event delegation for notes grid (more performant)
+        const notesGrid = document.getElementById('notesGrid');
+        if (notesGrid) {
+            notesGrid.addEventListener('click', (e) => {
+                const noteCard = e.target.closest('.note-card');
+                if (!noteCard) return;
+                
+                const noteId = noteCard.dataset.noteId;
+                const action = e.target.dataset.action;
+                
+                e.stopPropagation();
+                
+                if (action === 'preview') {
+                    this.previewNote(noteId);
+                } else if (action === 'download') {
+                    this.downloadNote(noteId);
+                } else if (!action) {
+                    // Click on card itself
+                    this.previewNote(noteId);
                 }
             });
         }
@@ -429,23 +455,32 @@ class NotesManager {
         
         if (!notesGrid) return;
 
-        // Clear existing notes (except loading)
-        const existingNotes = notesGrid.querySelectorAll('.note-card');
+        // Clear existing notes (except loading) more efficiently
+        const existingNotes = notesGrid.querySelectorAll('.note-card, .no-notes');
         existingNotes.forEach(note => note.remove());
 
         if (this.filteredNotes.length === 0) {
-            notesGrid.innerHTML += '<div class="no-notes"><p>No notes found matching your criteria.</p></div>';
+            const noNotesDiv = document.createElement('div');
+            noNotesDiv.className = 'no-notes';
+            noNotesDiv.innerHTML = '<p>No notes found matching your criteria.</p>';
+            notesGrid.appendChild(noNotesDiv);
             if (loadMoreBtn) loadMoreBtn.style.display = 'none';
             return;
         }
 
-        // Render notes
+        // Render notes with improved performance
         const notesToShow = this.filteredNotes.slice(0, (this.currentPage + 1) * this.notesPerPage);
+        
+        // Use DocumentFragment for batched DOM updates
+        const fragment = document.createDocumentFragment();
         
         notesToShow.forEach(note => {
             const noteCard = this.createNoteCard(note);
-            notesGrid.appendChild(noteCard);
+            fragment.appendChild(noteCard);
         });
+        
+        // Single DOM update
+        notesGrid.appendChild(fragment);
 
         // Show/hide load more button
         if (loadMoreBtn) {
@@ -456,10 +491,13 @@ class NotesManager {
     createNoteCard(note) {
         const card = document.createElement('div');
         card.className = 'note-card';
-        card.onclick = () => this.previewNote(note);
+        
+        // Use event delegation instead of inline onclick for better performance
+        card.dataset.noteId = note.id;
 
         const uploadDate = note.approvedDate ? new Date(note.approvedDate.seconds * 1000) : new Date();
         
+        // Create elements more efficiently
         card.innerHTML = `
             <div class="note-card-header">
                 <h4 class="note-title">${this.escapeHtml(note.title)}</h4>
@@ -474,10 +512,10 @@ class NotesManager {
             <div class="note-footer">
                 <span class="note-author">👤 ${this.escapeHtml(note.uploaderName)}</span>
                 <div class="note-actions">
-                    <button class="note-preview" onclick="event.stopPropagation(); notesManager.previewNote('${note.id}')">
+                    <button class="note-preview" data-action="preview">
                         👁️ Preview
                     </button>
-                    <button class="note-download" onclick="event.stopPropagation(); notesManager.downloadNote('${note.id}')">
+                    <button class="note-download" data-action="download">
                         📥 Download
                     </button>
                 </div>
@@ -495,12 +533,7 @@ class NotesManager {
                 return;
             }
 
-            // Increment download count
-            await this.database.collection('notes').doc(noteId).update({
-                downloadCount: firebase.firestore.FieldValue.increment(1)
-            });
-
-            // Create download link
+            // Start download immediately for better UX
             const link = document.createElement('a');
             link.href = note.fileUrl;
             link.download = note.fileName;
@@ -509,15 +542,40 @@ class NotesManager {
             link.click();
             document.body.removeChild(link);
 
-            this.showMessage('Download started successfully', 'success');
-
-            // Update local data
+            // Update UI immediately (optimistic update)
             note.downloadCount = (note.downloadCount || 0) + 1;
-            this.renderNotes();
+            this.updateDownloadCountInUI(noteId, note.downloadCount);
+
+            // Update database asynchronously without waiting
+            this.updateDownloadCountAsync(noteId);
+
+            this.showMessage('Download started successfully', 'success');
 
         } catch (error) {
             console.error('❌ Download failed:', error);
             this.showMessage('Download failed. Please try again.', 'error');
+        }
+    }
+
+    // Async database update without blocking UI
+    async updateDownloadCountAsync(noteId) {
+        try {
+            await this.database.collection('notes').doc(noteId).update({
+                downloadCount: firebase.firestore.FieldValue.increment(1)
+            });
+        } catch (error) {
+            console.warn('⚠️ Failed to update download count:', error);
+        }
+    }
+
+    // Update UI without full re-render
+    updateDownloadCountInUI(noteId, newCount) {
+        const noteCard = document.querySelector(`[data-note-id="${noteId}"]`);
+        if (noteCard) {
+            const downloadCountElement = noteCard.querySelector('.note-meta span:last-child');
+            if (downloadCountElement) {
+                downloadCountElement.textContent = `📥 ${newCount} downloads`;
+            }
         }
     }
 
@@ -533,20 +591,28 @@ class NotesManager {
     }
 
     filterNotes() {
-        const subjectFilter = document.getElementById('filterSubject')?.value;
-        const semesterFilter = document.getElementById('filterSemester')?.value;
-        const categoryFilter = document.getElementById('filterCategory')?.value;
+        // Clear existing timeout
+        if (this.filterTimeout) {
+            clearTimeout(this.filterTimeout);
+        }
+        
+        // Debounce filtering to prevent excessive re-rendering
+        this.filterTimeout = setTimeout(() => {
+            const subjectFilter = document.getElementById('filterSubject')?.value;
+            const semesterFilter = document.getElementById('filterSemester')?.value;
+            const categoryFilter = document.getElementById('filterCategory')?.value;
 
-        this.filteredNotes = this.allNotes.filter(note => {
-            const matchSubject = !subjectFilter || note.subject === subjectFilter;
-            const matchSemester = !semesterFilter || note.semester.toString() === semesterFilter;
-            const matchCategory = !categoryFilter || note.category === categoryFilter;
+            this.filteredNotes = this.allNotes.filter(note => {
+                const matchSubject = !subjectFilter || note.subject === subjectFilter;
+                const matchSemester = !semesterFilter || note.semester.toString() === semesterFilter;
+                const matchCategory = !categoryFilter || note.category === categoryFilter;
 
-            return matchSubject && matchSemester && matchCategory;
-        });
+                return matchSubject && matchSemester && matchCategory;
+            });
 
-        this.currentPage = 0;
-        this.renderNotes();
+            this.currentPage = 0;
+            this.renderNotes();
+        }, 150); // 150ms debounce
     }
 
     loadMoreNotes() {
