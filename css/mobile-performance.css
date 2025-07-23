@@ -1,110 +1,109 @@
 /* ==========================================================================
    STUDY PORTAL - MOBILE PERFORMANCE OPTIMIZATIONS
-   Lightweight mobile CSS to reduce lag and improve performance
+   Lightweight mobile CSS to reduce lag - MOBILE ONLY (Desktop unchanged)
    ========================================================================== */
 
 /* ==========================================================================
-   MOBILE PERFORMANCE OPTIMIZATIONS
+   MOBILE PERFORMANCE OPTIMIZATIONS (MOBILE DEVICES ONLY)
    ========================================================================== */
 
-/* Disable expensive animations on mobile */
+/* Only apply optimizations to mobile devices (768px and below) */
 @media screen and (max-width: 768px) {
     
-    /* Disable animated background gradient on mobile for better performance */
+    /* Disable expensive animations ONLY on mobile for better performance */
     body {
         background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%) !important;
-        background-attachment: scroll !important; /* Prevent fixed attachment lag */
-        animation: none !important; /* Disable gradient animation */
+        background-attachment: scroll !important; /* Prevent fixed attachment lag on mobile */
+        animation: none !important; /* Disable gradient animation on mobile only */
     }
     
-    /* Disable floating particles on mobile */
+    /* Disable floating particles ONLY on mobile */
     body::before,
     body::after {
-        display: none !important; /* Remove overlay effects */
+        display: none !important; /* Remove overlay effects on mobile only */
     }
     
-    /* Reduce backdrop-filter blur for better performance */
+    /* Reduce backdrop-filter blur ONLY on mobile for better performance */
     .mobile-menu-toggle {
-        backdrop-filter: blur(5px) !important; /* Reduced from 15px */
+        backdrop-filter: blur(8px) !important; /* Reduced from 15px for mobile */
     }
     
     .sidebar {
-        backdrop-filter: blur(10px) !important; /* Reduced from 25px */
+        backdrop-filter: blur(12px) !important; /* Reduced from 25px for mobile */
     }
     
     .mobile-backdrop {
-        backdrop-filter: none !important; /* Remove expensive blur */
-        background: rgba(0, 0, 0, 0.7) !important; /* Use solid color instead */
+        backdrop-filter: none !important; /* Remove expensive blur on mobile */
+        background: rgba(0, 0, 0, 0.75) !important; /* Use solid color instead on mobile */
     }
     
     .portal-title {
-        backdrop-filter: blur(5px) !important; /* Reduced from 15px */
+        backdrop-filter: blur(8px) !important; /* Reduced from 15px for mobile */
     }
     
     .login-btn {
-        backdrop-filter: blur(5px) !important; /* Reduced blur */
+        backdrop-filter: blur(8px) !important; /* Reduced blur on mobile */
     }
     
-    /* Simplify transitions for better performance */
-    * {
-        transition-duration: 0.2s !important; /* Faster transitions */
-    }
-    
-    /* Optimize will-change property for animated elements */
-    .sidebar,
-    .mobile-backdrop,
-    .mobile-menu-toggle {
-        will-change: transform, opacity !important;
-    }
-    
-    /* Force hardware acceleration for smooth animations */
+    /* Faster transitions ONLY on mobile */
     .sidebar,
     .mobile-backdrop,
     .mobile-menu-toggle,
     .hamburger-bar {
-        transform: translateZ(0) !important; /* Force GPU acceleration */
+        transition-duration: 0.25s !important; /* Faster on mobile */
     }
     
-    /* Reduce box-shadows for better performance */
+    /* Force hardware acceleration for smooth animations on mobile */
+    .sidebar,
+    .mobile-backdrop,
+    .mobile-menu-toggle,
+    .hamburger-bar {
+        transform: translateZ(0) !important; /* Force GPU acceleration on mobile */
+        will-change: transform, opacity !important; /* Optimize for mobile animations */
+    }
+    
+    /* Reduce box-shadows ONLY on mobile for better performance */
     .mobile-menu-toggle {
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important; /* Simplified shadow */
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4) !important; /* Simplified shadow for mobile */
     }
     
     .sidebar {
-        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.4) !important; /* Simplified shadow */
+        box-shadow: 3px 0 20px rgba(0, 0, 0, 0.5) !important; /* Simplified shadow for mobile */
     }
     
-    /* Optimize text rendering */
+    /* Optimize text rendering on mobile */
     body {
         text-rendering: optimizeSpeed !important;
         -webkit-font-smoothing: antialiased !important;
         -moz-osx-font-smoothing: grayscale !important;
     }
     
-    /* Prevent layout shifts and improve CLS */
+    /* Prevent layout shifts and improve performance on mobile */
     .main-bar {
         contain: layout style !important;
     }
     
     .sidebar {
-        contain: layout style !important;
+        contain: layout style paint !important;
     }
     
-    /* Reduce repaints by containing paint */
+    /* Reduce repaints by containing paint on mobile */
     .section-container {
         contain: paint !important;
     }
     
-    /* Disable hover effects on mobile to prevent sticky states */
+    /* Disable hover effects on mobile to prevent sticky states and improve performance */
     .mobile-menu-toggle:hover,
     .sidebar .nav-link:hover,
-    .login-btn:hover {
+    .login-btn:hover,
+    .nav-btn:hover {
         transform: none !important;
         box-shadow: none !important;
         background: inherit !important;
+        border-color: inherit !important;
     }
     
-    /* Enable touch-action for better scroll performance */
+    /* Enable touch-action for better scroll performance on mobile */
     body {
         touch-action: pan-y !important;
         -webkit-overflow-scrolling: touch !important;
@@ -115,7 +114,7 @@
         -webkit-overflow-scrolling: touch !important;
     }
     
-    /* Prevent flicker during orientation changes */
+    /* Prevent flicker during orientation changes on mobile */
     @media screen and (orientation: portrait) {
         body {
             -webkit-text-size-adjust: 100% !important;
@@ -128,26 +127,26 @@
         }
     }
     
-    /* Reduce complexity of gradients */
+    /* Simplify gradients ONLY on mobile */
     .sidebar {
-        background: rgba(15, 32, 39, 0.95) !important; /* Solid color instead of gradient */
+        background: rgba(15, 32, 39, 0.96) !important; /* More solid background for mobile performance */
     }
     
     .sidebar-header {
-        background: none !important; /* Remove gradient */
+        background: rgba(79, 195, 247, 0.1) !important; /* Simple background instead of gradient on mobile */
     }
     
-    /* Optimize font loading */
+    /* Optimize font loading on mobile */
     body {
         font-display: swap !important;
     }
     
-    /* Reduce animation complexity */
+    /* Faster animation complexity on mobile */
     .mobile-menu-toggle.active .hamburger-bar {
-        transition: transform 0.2s ease !important; /* Faster animation */
+        transition: transform 0.2s ease !important; /* Faster animation on mobile */
     }
     
-    /* Prevent accidental zooming */
+    /* Prevent accidental zooming on mobile */
     input, select, textarea {
         font-size: 16px !important; /* Prevent zoom on iOS */
     }
@@ -161,10 +160,29 @@
         -webkit-perspective: 1000px !important;
         perspective: 1000px !important;
     }
+    
+    /* Reduce complex CSS calculations on mobile */
+    .hero-section,
+    .dashboard-grid,
+    .stats-section {
+        will-change: auto !important; /* Reduce GPU usage when not animating */
+    }
+    
+    /* Optimize scroll performance on mobile */
+    .content-area {
+        -webkit-overflow-scrolling: touch !important;
+        overflow-anchor: none !important; /* Prevent scroll anchoring issues */
+    }
+    
+    /* Simplify notification bar on mobile */
+    .notification-bar {
+        backdrop-filter: blur(5px) !important; /* Reduced blur for mobile */
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3) !important; /* Simplified shadow */
+    }
 }
 
 /* ==========================================================================
-   REDUCE MOTION FOR USERS WHO PREFER IT
+   REDUCE MOTION FOR USERS WHO PREFER IT (ALL DEVICES)
    ========================================================================== */
 
 @media (prefers-reduced-motion: reduce) {
@@ -172,9 +190,15 @@
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
     }
     
     body {
         animation: none !important;
+    }
+    
+    .sidebar,
+    .mobile-backdrop {
+        transition: none !important;
     }
 }
