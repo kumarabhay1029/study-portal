@@ -12,6 +12,13 @@
 console.log('🚀 Study Portal Bundle Loading...');
 
 /* ==========================================================================
+   GLOBAL VARIABLES
+   ========================================================================== */
+
+// Global variable to track current active section in the Study Portal
+let currentSection = 'home';
+
+/* ==========================================================================
    GOOGLE FORMS INTEGRATION SYSTEM
    ========================================================================== */
 
@@ -138,27 +145,6 @@ class GoogleFormsManager {
         if (selectedBtn) selectedBtn.classList.add('active');
     }
     
-    // Message display function
-    showMessage(message, type = 'info') {
-        // Create message element
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${type}`;
-        messageDiv.innerHTML = `
-            <span class="message-text">${message}</span>
-            <button class="message-close" onclick="this.parentElement.remove()">×</button>
-        `;
-        
-        // Add to page
-        document.body.appendChild(messageDiv);
-        
-        // Auto remove after 5 seconds
-        setTimeout(() => {
-            if (messageDiv.parentElement) {
-                messageDiv.remove();
-            }
-        }, 5000);
-    }
-    
     // Content filtering (for browse tabs)
     filterContent(section, filterType, value) {
         const grid = document.getElementById(`${section}Grid`);
@@ -186,6 +172,31 @@ class GoogleFormsManager {
                 return true;
         }
     }
+}
+
+/* ==========================================================================
+   GLOBAL UTILITY FUNCTIONS
+   ========================================================================== */
+
+// Global message display function
+function showMessage(message, type = 'info', duration = 3500) {
+    // Create message element
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${type}`;
+    messageDiv.innerHTML = `
+        <span class="message-text">${message}</span>
+        <button class="message-close" onclick="this.parentElement.remove()">×</button>
+    `;
+    
+    // Add to page
+    document.body.appendChild(messageDiv);
+    
+    // Auto remove after specified duration
+    setTimeout(() => {
+        if (messageDiv.parentElement) {
+            messageDiv.remove();
+        }
+    }, duration);
 }
 
 // Get configuration securely
@@ -1264,9 +1275,6 @@ if (!window.finalAuthInitialized) {
 /* ==========================================================================
    MAIN APPLICATION LOGIC
    ========================================================================== */
-
-// Global variable to track current active section in the Study Portal
-let currentSection = 'home';
 
 /**
  * Show a specific section and hide all others (SPA-like navigation)

@@ -12,4 +12,9 @@ window.firebaseConfig = {
     appId: "1:1077434047400:web:0e30d9b02540355a4b1b9d"
 };
 
+// Function to get Firebase configuration
+function getFirebaseConfig() {
+    return window.firebaseConfig;
+}
+
 console.log('🔥 Firebase configuration loaded');
