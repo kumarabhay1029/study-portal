@@ -33,10 +33,36 @@ const CONFIG = {
 // ==========================================================================
 function doPost(e) {
   try {
-    const data = JSON.parse(e.postData.contents);
+    // Log the incoming request for debugging
+    console.log('doPost called with:', e);
+    console.log('postData:', e.postData);
+    console.log('parameter:', e.parameter);
     
-    // Log for debugging
-    console.log('Received submission:', data);
+    let data;
+    
+    // Check if we have postData (proper POST request)
+    if (e.postData && e.postData.contents) {
+      // Check if data is JSON or form data
+      if (e.postData.type === 'application/json') {
+        data = JSON.parse(e.postData.contents);
+      } else {
+        // Handle form data (application/x-www-form-urlencoded)
+        // Parse the form data manually
+        const formData = {};
+        const pairs = e.postData.contents.split('&');
+        for (const pair of pairs) {
+          const [key, value] = pair.split('=');
+          formData[decodeURIComponent(key)] = decodeURIComponent(value);
+        }
+        data = formData;
+      }
+    } else {
+      // Fallback to URL parameters (GET-style request)
+      data = e.parameter || {};
+    }
+    
+    // Log the parsed data
+    console.log('Parsed data:', data);
     
     // Handle different actions
     if (data.action === 'submit') {
@@ -45,15 +71,21 @@ function doPost(e) {
       return handleApproval(data);
     } else if (data.action === 'reject') {
       return handleRejection(data);
+    } else if (data.action === 'getPendingSubmissions') {
+      // Check password for admin actions
+      if (data.password !== CONFIG.ADMIN_PASSWORD) {
+        return createResponse({success: false, error: 'Invalid password'});
+      }
+      return getPendingSubmissions();
     }
     
-    throw new Error('Invalid action');
+    return createResponse({success: false, error: 'Invalid action: ' + data.action});
     
   } catch (error) {
     console.error('Error in doPost:', error);
     return createResponse({
       success: false, 
-      error: error.toString()
+      error: 'Server error: ' + error.toString()
     });
   }
 }
@@ -251,8 +283,13 @@ Study Portal Admin System
 function doGet(e) {
   try {
     const action = e.parameter.action;
+    const password = e.parameter.password;
     
     if (action === 'getPendingSubmissions') {
+      // Check password for admin actions
+      if (password !== CONFIG.ADMIN_PASSWORD) {
+        return createResponse({success: false, error: 'Invalid password'});
+      }
       return getPendingSubmissions();
     } else if (action === 'getApprovedContent') {
       return getApprovedContent(e.parameter);

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login Debug - Study Portal</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f0f0f0; }
+        .debug-container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 2px solid #ddd; border-radius: 8px; }
+        .success { border-color: #28a745; background: #d4edda; }
+        .error { border-color: #dc3545; background: #f8d7da; }
+        .info { border-color: #17a2b8; background: #d1ecf1; }
+        input, button { padding: 10px; margin: 5px; font-size: 16px; }
+        button { background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .log { background: #f8f9fa; padding: 10px; margin: 10px 0; border-radius: 5px; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <div class="debug-container">
+        <h2>🔧 Admin Login Debug Tool</h2>
+        <p>This will help us figure out why admin login isn't working.</p>
+        
+        <!-- Test 1: Simple Admin Test -->
+        <div class="test-section info">
+            <h3>Test 1: Simple Admin Login (Local)</h3>
+            <div>
+                <input type="password" id="testPassword1" placeholder="Enter password (admin123)" value="admin123">
+                <button onclick="testSimpleLogin()">Test Simple Admin</button>
+            </div>
+            <div id="result1" class="log">Ready to test...</div>
+        </div>
+        
+        <!-- Test 2: Full Admin Test -->
+        <div class="test-section info">
+            <h3>Test 2: Full Admin Login (Google Apps Script)</h3>
+            <div>
+                <input type="password" id="testPassword2" placeholder="Enter password (admin123)" value="admin123">
+                <button onclick="testFullAdminLogin()">Test Full Admin</button>
+            </div>
+            <div id="result2" class="log">Ready to test...</div>
+        </div>
+        
+        <!-- Test 3: Direct Function Test -->
+        <div class="test-section info">
+            <h3>Test 3: JavaScript Function Test</h3>
+            <div>
+                <button onclick="testJavaScriptFunctions()">Test JS Functions</button>
+            </div>
+            <div id="result3" class="log">Ready to test...</div>
+        </div>
+        
+        <!-- Quick Links -->
+        <div class="test-section">
+            <h3>🔗 Quick Links</h3>
+            <button onclick="window.open('simple-admin.html', '_blank')">Open Simple Admin</button>
+            <button onclick="window.open('admin-panel.html', '_blank')">Open Full Admin</button>
+            <button onclick="window.open('index.html', '_blank')">Open Main Portal</button>
+        </div>
+    </div>
+
+    <script>
+        // Test 1: Simple Admin Login (like simple-admin.html)
+        function testSimpleLogin() {
+            const password = document.getElementById('testPassword1').value;
+            const resultDiv = document.getElementById('result1');
+            
+            resultDiv.innerHTML = `Testing password: "${password}"...`;
+            
+            try {
+                // Same logic as simple-admin.html
+                if (!password) {
+                    resultDiv.innerHTML = '❌ FAIL: No password entered';
+                    return;
+                }
+                
+                if (password === 'admin123') {
+                    resultDiv.innerHTML = '✅ SUCCESS: Simple admin login works!';
+                    resultDiv.parentElement.className = 'test-section success';
+                } else {
+                    resultDiv.innerHTML = `❌ FAIL: Invalid password. Got "${password}", expected "admin123"`;
+                    resultDiv.parentElement.className = 'test-section error';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `❌ ERROR: ${error.message}`;
+                resultDiv.parentElement.className = 'test-section error';
+            }
+        }
+        
+        // Test 2: Full Admin Login (connects to Google Apps Script)
+        async function testFullAdminLogin() {
+            const password = document.getElementById('testPassword2').value;
+            const resultDiv = document.getElementById('result2');
+            
+            resultDiv.innerHTML = `Testing Google Apps Script connection with password: "${password}"...`;
+            
+            try {
+                const CONFIG = {
+                    GOOGLE_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzafpQojqO5k93LwapMEfbMSnXgLXod4HJMf87bonHRmTp6JN7_SsKPtj3p9QK5ZwZM/exec'
+                };
+                
+                resultDiv.innerHTML += '<br>📡 Connecting to Google Apps Script...';
+                
+                const url = `${CONFIG.GOOGLE_SCRIPT_URL}?action=getPendingSubmissions&password=${encodeURIComponent(password)}`;
+                const response = await fetch(url);
+                const result = await response.json();
+                
+                if (result.success) {
+                    resultDiv.innerHTML = '✅ SUCCESS: Full admin login works! Google Apps Script is deployed correctly.';
+                    resultDiv.parentElement.className = 'test-section success';
+                } else {
+                    resultDiv.innerHTML = `❌ FAIL: ${result.error || 'Invalid password or Google Apps Script not deployed'}`;
+                    resultDiv.parentElement.className = 'test-section error';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `❌ CONNECTION ERROR: ${error.message}<br>💡 This means Google Apps Script is not deployed or URL is wrong.`;
+                resultDiv.parentElement.className = 'test-section error';
+            }
+        }
+        
+        // Test 3: JavaScript Function Test
+        function testJavaScriptFunctions() {
+            const resultDiv = document.getElementById('result3');
+            
+            try {
+                // Test basic functions
+                resultDiv.innerHTML = '🔍 Testing JavaScript functions...<br>';
+                
+                // Test 1: Basic string comparison
+                const test1 = ('admin123' === 'admin123');
+                resultDiv.innerHTML += `✓ String comparison: ${test1}<br>`;
+                
+                // Test 2: Input value retrieval
+                const testInput = document.getElementById('testPassword1');
+                const inputValue = testInput ? testInput.value : 'NO INPUT FOUND';
+                resultDiv.innerHTML += `✓ Input value retrieval: "${inputValue}"<br>`;
+                
+                // Test 3: DOM manipulation
+                const testDiv = document.createElement('div');
+                testDiv.innerHTML = 'Test successful';
+                resultDiv.innerHTML += `✓ DOM manipulation: ${testDiv.innerHTML}<br>`;
+                
+                resultDiv.innerHTML += '<br>✅ All JavaScript functions working correctly!';
+                resultDiv.parentElement.className = 'test-section success';
+                
+            } catch (error) {
+                resultDiv.innerHTML = `❌ JAVASCRIPT ERROR: ${error.message}`;
+                resultDiv.parentElement.className = 'test-section error';
+            }
+        }
+        
+        // Auto-run tests on page load
+        window.addEventListener('load', function() {
+            console.log('Debug page loaded');
+        });
+    </script>
+</body>
+</html>

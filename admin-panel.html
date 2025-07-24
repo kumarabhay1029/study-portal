@@ -354,7 +354,7 @@
     <script>
         // Configuration
         const CONFIG = {
-            GOOGLE_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzD8Ff5rCEq0jGY5dJrDr8DdID5XnE82wKNeBEonw55-F6dYUYnGHJyE4OFjKSV_h7Z/exec'
+            GOOGLE_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzafpQojqO5k93LwapMEfbMSnXgLXod4HJMf87bonHRmTp6JN7_SsKPtj3p9QK5ZwZM/exec'
         };
 
         let currentPassword = '';
@@ -374,8 +374,9 @@
             loginBtn.innerHTML = '<span class="loading"></span> Logging in...';
 
             try {
-                // Test password by trying to fetch pending submissions
-                const response = await fetch(`${CONFIG.GOOGLE_SCRIPT_URL}?action=getPending&adminPassword=${encodeURIComponent(password)}`);
+                // Test password by trying to fetch pending submissions using GET method
+                const url = `${CONFIG.GOOGLE_SCRIPT_URL}?action=getPendingSubmissions&password=${encodeURIComponent(password)}`;
+                const response = await fetch(url);
                 const result = await response.json();
 
                 if (result.success) {
@@ -401,7 +402,8 @@
             container.innerHTML = '<div style="text-align: center; padding: 40px; color: #7f8c8d;">Loading submissions...</div>';
 
             try {
-                const response = await fetch(`${CONFIG.GOOGLE_SCRIPT_URL}?action=getPending&adminPassword=${encodeURIComponent(currentPassword)}`);
+                const url = `${CONFIG.GOOGLE_SCRIPT_URL}?action=getPendingSubmissions&password=${encodeURIComponent(currentPassword)}`;
+                const response = await fetch(url);
                 const result = await response.json();
 
                 if (result.success) {
