@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Portal - Submit Material</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4285f4, #34a853);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .form-container {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="url"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #4285f4;
+            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
+        }
+
+        .file-upload-area {
+            border: 3px dashed #4285f4;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            background: #f8f9fa;
+        }
+
+        .file-upload-area:hover,
+        .file-upload-area.drag-over {
+            border-color: #0056b3;
+            background: #e3f2fd;
+        }
+
+        .file-upload-area input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .upload-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #4285f4;
+            margin-bottom: 5px;
+        }
+
+        .upload-subtitle {
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        .file-preview {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            display: none;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .file-details {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .file-icon {
+            font-size: 24px;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .file-size {
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        .remove-file {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+        }
+
+        .submit-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .message {
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: 500;
+            display: none;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .form-container {
+                padding: 20px;
+            }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Submit Study Material</h1>
+            <p>Share your notes, assignments, and projects with fellow students</p>
+        </div>
+
+        <div class="form-container">
+            <div id="messageArea"></div>
+
+            <form id="submissionForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="studentName">👤 Your Name *</label>
+                        <input type="text" id="studentName" name="studentName" required 
+                               placeholder="Enter your full name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="studentId">🎓 Student ID</label>
+                        <input type="text" id="studentId" name="studentId" 
+                               placeholder="e.g., BCA2023001">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="materialType">📋 Material Type *</label>
+                        <select id="materialType" name="materialType" required>
+                            <option value="">Select Type</option>
+                            <option value="notes">📝 Class Notes</option>
+                            <option value="assignment">📋 Assignment Solution</option>
+                            <option value="project">🚀 Project</option>
+                            <option value="research">📄 Research Paper</option>
+                            <option value="question-bank">❓ Question Bank</option>
+                            <option value="book">📚 Book/Reference</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subject">📖 Subject *</label>
+                        <select id="subject" name="subject" required>
+                            <option value="">Select Subject</option>
+                            <option value="programming">💻 Programming</option>
+                            <option value="database">🗄️ Database Management</option>
+                            <option value="web-dev">🌐 Web Development</option>
+                            <option value="data-structures">🔗 Data Structures</option>
+                            <option value="mathematics">📊 Mathematics</option>
+                            <option value="networking">🌐 Computer Networks</option>
+                            <option value="os">⚙️ Operating Systems</option>
+                            <option value="software-engineering">🛠️ Software Engineering</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="title">📌 Title *</label>
+                    <input type="text" id="title" name="title" required 
+                           placeholder="e.g., Array Operations in C++">
+                </div>
+
+                <div class="form-group">
+                    <label for="description">📝 Description *</label>
+                    <textarea id="description" name="description" rows="4" required
+                             placeholder="Describe the content, topics covered, key concepts, etc."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="githubLink">🔗 GitHub/Demo Link (Optional)</label>
+                    <input type="url" id="githubLink" name="githubLink" 
+                           placeholder="https://github.com/username/project">
+                </div>
+
+                <div class="form-group">
+                    <label>📎 Upload File *</label>
+                    <div class="file-upload-area" id="fileUploadArea">
+                        <input type="file" id="fileInput" name="file" 
+                               accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.zip,.rar" required>
+                        <span class="upload-icon">📁</span>
+                        <div class="upload-text">Click to select file or drag & drop</div>
+                        <div class="upload-subtitle">Supported: PDF, DOC, PPT, TXT, ZIP, RAR (Max 10MB)</div>
+                    </div>
+                    <div class="file-preview" id="filePreview"></div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    🚀 Submit Material
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const CONFIG = {
+            GOOGLE_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzD8Ff5rCEq0jGY5dJrDr8DdID5XnE82wKNeBEonw55-F6dYUYnGHJyE4OFjKSV_h7Z/exec',
+            MAX_FILE_SIZE: 10 * 1024 * 1024 // 10MB
+        };
+
+        // DOM Elements
+        const form = document.getElementById('submissionForm');
+        const fileInput = document.getElementById('fileInput');
+        const fileUploadArea = document.getElementById('fileUploadArea');
+        const filePreview = document.getElementById('filePreview');
+        const submitBtn = document.getElementById('submitBtn');
+        const messageArea = document.getElementById('messageArea');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            setupFileUpload();
+            setupFormSubmission();
+        });
+
+        // File upload functionality
+        function setupFileUpload() {
+            // File input change
+            fileInput.addEventListener('change', handleFileSelect);
+
+            // Drag and drop
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                fileUploadArea.addEventListener(eventName, preventDefaults, false);
+            });
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                fileUploadArea.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                fileUploadArea.addEventListener(eventName, unhighlight, false);
+            });
+
+            fileUploadArea.addEventListener('drop', handleDrop, false);
+        }
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        function highlight() {
+            fileUploadArea.classList.add('drag-over');
+        }
+
+        function unhighlight() {
+            fileUploadArea.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                handleFileSelect({ target: { files } });
+            }
+        }
+
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (file && validateFile(file)) {
+                displayFilePreview(file);
+            }
+        }
+
+        function validateFile(file) {
+            const allowedTypes = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'txt', 'zip', 'rar'];
+            const extension = file.name.split('.').pop().toLowerCase();
+
+            if (!allowedTypes.includes(extension)) {
+                showMessage('❌ File type not allowed. Please upload PDF, DOC, PPT, TXT, ZIP, or RAR files.', 'error');
+                return false;
+            }
+
+            if (file.size > CONFIG.MAX_FILE_SIZE) {
+                showMessage('❌ File too large. Maximum size is 10MB.', 'error');
+                return false;
+            }
+
+            return true;
+        }
+
+        function displayFilePreview(file) {
+            const sizeText = formatFileSize(file.size);
+            
+            filePreview.innerHTML = `
+                <div class="file-info">
+                    <div class="file-details">
+                        <span class="file-icon">📄</span>
+                        <div>
+                            <div class="file-name">${file.name}</div>
+                            <div class="file-size">${sizeText}</div>
+                        </div>
+                    </div>
+                    <button type="button" class="remove-file" onclick="removeFile()">❌ Remove</button>
+                </div>
+            `;
+            
+            filePreview.style.display = 'block';
+        }
+
+        function removeFile() {
+            fileInput.value = '';
+            filePreview.style.display = 'none';
+            filePreview.innerHTML = '';
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Form submission
+        function setupFormSubmission() {
+            form.addEventListener('submit', handleSubmission);
+        }
+
+        async function handleSubmission(e) {
+            e.preventDefault();
+
+            if (!validateForm()) return;
+
+            const formData = new FormData(form);
+            const file = fileInput.files[0];
+
+            // Show loading state
+            setLoadingState(true);
+
+            try {
+                // Prepare submission data
+                const submissionData = {
+                    action: 'submit',
+                    studentName: formData.get('studentName'),
+                    studentId: formData.get('studentId'),
+                    materialType: formData.get('materialType'),
+                    subject: formData.get('subject'),
+                    title: formData.get('title'),
+                    description: formData.get('description'),
+                    githubLink: formData.get('githubLink'),
+                    fileName: file.name,
+                    fileSize: file.size,
+                    submissionDate: new Date().toISOString()
+                };
+
+                // Convert file to base64
+                const fileData = await fileToBase64(file);
+                submissionData.fileData = fileData;
+                submissionData.mimeType = file.type;
+
+                // Submit to Google Apps Script
+                const response = await fetch(CONFIG.GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(submissionData)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showMessage('✅ Material submitted successfully! It will appear after admin approval.', 'success');
+                    form.reset();
+                    removeFile();
+                } else {
+                    throw new Error(result.error || 'Submission failed');
+                }
+
+            } catch (error) {
+                console.error('Submission error:', error);
+                showMessage('❌ Upload failed. Please try again. ' + error.message, 'error');
+            } finally {
+                setLoadingState(false);
+            }
+        }
+
+        function validateForm() {
+            const requiredFields = ['studentName', 'materialType', 'subject', 'title', 'description'];
+            
+            for (const field of requiredFields) {
+                const element = document.getElementById(field);
+                if (!element.value.trim()) {
+                    showMessage(`❌ Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()} field.`, 'error');
+                    element.focus();
+                    return false;
+                }
+            }
+
+            if (!fileInput.files[0]) {
+                showMessage('❌ Please select a file to upload.', 'error');
+                return false;
+            }
+
+            return true;
+        }
+
+        function setLoadingState(loading) {
+            if (loading) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="loading"></span> Uploading...';
+            } else {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '🚀 Submit Material';
+            }
+        }
+
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        function showMessage(message, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = message;
+            
+            messageArea.innerHTML = '';
+            messageArea.appendChild(messageDiv);
+            messageDiv.style.display = 'block';
+            
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // URL parameter handling (for pre-filling form)
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // Pre-fill form based on URL parameters
+        document.addEventListener('DOMContentLoaded', function() {
+            const type = getUrlParameter('type');
+            if (type) {
+                document.getElementById('materialType').value = type;
+            }
+        });
+    </script>
+</body>
+</html>

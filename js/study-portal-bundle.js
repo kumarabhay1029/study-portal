@@ -1970,6 +1970,96 @@ function showContentTab(section, tabName) {
     googleFormsManager?.showContentTab(section, tabName);
 }
 
+/* ==========================================================================
+   SUBMISSION FORM INTEGRATION
+   ========================================================================== */
+
+// Open submission form in new window/tab
+function openSubmissionForm(materialType) {
+    try {
+        // Construct URL with pre-filled material type
+        const submissionUrl = 'submission-form.html' + (materialType ? `?type=${materialType}` : '');
+        
+        // Open in new window with proper dimensions
+        const width = 700;
+        const height = 800;
+        const left = (screen.width / 2) - (width / 2);
+        const top = (screen.height / 2) - (height / 2);
+        
+        const submissionWindow = window.open(
+            submissionUrl,
+            'submissionForm',
+            `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes,status=yes`
+        );
+        
+        // Focus the new window
+        if (submissionWindow) {
+            submissionWindow.focus();
+            
+            // Show confirmation message
+            showMessage(`📤 Opening ${materialType || 'material'} submission form...`, 'info', 2000);
+        } else {
+            // Fallback if popup blocked
+            window.location.href = submissionUrl;
+        }
+        
+    } catch (error) {
+        console.error('Error opening submission form:', error);
+        
+        // Fallback: try to open in same tab
+        try {
+            window.location.href = 'submission-form.html' + (materialType ? `?type=${materialType}` : '');
+        } catch (fallbackError) {
+            console.error('Fallback failed:', fallbackError);
+            showMessage('❌ Could not open submission form. Please refresh and try again.', 'error');
+        }
+    }
+}
+
+// Alternative function for embedded iframe (if needed later)
+function embedSubmissionForm(materialType, containerId) {
+    try {
+        const container = document.getElementById(containerId);
+        if (!container) {
+            console.error('Container not found:', containerId);
+            return;
+        }
+        
+        const iframeUrl = 'submission-form.html' + (materialType ? `?type=${materialType}` : '');
+        
+        container.innerHTML = `
+            <div class="embedded-form-container">
+                <div class="form-header">
+                    <h3>📤 Submit ${materialType || 'Material'}</h3>
+                    <button onclick="closeEmbeddedForm('${containerId}')" class="close-btn">❌</button>
+                </div>
+                <iframe src="${iframeUrl}" 
+                        width="100%" 
+                        height="600" 
+                        frameborder="0" 
+                        style="border-radius: 8px;">
+                </iframe>
+            </div>
+        `;
+        
+        container.style.display = 'block';
+        container.scrollIntoView({ behavior: 'smooth' });
+        
+    } catch (error) {
+        console.error('Error embedding submission form:', error);
+        showMessage('❌ Could not load submission form.', 'error');
+    }
+}
+
+// Close embedded form
+function closeEmbeddedForm(containerId) {
+    const container = document.getElementById(containerId);
+    if (container) {
+        container.style.display = 'none';
+        container.innerHTML = '';
+    }
+}
+
 // Initialize Google Forms Manager when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
     googleFormsManager = new GoogleFormsManager();
