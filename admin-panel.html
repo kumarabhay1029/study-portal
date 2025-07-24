@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Portal - Admin Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .admin-header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .admin-header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .admin-header p {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+
+        .login-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .login-form {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .login-form input {
+            padding: 12px 20px;
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            font-size: 14px;
+            min-width: 200px;
+        }
+
+        .login-form input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .submissions-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .submissions-section.show {
+            display: block;
+        }
+
+        .submission-card {
+            border: 2px solid #ecf0f1;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .submission-card:hover {
+            border-color: #3498db;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.1);
+        }
+
+        .submission-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .submission-info h3 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+
+        .submission-meta {
+            color: #7f8c8d;
+            font-size: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .submission-details {
+            margin: 15px 0;
+        }
+
+        .submission-details p {
+            margin-bottom: 8px;
+            color: #34495e;
+        }
+
+        .submission-details strong {
+            color: #2c3e50;
+        }
+
+        .submission-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .admin-notes {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #bdc3c7;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .admin-notes:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: #f39c12;
+            color: white;
+        }
+
+        .status-approved {
+            background: #27ae60;
+            color: white;
+        }
+
+        .status-rejected {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .message {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: 500;
+            display: none;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .file-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #3498db;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .admin-container {
+                padding: 10px;
+            }
+
+            .submission-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .submission-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #34495e;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .back-btn:hover {
+            background: #2c3e50;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Back to Home Button -->
+    <a href="index.html" class="back-btn">
+        <span>🏠</span>
+        <span>Back to Portal</span>
+    </a>
+
+    <div class="admin-container">
+        <!-- Admin Header -->
+        <div class="admin-header">
+            <h1>🔐 Study Portal Admin Panel</h1>
+            <p>Review and approve student submissions</p>
+        </div>
+
+        <!-- Login Section -->
+        <div class="login-section" id="loginSection">
+            <h2 style="text-align: center; margin-bottom: 20px; color: #2c3e50;">🔑 Admin Login</h2>
+            <div class="login-form">
+                <input type="password" id="adminPassword" placeholder="Enter admin password" />
+                <button class="btn btn-primary" onclick="login()">
+                    <span id="loginBtnText">Login</span>
+                </button>
+            </div>
+            <div id="loginMessage" class="message"></div>
+        </div>
+
+        <!-- Submissions Section -->
+        <div class="submissions-section" id="submissionsSection">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+                <h2 style="color: #2c3e50;">📋 Pending Submissions</h2>
+                <button class="btn btn-primary" onclick="refreshSubmissions()">
+                    <span id="refreshBtnText">🔄 Refresh</span>
+                </button>
+            </div>
+            
+            <div id="submissionsContainer">
+                <!-- Submissions will be loaded here -->
+            </div>
+            
+            <div id="actionMessage" class="message"></div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const CONFIG = {
+            GOOGLE_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzD8Ff5rCEq0jGY5dJrDr8DdID5XnE82wKNeBEonw55-F6dYUYnGHJyE4OFjKSV_h7Z/exec'
+        };
+
+        let currentPassword = '';
+        let submissions = [];
+
+        // Login functionality
+        async function login() {
+            const password = document.getElementById('adminPassword').value;
+            const loginBtn = document.getElementById('loginBtnText');
+            const loginMessage = document.getElementById('loginMessage');
+
+            if (!password) {
+                showMessage(loginMessage, 'Please enter admin password', 'error');
+                return;
+            }
+
+            loginBtn.innerHTML = '<span class="loading"></span> Logging in...';
+
+            try {
+                // Test password by trying to fetch pending submissions
+                const response = await fetch(`${CONFIG.GOOGLE_SCRIPT_URL}?action=getPending&adminPassword=${encodeURIComponent(password)}`);
+                const result = await response.json();
+
+                if (result.success) {
+                    currentPassword = password;
+                    document.getElementById('loginSection').style.display = 'none';
+                    document.getElementById('submissionsSection').classList.add('show');
+                    await loadSubmissions();
+                    showMessage(loginMessage, 'Login successful!', 'success');
+                } else {
+                    showMessage(loginMessage, 'Invalid password', 'error');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showMessage(loginMessage, 'Login failed. Please try again.', 'error');
+            } finally {
+                loginBtn.textContent = 'Login';
+            }
+        }
+
+        // Load pending submissions
+        async function loadSubmissions() {
+            const container = document.getElementById('submissionsContainer');
+            container.innerHTML = '<div style="text-align: center; padding: 40px; color: #7f8c8d;">Loading submissions...</div>';
+
+            try {
+                const response = await fetch(`${CONFIG.GOOGLE_SCRIPT_URL}?action=getPending&adminPassword=${encodeURIComponent(currentPassword)}`);
+                const result = await response.json();
+
+                if (result.success) {
+                    submissions = result.data || [];
+                    displaySubmissions();
+                } else {
+                    container.innerHTML = '<div style="text-align: center; padding: 40px; color: #e74c3c;">Failed to load submissions</div>';
+                }
+            } catch (error) {
+                console.error('Error loading submissions:', error);
+                container.innerHTML = '<div style="text-align: center; padding: 40px; color: #e74c3c;">Error loading submissions</div>';
+            }
+        }
+
+        // Display submissions
+        function displaySubmissions() {
+            const container = document.getElementById('submissionsContainer');
+
+            if (submissions.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px;">
+                        <h3 style="color: #27ae60; margin-bottom: 10px;">🎉 All caught up!</h3>
+                        <p style="color: #7f8c8d;">No pending submissions to review.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const submissionsHTML = submissions.map(submission => `
+                <div class="submission-card" id="submission-${submission.submissionId}">
+                    <div class="submission-header">
+                        <div class="submission-info">
+                            <h3>${submission.title}</h3>
+                            <div class="submission-meta">
+                                <span>📚 ${submission.materialType}</span>
+                                <span>📖 ${submission.subject}</span>
+                                <span>👤 ${submission.studentName}</span>
+                                <span>🕒 ${new Date(submission.timestamp).toLocaleString()}</span>
+                            </div>
+                        </div>
+                        <span class="status-badge status-${submission.status || 'pending'}">${submission.status || 'pending'}</span>
+                    </div>
+
+                    <div class="submission-details">
+                        <p><strong>Description:</strong> ${submission.description}</p>
+                        <p><strong>Student ID:</strong> ${submission.studentId || 'N/A'}</p>
+                        ${submission.githubLink ? `<p><strong>GitHub/Demo:</strong> <a href="${submission.githubLink}" target="_blank">${submission.githubLink}</a></p>` : ''}
+                    </div>
+
+                    <div class="file-info">
+                        <strong>📎 File:</strong> ${submission.fileName} 
+                        <span style="color: #7f8c8d;">(${formatFileSize(submission.fileSize)})</span>
+                        ${submission.fileUrl ? `<br><a href="${submission.fileUrl}" target="_blank" style="color: #3498db;">📥 Download File</a>` : ''}
+                    </div>
+
+                    <div class="submission-actions">
+                        <textarea class="admin-notes" id="notes-${submission.submissionId}" 
+                                placeholder="Add admin notes (optional)..."></textarea>
+                        
+                        <button class="btn btn-success" onclick="approveSubmission('${submission.submissionId}')">
+                            <span id="approve-btn-${submission.submissionId}">✅ Approve</span>
+                        </button>
+                        
+                        <button class="btn btn-danger" onclick="rejectSubmission('${submission.submissionId}')">
+                            <span id="reject-btn-${submission.submissionId}">❌ Reject</span>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = submissionsHTML;
+        }
+
+        // Approve submission
+        async function approveSubmission(submissionId) {
+            const approveBtn = document.getElementById(`approve-btn-${submissionId}`);
+            const adminNotes = document.getElementById(`notes-${submissionId}`).value;
+            const actionMessage = document.getElementById('actionMessage');
+
+            approveBtn.innerHTML = '<span class="loading"></span> Approving...';
+
+            try {
+                const response = await fetch(CONFIG.GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'approve',
+                        submissionId: submissionId,
+                        adminPassword: currentPassword,
+                        adminNotes: adminNotes
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showMessage(actionMessage, '✅ Submission approved successfully!', 'success');
+                    document.getElementById(`submission-${submissionId}`).remove();
+                    
+                    // Update submissions count
+                    submissions = submissions.filter(s => s.submissionId !== submissionId);
+                    if (submissions.length === 0) {
+                        displaySubmissions();
+                    }
+                } else {
+                    showMessage(actionMessage, '❌ Failed to approve submission: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Approval error:', error);
+                showMessage(actionMessage, '❌ Error approving submission. Please try again.', 'error');
+            } finally {
+                approveBtn.textContent = '✅ Approve';
+            }
+        }
+
+        // Reject submission
+        async function rejectSubmission(submissionId) {
+            const rejectBtn = document.getElementById(`reject-btn-${submissionId}`);
+            const adminNotes = document.getElementById(`notes-${submissionId}`).value;
+            const actionMessage = document.getElementById('actionMessage');
+
+            if (!adminNotes.trim()) {
+                showMessage(actionMessage, '⚠️ Please provide a reason for rejection in the admin notes.', 'error');
+                return;
+            }
+
+            rejectBtn.innerHTML = '<span class="loading"></span> Rejecting...';
+
+            try {
+                const response = await fetch(CONFIG.GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'reject',
+                        submissionId: submissionId,
+                        adminPassword: currentPassword,
+                        adminNotes: adminNotes
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showMessage(actionMessage, '❌ Submission rejected successfully!', 'success');
+                    document.getElementById(`submission-${submissionId}`).remove();
+                    
+                    // Update submissions count
+                    submissions = submissions.filter(s => s.submissionId !== submissionId);
+                    if (submissions.length === 0) {
+                        displaySubmissions();
+                    }
+                } else {
+                    showMessage(actionMessage, '❌ Failed to reject submission: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Rejection error:', error);
+                showMessage(actionMessage, '❌ Error rejecting submission. Please try again.', 'error');
+            } finally {
+                rejectBtn.textContent = '❌ Reject';
+            }
+        }
+
+        // Refresh submissions
+        async function refreshSubmissions() {
+            const refreshBtn = document.getElementById('refreshBtnText');
+            refreshBtn.innerHTML = '<span class="loading"></span> Refreshing...';
+            
+            await loadSubmissions();
+            
+            refreshBtn.textContent = '🔄 Refresh';
+        }
+
+        // Utility functions
+        function showMessage(element, message, type) {
+            element.className = `message ${type} show`;
+            element.textContent = message;
+            setTimeout(() => {
+                element.classList.remove('show');
+            }, 5000);
+        }
+
+        function formatFileSize(bytes) {
+            if (!bytes) return 'Unknown size';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Handle Enter key for login
+        document.getElementById('adminPassword').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                login();
+            }
+        });
+    </script>
+</body>
+</html>
