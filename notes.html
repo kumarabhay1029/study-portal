@@ -35,10 +35,98 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            direction: ltr;
+            text-align: left;
+        }
+
+        /* Modern Navigation Bar */
+        .main-navigation {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .back-to-portal {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .back-to-portal:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .page-title {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            font-weight: 700;
             margin: 0;
-            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .upload-notes-btn {
+            background: linear-gradient(135deg, var(--success-color), #059669);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .upload-notes-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
         .container {
@@ -46,11 +134,44 @@
             margin: 0 auto;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
-            border-radius: 24px;
+            border-radius: 0 0 24px 24px;
             box-shadow: var(--shadow-xl);
             padding: 40px;
-            margin-top: 20px;
             border: 1px solid rgba(255, 255, 255, 0.2);
+            border-top: none;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+
+        /* Upload Section Improvements */
+        .upload-section {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.05) 100%);
+            border-radius: 24px;
+            padding: 40px;
+            border: 1px solid rgba(102, 126, 234, 0.15);
+            position: relative;
+            overflow: hidden;
+            display: none; /* Hidden by default, shown when upload button is clicked */
+        }
+
+        .upload-section.active {
+            display: block;
+            animation: slideInDown 0.5s ease;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .upload-section {
@@ -732,26 +853,37 @@
 </head>
 
 <body>
-    <!-- Navigation Bar -->
-    <div class="main-bar">
-        <div class="main-bar-content">
-            <div class="logo-section">
-                <button class="back-btn" onclick="window.location.href='index.html'" title="Go back to main portal">
-                    ← Back to Portal
+    <!-- Modern Navigation -->
+    <nav class="main-navigation">
+        <div class="nav-content">
+            <div class="nav-left">
+                <a href="index.html" class="back-to-portal">
+                    <span>←</span>
+                    <span>Back to Portal</span>
+                </a>
+                <h1 class="page-title">
+                    <span>�</span>
+                    <span>Study Notes Hub</span>
+                </h1>
+            </div>
+            <div class="nav-right">
+                <button class="upload-notes-btn" onclick="toggleUploadSection()">
+                    <span>📤</span>
+                    <span>Upload Notes</span>
                 </button>
-                <h1>📋 Study Notes</h1>
             </div>
         </div>
-    </div>
+    </nav>
 
-    <!-- Content Area -->
-    <div class="content-area">
-        <!-- Upload Section -->
-        <div class="upload-section">
-            <div class="section-header">
-                <h2>📤 Upload Your Notes</h2>
-                <p>Share your study notes with fellow students. All submissions are reviewed before being published.</p>
-            </div>
+    <!-- Main Content Container -->
+    <div class="container">
+        <div class="main-content">
+            <!-- Upload Section (Hidden by default) -->
+            <div class="upload-section" id="uploadSection">
+                <div class="section-header">
+                    <h2>📤 Share Your Knowledge</h2>
+                    <p>Upload your study notes and help fellow students succeed. All submissions are reviewed before publication.</p>
+                </div>
 
             <form id="notesUploadForm" class="upload-form">
                 <!-- Student Information -->
@@ -866,64 +998,177 @@
                 </button>
             </form>
 
-            <!-- Status Messages -->
-            <div id="statusMessage" class="status-message"></div>
-            
-            <!-- Loading Spinner -->
-            <div id="loadingSpinner" class="loading-spinner">
-                <div class="spinner"></div>
-                <p>Uploading your notes...</p>
             </div>
-        </div>
 
-        <!-- Approved Notes Section -->
-        <div class="approved-notes">
-            <div class="section-header">
-                <h2>📚 Available Notes</h2>
-                <p>Browse approved study notes shared by fellow students</p>
-            </div>
-            
-            <div id="notesGrid" class="notes-grid">
-                <div class="note-card">
-                    <div class="note-header">
-                        <div class="note-subject">Programming</div>
+            <!-- Available Notes Section (Main Content) -->
+            <div class="notes-library">
+                <div class="library-header">
+                    <h2>📚 Study Notes Library</h2>
+                    <p>Discover and download notes shared by fellow students. All content is reviewed and verified for quality.</p>
+                </div>
+
+                <!-- Filter and Search -->
+                <div class="notes-filters">
+                    <div class="filter-section">
+                        <label for="subjectFilter">Filter by Subject:</label>
+                        <select id="subjectFilter" onchange="filterNotes()">
+                            <option value="">All Subjects</option>
+                            <option value="programming">Programming</option>
+                            <option value="database">Database</option>
+                            <option value="data-structures">Data Structures</option>
+                            <option value="web-programming">Web Programming</option>
+                            <option value="mathematics">Mathematics</option>
+                            <option value="other">Other</option>
+                        </select>
                     </div>
-                    <h3 class="note-title">C++ Complete Reference Guide</h3>
-                    <p class="note-description">Comprehensive notes covering all C++ concepts including OOP, pointers, templates, and STL. Perfect for exam preparation.</p>
-                    <div class="note-footer">
-                        <span class="note-author">By: Admin</span>
-                        <button class="download-note-btn" onclick="alert('Download feature will be available after admin setup')">
-                            📥 Download
-                        </button>
+                    <div class="search-section">
+                        <input type="text" id="searchInput" placeholder="🔍 Search notes..." onkeyup="searchNotes()">
                     </div>
                 </div>
-                
-                <div class="note-card">
-                    <div class="note-header">
-                        <div class="note-subject">Database</div>
+
+                <!-- Notes Statistics -->
+                <div class="notes-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">24</span>
+                        <span class="stat-label">Total Notes</span>
                     </div>
-                    <h3 class="note-title">SQL Query Examples & Practice</h3>
-                    <p class="note-description">Collection of SQL queries with examples, covering joins, subqueries, and database design principles.</p>
-                    <div class="note-footer">
-                        <span class="note-author">By: Admin</span>
-                        <button class="download-note-btn" onclick="alert('Download feature will be available after admin setup')">
-                            📥 Download
-                        </button>
+                    <div class="stat-item">
+                        <span class="stat-number">8</span>
+                        <span class="stat-label">Subjects</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">156</span>
+                        <span class="stat-label">Downloads</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">12</span>
+                        <span class="stat-label">Contributors</span>
                     </div>
                 </div>
-                
-                <div class="note-card">
-                    <div class="note-header">
-                        <div class="note-subject">Data Structures</div>
+
+                <!-- Notes Grid -->
+                <div id="notesGrid" class="notes-grid">
+                    <!-- Sample Notes Cards -->
+                    <div class="note-card" data-subject="programming">
+                        <div class="note-header">
+                            <div class="note-subject programming">Programming</div>
+                            <div class="note-rating">⭐ 4.8</div>
+                        </div>
+                        <h3 class="note-title">C++ Complete Reference Guide</h3>
+                        <p class="note-description">Comprehensive notes covering all C++ concepts including OOP, pointers, templates, and STL. Perfect for exam preparation and practical implementation.</p>
+                        <div class="note-meta">
+                            <span class="note-author">👨‍💻 By: Rahul Kumar</span>
+                            <span class="note-date">📅 Jan 2025</span>
+                        </div>
+                        <div class="note-footer">
+                            <span class="download-count">📥 45 downloads</span>
+                            <button class="download-note-btn" onclick="downloadNote('cpp-guide')">
+                                📥 Download PDF
+                            </button>
+                        </div>
                     </div>
-                    <h3 class="note-title">Trees and Graphs - Complete Guide</h3>
-                    <p class="note-description">Detailed explanation of tree and graph data structures with implementation examples and algorithms.</p>
-                    <div class="note-footer">
-                        <span class="note-author">By: Admin</span>
-                        <button class="download-note-btn" onclick="alert('Download feature will be available after admin setup')">
-                            📥 Download
-                        </button>
+                    
+                    <div class="note-card" data-subject="database">
+                        <div class="note-header">
+                            <div class="note-subject database">Database</div>
+                            <div class="note-rating">⭐ 4.9</div>
+                        </div>
+                        <h3 class="note-title">SQL Query Examples & Practice</h3>
+                        <p class="note-description">Collection of SQL queries with examples, covering joins, subqueries, and database design principles. Includes real-world scenarios.</p>
+                        <div class="note-meta">
+                            <span class="note-author">👩‍💻 By: Priya Sharma</span>
+                            <span class="note-date">📅 Dec 2024</span>
+                        </div>
+                        <div class="note-footer">
+                            <span class="download-count">📥 38 downloads</span>
+                            <button class="download-note-btn" onclick="downloadNote('sql-guide')">
+                                📥 Download PDF
+                            </button>
+                        </div>
                     </div>
+                    
+                    <div class="note-card" data-subject="data-structures">
+                        <div class="note-header">
+                            <div class="note-subject data-structures">Data Structures</div>
+                            <div class="note-rating">⭐ 4.7</div>
+                        </div>
+                        <h3 class="note-title">Trees and Graphs - Complete Guide</h3>
+                        <p class="note-description">Detailed explanation of tree and graph data structures with implementation examples and algorithms. Includes complexity analysis.</p>
+                        <div class="note-meta">
+                            <span class="note-author">👨‍💻 By: Amit Singh</span>
+                            <span class="note-date">📅 Jan 2025</span>
+                        </div>
+                        <div class="note-footer">
+                            <span class="download-count">📥 52 downloads</span>
+                            <button class="download-note-btn" onclick="downloadNote('trees-graphs')">
+                                📥 Download PDF
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="note-card" data-subject="web-programming">
+                        <div class="note-header">
+                            <div class="note-subject web-programming">Web Development</div>
+                            <div class="note-rating">⭐ 4.6</div>
+                        </div>
+                        <h3 class="note-title">JavaScript ES6+ Features Guide</h3>
+                        <p class="note-description">Modern JavaScript features including arrow functions, promises, async/await, destructuring, and modules with practical examples.</p>
+                        <div class="note-meta">
+                            <span class="note-author">👩‍💻 By: Sneha Patel</span>
+                            <span class="note-date">📅 Dec 2024</span>
+                        </div>
+                        <div class="note-footer">
+                            <span class="download-count">📥 41 downloads</span>
+                            <button class="download-note-btn" onclick="downloadNote('js-es6')">
+                                📥 Download PDF
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="note-card" data-subject="mathematics">
+                        <div class="note-header">
+                            <div class="note-subject mathematics">Mathematics</div>
+                            <div class="note-rating">⭐ 4.5</div>
+                        </div>
+                        <h3 class="note-title">Discrete Mathematics Formulas</h3>
+                        <p class="note-description">Essential formulas and theorems for discrete mathematics including graph theory, combinatorics, and logic. Quick reference guide.</p>
+                        <div class="note-meta">
+                            <span class="note-author">👨‍💻 By: Vikash Gupta</span>
+                            <span class="note-date">📅 Nov 2024</span>
+                        </div>
+                        <div class="note-footer">
+                            <span class="download-count">📥 29 downloads</span>
+                            <button class="download-note-btn" onclick="downloadNote('discrete-math')">
+                                📥 Download PDF
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="note-card" data-subject="programming">
+                        <div class="note-header">
+                            <div class="note-subject programming">Programming</div>
+                            <div class="note-rating">⭐ 4.8</div>
+                        </div>
+                        <h3 class="note-title">Python Programming Handbook</h3>
+                        <p class="note-description">Complete Python programming guide from basics to advanced topics including OOP, file handling, and popular libraries like NumPy and Pandas.</p>
+                        <div class="note-meta">
+                            <span class="note-author">👩‍💻 By: Ananya Roy</span>
+                            <span class="note-date">📅 Jan 2025</span>
+                        </div>
+                        <div class="note-footer">
+                            <span class="download-count">📥 67 downloads</span>
+                            <button class="download-note-btn" onclick="downloadNote('python-handbook')">
+                                📥 Download PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Load More Button -->
+                <div class="load-more-section">
+                    <button class="load-more-btn" onclick="loadMoreNotes()">
+                        📚 Load More Notes
+                    </button>
                 </div>
             </div>
         </div>
@@ -1251,173 +1496,7 @@
                 </div>
             </div>
 
-            <!-- Subject-wise Notes Organization -->
-            <div class="notes-organization">
-                <h3 class="section-subtitle">📚 Subject-wise Notes Collection</h3>
-                <div class="subject-notes-grid">
-                    <!-- Programming Notes -->
-                    <div class="subject-note-card programming">
-                        <div class="note-card-header">
-                            <span class="subject-icon">💻</span>
-                            <h4>Programming</h4>
-                        </div>
-                        <div class="note-topics">
-                            <div class="topic-item">
-                                <span class="topic-title">C Programming</span>
-                                <span class="note-count">15 notes</span>
-                            </div>
-                            <div class="topic-item">
-                                <span class="topic-title">Python Programming</span>
-                                <span class="note-count">18 notes</span>
-                            </div>
-                            <div class="topic-item">
-                                <span class="topic-title">C++ Programming</span>
-                                <span class="note-count">12 notes</span>
-                            </div>
-                            <div class="topic-item">
-                                <span class="topic-title">Java Programming</span>
-                                <span class="note-count">20 notes</span>
-                            </div>
-                        </div>
-                        <button class="view-notes-btn">📖 View All Programming Notes</button>
-                    </div>
-
-                    <!-- Data Structures & Algorithms -->
-                    <div class="subject-note-card algorithms">
-                        <div class="note-card-header">
-                            <span class="subject-icon">🔗</span>
-                            <h4>Data Structures & Algorithms</h4>
-                        </div>
-                        <div class="note-topics">
-                            <div class="topic-item">
-                                <span class="topic-title">Arrays & Linked Lists</span>
-                                <span class="note-count">10 notes</span>
-                            </div>
-                            <div class="topic-item">
-                                <span class="topic-title">Stacks & Queues</span>
-                                <span class="note-count">8 notes</span>
-                            </div>
-                            <div class="topic-item">
-                                <span class="topic-title">Trees & Graphs</span>
-                                <span class="note-count">14 notes</span>
-                            </div>
-                            <div class="topic-item">
-                                <span class="topic-title">Sorting & Searching</span>
-                                <span class="note-count">12 notes</span>
-                            </div>
-                        </div>
-                        <button class="view-notes-btn">🔍 View DSA Notes</button>
-                    </div>
-
-                    <!-- Database Management -->
-                    <div class="subject-note-card database">
-                        <div class="note-card-header">
-                            <span class="subject-icon">🗄️</span>
-                            <h4>Database Management</h4>
-                        </div>
-                        <div class="note-topics">
-                            <div class="topic-item">
-                                <span class="topic-title">SQL Fundamentals</span>
-                                <span class="note-count">16 notes</span>
-                            </div>
-                            <div class="topic-item">
-                                <span class="topic-title">Database Design</span>
-                                <span class="note-count">12 notes</span>
-                            </div>
-                            <div class="topic-item">
-                                <span class="topic-title">Normalization</span>
-                                <span class="note-count">8 notes</span>
-                            </div>
-                            <div class="topic-item">
-                                <span class="topic-title">Advanced Queries</span>
-                                <span class="note-count">10 notes</span>
-                            </div>
-                        </div>
-                        <button class="view-notes-btn">🗃️ View Database Notes</button>
-                    </div>
-
-                    <!-- Web Technologies -->
-                    <div class="subject-note-card web">
-                        <div class="note-card-header">
-                            <span class="subject-icon">🌐</span>
-                            <h4>Web Technologies</h4>
-                        </div>
-                        <div class="note-topics">
-                            <div class="topic-item">
-                                <span class="topic-title">HTML5 & CSS3</span>
-                                <span class="note-count">14 notes</span>
-                            </div>
-                            <div class="topic-item">
-                                <span class="topic-title">JavaScript</span>
-                                <span class="note-count">18 notes</span>
-                            </div>
-                            <div class="topic-item">
-                                <span class="topic-title">PHP & MySQL</span>
-                                <span class="note-count">12 notes</span>
-                            </div>
-                            <div class="topic-item">
-                                <span class="topic-title">Web Frameworks</span>
-                                <span class="note-count">9 notes</span>
-                            </div>
-                        </div>
-                        <button class="view-notes-btn">🌍 View Web Notes</button>
-                    </div>
-
-                    <!-- Mathematics -->
-                    <div class="subject-note-card mathematics">
-                        <div class="note-card-header">
-                            <span class="subject-icon">📊</span>
-                            <h4>Mathematics</h4>
-                        </div>
-                        <div class="note-topics">
-                            <div class="topic-item">
-                                <span class="topic-title">Discrete Mathematics</span>
-                                <span class="note-count">20 notes</span>
-                            </div>
-                            <div class="topic-item">
-                                <span class="topic-title">Statistics</span>
-                                <span class="note-count">15 notes</span>
-                            </div>
-                            <div class="topic-item">
-                                <span class="topic-title">Linear Algebra</span>
-                                <span class="note-count">12 notes</span>
-                            </div>
-                            <div class="topic-item">
-                                <span class="topic-title">Probability</span>
-                                <span class="note-count">10 notes</span>
-                            </div>
-                        </div>
-                        <button class="view-notes-btn">📈 View Math Notes</button>
-                    </div>
-
-                    <!-- Computer Networks -->
-                    <div class="subject-note-card networks">
-                        <div class="note-card-header">
-                            <span class="subject-icon">🌐</span>
-                            <h4>Computer Networks</h4>
-                        </div>
-                        <div class="note-topics">
-                            <div class="topic-item">
-                                <span class="topic-title">Network Fundamentals</span>
-                                <span class="note-count">12 notes</span>
-                            </div>
-                            <div class="topic-item">
-                                <span class="topic-title">TCP/IP Protocol</span>
-                                <span class="note-count">8 notes</span>
-                            </div>
-                            <div class="topic-item">
-                                <span class="topic-title">Network Security</span>
-                                <span class="note-count">10 notes</span>
-                            </div>
-                            <div class="topic-item">
-                                <span class="topic-title">Wireless Networks</span>
-                                <span class="note-count">6 notes</span>
-                            </div>
-                        </div>
-                        <button class="view-notes-btn">🔗 View Network Notes</button>
-                    </div>
-                </div>
-            </div>
+            <!-- Subject Notes Cards -->
 
             <!-- Recent Updates & Quick Access -->
             <div class="notes-updates">
