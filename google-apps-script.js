@@ -513,47 +513,6 @@ function testSubmission() {
   const result = handleSubmission(testData);
   console.log('Test result:', result);
 }
-        const formData = {};
-        const pairs = e.postData.contents.split('&');
-        for (const pair of pairs) {
-          const [key, value] = pair.split('=');
-          formData[decodeURIComponent(key)] = decodeURIComponent(value);
-        }
-        data = formData;
-      }
-    } else {
-      // Fallback to URL parameters (GET-style request)
-      data = e.parameter || {};
-    }
-    
-    // Log the parsed data
-    console.log('Parsed data:', data);
-    
-    // Handle different actions
-    if (data.action === 'submit') {
-      return handleSubmission(data);
-    } else if (data.action === 'approve') {
-      return handleApproval(data);
-    } else if (data.action === 'reject') {
-      return handleRejection(data);
-    } else if (data.action === 'getPendingSubmissions') {
-      // Check password for admin actions
-      if (data.password !== CONFIG.ADMIN_PASSWORD) {
-        return createResponse({success: false, error: 'Invalid password'});
-      }
-      return getPendingSubmissions();
-    }
-    
-    return createResponse({success: false, error: 'Invalid action: ' + data.action});
-    
-  } catch (error) {
-    console.error('Error in doPost:', error);
-    return createResponse({
-      success: false, 
-      error: 'Server error: ' + error.toString()
-    });
-  }
-}
 
 // ==========================================================================
 // HANDLE NEW SUBMISSIONS

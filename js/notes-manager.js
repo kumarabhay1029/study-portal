@@ -23,38 +23,26 @@ class NotesManager {
     async init() {
         try {
             console.log('🔥 Initializing Notes Manager...');
-            
             // Set up event listeners first (independent of Firebase)
             this.setupEventListeners();
-            
             // Try to initialize Firebase
             try {
                 if (firebase.apps.length === 0) {
                     firebase.initializeApp(window.firebaseConfig);
-
-                <h4 class="note-title">${this.escapeHtml(note.title)}</h4>
-                <span class="note-subject">${note.subject}</span>
-            </div>
-            <div class="note-meta">
-                <span>📅 Semester ${note.semester}</span>
-                <span>🏷️ ${note.category.replace('-', ' ')}</span>
-                <span>📥 ${note.downloadCount || 0} downloads</span>
-            </div>
-            <p class="note-description">${this.escapeHtml(note.description)}</p>
-            <div class="note-footer">
-                <span class="note-author">👤 ${this.escapeHtml(note.uploaderName)}</span>
-                <div class="note-actions">
-                    <button class="note-preview" data-action="preview">
-                        👁️ Preview
-                    </button>
-                    <button class="note-download" data-action="download">
-                        📥 Download
-                    </button>
-                </div>
-            </div>
-        `;
-
-        return card;
+                }
+                this.storage = firebase.storage();
+                this.database = firebase.firestore();
+                // Load approved notes
+                await this.loadApprovedNotes();
+            } catch (firebaseError) {
+                console.warn('⚠️ Firebase initialization failed, running in offline mode:', firebaseError);
+                this.showMessage('Notes system running in offline mode. Upload functionality disabled.', 'warning');
+                this.showOfflineContent();
+            }
+        } catch (error) {
+            console.error('❌ Failed to initialize Notes Manager:', error);
+            this.showMessage('Failed to initialize notes system', 'error');
+        }
     }
 
     async downloadNote(noteId) {
