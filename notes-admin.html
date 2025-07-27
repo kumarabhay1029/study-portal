@@ -1094,6 +1094,333 @@
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
 
+    <script>
+        // ========================================================================
+        // ADMIN PANEL CONFIGURATION
+        // ========================================================================
+        
+        // UPDATE THIS URL WITH YOUR DEPLOYED GOOGLE APPS SCRIPT URL
+        const GOOGLE_APPS_SCRIPT_URL = 'YOUR_DEPLOYED_SCRIPT_URL_HERE';
+        
+        let isLoggedIn = false;
+        let adminPassword = '';
+        
+        // ========================================================================
+        // LOGIN FUNCTIONALITY
+        // ========================================================================
+        
+        function loginAdmin() {
+            const password = document.getElementById('adminPassword').value;
+            
+            if (!password) {
+                showMessage('Please enter admin password', 'error');
+                return;
+            }
+            
+            adminPassword = password;
+            isLoggedIn = true;
+            
+            // Hide login section and show admin content
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('adminContent').style.display = 'block';
+            
+            // Load pending submissions
+            loadPendingSubmissions();
+        }
+        
+        function logout() {
+            isLoggedIn = false;
+            adminPassword = '';
+            
+            // Show login section and hide admin content
+            document.getElementById('loginSection').style.display = 'block';
+            document.getElementById('adminContent').style.display = 'none';
+            
+            // Clear password field
+            document.getElementById('adminPassword').value = '';
+        }
+        
+        // ========================================================================
+        // LOAD PENDING SUBMISSIONS
+        // ========================================================================
+        
+        async function loadPendingSubmissions() {
+            if (!isLoggedIn) return;
+            
+            showLoading();
+            
+            try {
+                const response = await fetch(`${GOOGLE_APPS_SCRIPT_URL}?action=getPendingSubmissions`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    renderSubmissions(result.data);
+                    updateStats(result.data);
+                } else {
+                    throw new Error(result.error || 'Failed to load submissions');
+                }
+                
+            } catch (error) {
+                console.error('Error loading submissions:', error);
+                showMessage('Error loading submissions: ' + error.message, 'error');
+                const tbody = document.getElementById('submissions-tbody');
+                tbody.innerHTML = '<tr><td colspan="8" class="error-message">❌ Failed to load submissions</td></tr>';
+            }
+        }
+        
+        function renderSubmissions(submissions) {
+            const tbody = document.getElementById('submissions-tbody');
+            
+            if (!submissions || submissions.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="empty-message">📭 No pending submissions</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            
+            submissions.forEach((submission, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>
+                        <div class="submission-info">
+                            <div class="title">${submission.title}</div>
+                            <div class="meta">${submission.studentName}</div>
+                        </div>
+                    </td>
+                    <td><span class="subject-tag">${submission.subject}</span></td>
+                    <td><span class="type-tag">${submission.materialType}</span></td>
+                    <td>${new Date(submission.timestamp).toLocaleDateString()}</td>
+                    <td>
+                        ${submission.fileName ? `
+                            <div class="file-info">
+                                📎 ${submission.fileName}<br>
+                                <small>${formatFileSize(submission.fileSize)}</small>
+                                ${submission.fileUrl ? `<br><a href="${submission.fileUrl}" target="_blank">📥 Download</a>` : ''}
+                            </div>
+                        ` : 'No file'}
+                    </td>
+                    <td>
+                        <span class="status-badge status-pending">pending</span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-action btn-view" onclick="viewSubmission('${submission.submissionId}')" title="View Details">👁️</button>
+                            <button class="btn-action btn-approve" onclick="approveSubmission('${submission.submissionId}')" title="Approve">✅</button>
+                            <button class="btn-action btn-reject" onclick="rejectSubmission('${submission.submissionId}')" title="Reject">❌</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        function updateStats(submissions) {
+            document.getElementById('total-count').textContent = submissions.length;
+            document.getElementById('pending-count').textContent = submissions.length;
+            // You can add more stats here
+        }
+        
+        // ========================================================================
+        // APPROVAL/REJECTION FUNCTIONS
+        // ========================================================================
+        
+        async function approveSubmission(submissionId) {
+            const adminNotes = prompt('Add admin notes (optional):') || '';
+            
+            if (!confirm('Are you sure you want to approve this submission?')) return;
+            
+            try {
+                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'approve',
+                        submissionId: submissionId,
+                        adminPassword: adminPassword,
+                        adminNotes: adminNotes
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('✅ Submission approved successfully!', 'success');
+                    loadPendingSubmissions(); // Refresh the list
+                } else {
+                    throw new Error(result.error || 'Approval failed');
+                }
+                
+            } catch (error) {
+                console.error('Error approving submission:', error);
+                showMessage('❌ Failed to approve submission: ' + error.message, 'error');
+            }
+        }
+        
+        async function rejectSubmission(submissionId) {
+            const adminNotes = prompt('Please provide a reason for rejection:');
+            
+            if (!adminNotes || !adminNotes.trim()) {
+                alert('Please provide a reason for rejection.');
+                return;
+            }
+            
+            if (!confirm('Are you sure you want to reject this submission?')) return;
+            
+            try {
+                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'reject',
+                        submissionId: submissionId,
+                        adminPassword: adminPassword,
+                        adminNotes: adminNotes
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('📝 Submission rejected with notes.', 'success');
+                    loadPendingSubmissions(); // Refresh the list
+                } else {
+                    throw new Error(result.error || 'Rejection failed');
+                }
+                
+            } catch (error) {
+                console.error('Error rejecting submission:', error);
+                showMessage('❌ Failed to reject submission: ' + error.message, 'error');
+            }
+        }
+        
+        // ========================================================================
+        // VIEW SUBMISSION DETAILS
+        // ========================================================================
+        
+        async function viewSubmission(submissionId) {
+            try {
+                const response = await fetch(`${GOOGLE_APPS_SCRIPT_URL}?action=getPendingSubmissions`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    const submission = result.data.find(s => s.submissionId === submissionId);
+                    if (submission) {
+                        showSubmissionDetails(submission);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading submission details:', error);
+                showMessage('Error loading submission details', 'error');
+            }
+        }
+        
+        function showSubmissionDetails(submission) {
+            const detailContent = document.getElementById('detail-content');
+            detailContent.innerHTML = `
+                <div class="detail-row">
+                    <div class="detail-label">Submission ID:</div>
+                    <div class="detail-value">${submission.submissionId}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Student Name:</div>
+                    <div class="detail-value">${submission.studentName}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Student ID:</div>
+                    <div class="detail-value">${submission.studentId || 'N/A'}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Material Type:</div>
+                    <div class="detail-value">${submission.materialType}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Subject:</div>
+                    <div class="detail-value">${submission.subject}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Title:</div>
+                    <div class="detail-value">${submission.title}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Description:</div>
+                    <div class="detail-value">${submission.description}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">File:</div>
+                    <div class="detail-value">
+                        ${submission.fileName} (${formatFileSize(submission.fileSize)})
+                        ${submission.fileUrl ? `<br><a href="${submission.fileUrl}" target="_blank">📥 Download File</a>` : ''}
+                    </div>
+                </div>
+                ${submission.githubLink ? `
+                <div class="detail-row">
+                    <div class="detail-label">GitHub Link:</div>
+                    <div class="detail-value"><a href="${submission.githubLink}" target="_blank">${submission.githubLink}</a></div>
+                </div>
+                ` : ''}
+                <div class="detail-row">
+                    <div class="detail-label">Submitted:</div>
+                    <div class="detail-value">${new Date(submission.timestamp).toLocaleString()}</div>
+                </div>
+            `;
+            
+            document.getElementById('detail-modal').style.display = 'flex';
+        }
+        
+        function closeModal() {
+            document.getElementById('detail-modal').style.display = 'none';
+        }
+        
+        // ========================================================================
+        // UTILITY FUNCTIONS
+        // ========================================================================
+        
+        function showLoading() {
+            const tbody = document.getElementById('submissions-tbody');
+            tbody.innerHTML = '<tr><td colspan="8" class="loading">🔄 Loading submissions...</td></tr>';
+        }
+        
+        function showMessage(message, type) {
+            // Remove existing messages
+            const existingMessages = document.querySelectorAll('.message');
+            existingMessages.forEach(msg => msg.remove());
+            
+            // Create new message
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = message;
+            messageDiv.style.cssText = `
+                padding: 15px; 
+                margin: 20px 0; 
+                border-radius: 8px; 
+                ${type === 'error' ? 'background: #e74c3c; color: white;' : 'background: #27ae60; color: white;'}
+            `;
+            
+            // Insert at the top of admin container
+            const targetContainer = document.querySelector('.admin-container');
+            if (targetContainer) {
+                targetContainer.insertBefore(messageDiv, targetContainer.firstChild);
+            }
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+        
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
         // Close modal when clicking outside
         window.onclick = function(event) {
             const modal = document.getElementById('detail-modal');
@@ -1101,11 +1428,17 @@
                 closeModal();
             }
         }
-
-        // ==========================================================================
+        
+        // ========================================================================
         // KEYBOARD SHORTCUTS
-        // ==========================================================================
+        // ========================================================================
+        
         document.addEventListener('keydown', function(e) {
+            // Enter key on password field
+            if (e.target.id === 'adminPassword' && e.key === 'Enter') {
+                loginAdmin();
+            }
+            
             // Ctrl+R or F5 to refresh
             if ((e.ctrlKey && e.key === 'r') || e.key === 'F5') {
                 e.preventDefault();
@@ -1114,14 +1447,27 @@
                 }
             }
             
-            // Escape to logout
-            if (e.key === 'Escape' && isLoggedIn) {
-                if (confirm('Do you want to logout?')) {
+            // Escape to close modal or logout
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('detail-modal');
+                if (modal.style.display === 'flex') {
+                    closeModal();
+                } else if (isLoggedIn && confirm('Do you want to logout?')) {
                     logout();
                 }
             }
         });
-    </script>
+        
+        // ========================================================================
+        // INITIALIZE
+        // ========================================================================
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if Google Apps Script URL is configured
+            if (GOOGLE_APPS_SCRIPT_URL === 'YOUR_DEPLOYED_SCRIPT_URL_HERE') {
+                showMessage('⚠️ Please configure the Google Apps Script URL first.', 'error');
+            }
+        });
     </script>
 </body>
 </html>

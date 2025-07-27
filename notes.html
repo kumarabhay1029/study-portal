@@ -3,15 +3,373 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Notes - Study Portal</title>
+    <title>Notes - Study Portal</title>
     
     <!-- Stylesheets -->
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/auth.css">
     <link rel="stylesheet" href="css/sections.css">
     <link rel="stylesheet" href="css/mobile.css">
     
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📋</text></svg>">
+    
+    <style>
+        /* Notes Upload System Styles */
+        .upload-section {
+            background: linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(103, 58, 183, 0.05) 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 1px solid rgba(33, 150, 243, 0.2);
+        }
+        
+        .upload-form {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #2196f3;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+        
+        .file-upload-area {
+            border: 3px dashed #2196f3;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            background: rgba(33, 150, 243, 0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .file-upload-area:hover {
+            background: rgba(33, 150, 243, 0.1);
+            border-color: #1976d2;
+        }
+        
+        .file-upload-area.dragover {
+            border-color: #1976d2;
+            background: rgba(33, 150, 243, 0.15);
+            transform: scale(1.02);
+        }
+        
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #2196f3;
+        }
+        
+        .upload-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .upload-subtitle {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .file-input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .file-preview {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .file-icon {
+            font-size: 24px;
+        }
+        
+        .file-details h4 {
+            margin: 0 0 5px 0;
+            color: #2e7d32;
+        }
+        
+        .file-details p {
+            margin: 0;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .privacy-policy {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+        
+        .privacy-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .privacy-icon {
+            font-size: 24px;
+        }
+        
+        .privacy-title {
+            font-weight: 600;
+            color: #f57c00;
+            margin: 0;
+        }
+        
+        .privacy-content {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .privacy-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .privacy-checkbox input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            cursor: pointer;
+        }
+        
+        .privacy-label {
+            font-size: 14px;
+            color: #333;
+            cursor: pointer;
+            line-height: 1.5;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #2196f3, #1976d2);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.4);
+        }
+        
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .status-message {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .status-message.success {
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            color: #2e7d32;
+        }
+        
+        .status-message.error {
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            color: #c62828;
+        }
+        
+        .status-message.info {
+            background: rgba(33, 150, 243, 0.1);
+            border: 1px solid rgba(33, 150, 243, 0.3);
+            color: #1976d2;
+        }
+        
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #2196f3;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .approved-notes {
+            margin-top: 40px;
+        }
+        
+        .notes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .note-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .note-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .note-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .note-title {
+            font-weight: 600;
+            color: #333;
+            margin: 0 0 5px 0;
+            font-size: 16px;
+        }
+        
+        .note-subject {
+            background: #2196f3;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .note-description {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        
+        .note-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .note-author {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .download-note-btn {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .download-note-btn:hover {
+            background: #45a049;
+            transform: translateY(-1px);
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .upload-section {
+                padding: 20px;
+                margin: 20px 0;
+            }
+            
+            .file-upload-area {
+                padding: 30px 20px;
+            }
+            
+            .upload-icon {
+                font-size: 36px;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -19,7 +377,7 @@
     <div class="main-bar">
         <div class="main-bar-content">
             <div class="logo-section">
-                <button class="back-btn" onclick="goBack()" title="Go back to main portal">
+                <button class="back-btn" onclick="window.location.href='index.html'" title="Go back to main portal">
                     ← Back to Portal
                 </button>
                 <h1>📋 Study Notes</h1>
@@ -27,27 +385,485 @@
         </div>
     </div>
 
-    <!-- Notes Content Container -->
+    <!-- Content Area -->
     <div class="content-area">
-        <!-- Notes Section -->
-        <div id="notes-section" class="section-container">
-            <div class="notes-header">
-                <div class="section-header-content">
-                    <div>
-                        <h2 class="section-title">📋 Study Notes Hub</h2>
-                        <p class="section-description">Access comprehensive study notes, quick references, and summaries for all BCA subjects. Created by experts and fellow students to help you excel in your studies.</p>
-                    </div>
-                    <button class="upload-material-btn" onclick="showUploadForm()" title="Share your study notes">
-                        <span class="btn-icon">📤</span>
-                        <span class="btn-text">Upload Notes</span>
-                    </button>
-                </div>
+        <!-- Upload Section -->
+        <div class="upload-section">
+            <div class="section-header">
+                <h2>📤 Upload Your Notes</h2>
+                <p>Share your study notes with fellow students. All submissions are reviewed before being published.</p>
             </div>
 
-            <!-- Notes Statistics -->
-            <div class="notes-stats">
-                <div class="stat-card">
-                    <div class="stat-icon">📚</div>
+            <form id="notesUploadForm" class="upload-form">
+                <!-- Student Information -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="studentName">Student Name *</label>
+                        <input type="text" id="studentName" name="studentName" required placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label for="studentId">Student ID (Optional)</label>
+                        <input type="text" id="studentId" name="studentId" placeholder="Enter your student ID">
+                    </div>
+                </div>
+
+                <!-- Note Details -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="subject">Subject *</label>
+                        <select id="subject" name="subject" required>
+                            <option value="">Select Subject</option>
+                            <option value="programming">Programming (C/C++/Java/Python)</option>
+                            <option value="data-structures">Data Structures & Algorithms</option>
+                            <option value="database">Database Management Systems</option>
+                            <option value="web-programming">Web Programming</option>
+                            <option value="computer-networks">Computer Networks</option>
+                            <option value="operating-systems">Operating Systems</option>
+                            <option value="software-engineering">Software Engineering</option>
+                            <option value="mathematics">Mathematics & Statistics</option>
+                            <option value="computer-organization">Computer Organization</option>
+                            <option value="cybersecurity">Cyber Security</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="materialType">Material Type *</label>
+                        <select id="materialType" name="materialType" required>
+                            <option value="">Select Type</option>
+                            <option value="notes">Study Notes</option>
+                            <option value="summary">Chapter Summary</option>
+                            <option value="tutorial">Tutorial/Guide</option>
+                            <option value="practice">Practice Questions</option>
+                            <option value="solution">Assignment Solutions</option>
+                            <option value="reference">Reference Material</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="title">Title *</label>
+                    <input type="text" id="title" name="title" required placeholder="e.g., Data Structures Complete Notes - Trees & Graphs">
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description *</label>
+                    <textarea id="description" name="description" rows="4" required placeholder="Provide a detailed description of your notes, topics covered, and any special features..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="githubLink">GitHub/Drive Link (Optional)</label>
+                    <input type="url" id="githubLink" name="githubLink" placeholder="https://github.com/username/repo or Google Drive link">
+                </div>
+
+                <!-- File Upload -->
+                <div class="form-group">
+                    <label>Upload File *</label>
+                    <div class="file-upload-area" id="fileUploadArea">
+                        <div class="upload-icon">📎</div>
+                        <div class="upload-text">Drop your file here or click to browse</div>
+                        <div class="upload-subtitle">Supported: PDF, DOC, DOCX, TXT (Max: 10MB)</div>
+                        <input type="file" class="file-input" id="fileInput" accept=".pdf,.doc,.docx,.txt" required>
+                    </div>
+                    <div class="file-preview" id="filePreview">
+                        <div class="file-info">
+                            <div class="file-icon">📄</div>
+                            <div class="file-details">
+                                <h4 id="fileName"></h4>
+                                <p id="fileSize"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Privacy Policy & Terms -->
+                <div class="privacy-policy">
+                    <div class="privacy-header">
+                        <div class="privacy-icon">🔒</div>
+                        <h3 class="privacy-title">Privacy Policy & Terms of Use</h3>
+                    </div>
+                    <div class="privacy-content">
+                        <p><strong>By uploading content, you agree to the following:</strong></p>
+                        <ul>
+                            <li>Your notes will be reviewed by administrators before publication</li>
+                            <li>You grant permission to share your content with other students</li>
+                            <li>Content must be original or properly attributed</li>
+                            <li>No copyrighted material without permission</li>
+                            <li>Content must be educational and appropriate</li>
+                            <li>We reserve the right to modify or remove content</li>
+                            <li>Your name will be credited as the contributor</li>
+                        </ul>
+                    </div>
+                    <div class="privacy-checkbox">
+                        <input type="checkbox" id="privacyConsent" required>
+                        <label for="privacyConsent" class="privacy-label">
+                            I have read and agree to the <strong>Privacy Policy</strong> and <strong>Terms of Use</strong>. I consent to sharing my educational content with other students and understand that it will be reviewed before publication.
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn" id="submitBtn" disabled>
+                    📤 Submit Notes for Review
+                </button>
+            </form>
+
+            <!-- Status Messages -->
+            <div id="statusMessage" class="status-message"></div>
+            
+            <!-- Loading Spinner -->
+            <div id="loadingSpinner" class="loading-spinner">
+                <div class="spinner"></div>
+                <p>Uploading your notes...</p>
+            </div>
+        </div>
+
+        <!-- Approved Notes Section -->
+        <div class="approved-notes">
+            <div class="section-header">
+                <h2>📚 Available Notes</h2>
+                <p>Browse approved study notes shared by fellow students</p>
+            </div>
+            
+            <div id="notesGrid" class="notes-grid">
+                <div class="note-card">
+                    <div class="note-header">
+                        <div class="note-subject">Programming</div>
+                    </div>
+                    <h3 class="note-title">C++ Complete Reference Guide</h3>
+                    <p class="note-description">Comprehensive notes covering all C++ concepts including OOP, pointers, templates, and STL. Perfect for exam preparation.</p>
+                    <div class="note-footer">
+                        <span class="note-author">By: Admin</span>
+                        <button class="download-note-btn" onclick="alert('Download feature will be available after admin setup')">
+                            📥 Download
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="note-card">
+                    <div class="note-header">
+                        <div class="note-subject">Database</div>
+                    </div>
+                    <h3 class="note-title">SQL Query Examples & Practice</h3>
+                    <p class="note-description">Collection of SQL queries with examples, covering joins, subqueries, and database design principles.</p>
+                    <div class="note-footer">
+                        <span class="note-author">By: Admin</span>
+                        <button class="download-note-btn" onclick="alert('Download feature will be available after admin setup')">
+                            📥 Download
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="note-card">
+                    <div class="note-header">
+                        <div class="note-subject">Data Structures</div>
+                    </div>
+                    <h3 class="note-title">Trees and Graphs - Complete Guide</h3>
+                    <p class="note-description">Detailed explanation of tree and graph data structures with implementation examples and algorithms.</p>
+                    <div class="note-footer">
+                        <span class="note-author">By: Admin</span>
+                        <button class="download-note-btn" onclick="alert('Download feature will be available after admin setup')">
+                            📥 Download
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================================================================
+        // NOTES UPLOAD SYSTEM - REAL IMPLEMENTATION
+        // ========================================================================
+        
+        // UPDATE THIS URL WITH YOUR DEPLOYED GOOGLE APPS SCRIPT URL
+        const GOOGLE_APPS_SCRIPT_URL = 'YOUR_DEPLOYED_SCRIPT_URL_HERE';
+        
+        // Form elements
+        const form = document.getElementById('notesUploadForm');
+        const fileInput = document.getElementById('fileInput');
+        const fileUploadArea = document.getElementById('fileUploadArea');
+        const filePreview = document.getElementById('filePreview');
+        const privacyConsent = document.getElementById('privacyConsent');
+        const submitBtn = document.getElementById('submitBtn');
+        const statusMessage = document.getElementById('statusMessage');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        
+        let selectedFile = null;
+        
+        // ========================================================================
+        // FILE UPLOAD HANDLERS
+        // ========================================================================
+        
+        // File input change handler
+        fileInput.addEventListener('change', function(e) {
+            handleFileSelect(e.target.files[0]);
+        });
+        
+        // Drag and drop handlers
+        fileUploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            fileUploadArea.classList.add('dragover');
+        });
+        
+        fileUploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            fileUploadArea.classList.remove('dragover');
+        });
+        
+        fileUploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            fileUploadArea.classList.remove('dragover');
+            handleFileSelect(e.dataTransfer.files[0]);
+        });
+        
+        // Handle file selection
+        function handleFileSelect(file) {
+            if (!file) return;
+            
+            // Validate file type
+            const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain'];
+            if (!allowedTypes.includes(file.type)) {
+                showMessage('Please upload only PDF, DOC, DOCX, or TXT files.', 'error');
+                return;
+            }
+            
+            // Validate file size (10MB limit)
+            if (file.size > 10 * 1024 * 1024) {
+                showMessage('File size must be less than 10MB.', 'error');
+                return;
+            }
+            
+            selectedFile = file;
+            
+            // Show file preview
+            document.getElementById('fileName').textContent = file.name;
+            document.getElementById('fileSize').textContent = formatFileSize(file.size);
+            filePreview.style.display = 'block';
+            
+            checkFormValidity();
+        }
+        
+        // Format file size
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        // ========================================================================
+        // FORM VALIDATION
+        // ========================================================================
+        
+        // Privacy consent handler
+        privacyConsent.addEventListener('change', checkFormValidity);
+        
+        // Check form validity
+        function checkFormValidity() {
+            const isFormValid = form.checkValidity() && 
+                               privacyConsent.checked && 
+                               selectedFile !== null;
+            
+            submitBtn.disabled = !isFormValid;
+        }
+        
+        // Add validation to all required fields
+        const requiredFields = form.querySelectorAll('[required]');
+        requiredFields.forEach(field => {
+            field.addEventListener('input', checkFormValidity);
+            field.addEventListener('change', checkFormValidity);
+        });
+        
+        // ========================================================================
+        // FORM SUBMISSION
+        // ========================================================================
+        
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!selectedFile) {
+                showMessage('Please select a file to upload.', 'error');
+                return;
+            }
+            
+            if (!privacyConsent.checked) {
+                showMessage('Please accept the Privacy Policy and Terms of Use.', 'error');
+                return;
+            }
+            
+            await submitNotes();
+        });
+        
+        async function submitNotes() {
+            // Show loading state
+            submitBtn.disabled = true;
+            loadingSpinner.style.display = 'block';
+            statusMessage.style.display = 'none';
+            
+            try {
+                // Convert file to base64
+                const fileData = await fileToBase64(selectedFile);
+                
+                // Prepare submission data
+                const submissionData = {
+                    action: 'submit',
+                    studentName: document.getElementById('studentName').value,
+                    studentId: document.getElementById('studentId').value,
+                    subject: document.getElementById('subject').value,
+                    materialType: document.getElementById('materialType').value,
+                    title: document.getElementById('title').value,
+                    description: document.getElementById('description').value,
+                    githubLink: document.getElementById('githubLink').value,
+                    fileName: selectedFile.name,
+                    fileSize: selectedFile.size,
+                    fileData: fileData,
+                    mimeType: selectedFile.type,
+                    timestamp: new Date().toISOString()
+                };
+                
+                // Submit to Google Apps Script
+                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(submissionData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('✅ Notes submitted successfully! Admin will review and approve your submission. You will be notified once it\'s published.', 'success');
+                    resetForm();
+                } else {
+                    throw new Error(result.error || 'Submission failed');
+                }
+                
+            } catch (error) {
+                console.error('Submission error:', error);
+                showMessage('❌ Failed to submit notes: ' + error.message + '. Please try again.', 'error');
+            } finally {
+                // Hide loading state
+                loadingSpinner.style.display = 'none';
+                checkFormValidity();
+            }
+        }
+        
+        // Convert file to base64
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => {
+                    // Remove data:type;base64, prefix
+                    const base64 = reader.result.split(',')[1];
+                    resolve(base64);
+                };
+                reader.onerror = reject;
+            });
+        }
+        
+        // ========================================================================
+        // UTILITY FUNCTIONS
+        // ========================================================================
+        
+        // Show status message
+        function showMessage(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.className = `status-message ${type}`;
+            statusMessage.style.display = 'block';
+            
+            // Auto hide after 5 seconds for success messages
+            if (type === 'success') {
+                setTimeout(() => {
+                    statusMessage.style.display = 'none';
+                }, 5000);
+            }
+        }
+        
+        // Reset form
+        function resetForm() {
+            form.reset();
+            selectedFile = null;
+            filePreview.style.display = 'none';
+            privacyConsent.checked = false;
+            submitBtn.disabled = true;
+        }
+        
+        // ========================================================================
+        // LOAD APPROVED NOTES
+        // ========================================================================
+        
+        async function loadApprovedNotes() {
+            try {
+                const response = await fetch(`${GOOGLE_APPS_SCRIPT_URL}?action=getApprovedContent`);
+                const result = await response.json();
+                
+                if (result.success && result.data.length > 0) {
+                    displayApprovedNotes(result.data);
+                }
+            } catch (error) {
+                console.error('Error loading approved notes:', error);
+            }
+        }
+        
+        function displayApprovedNotes(notes) {
+            const notesGrid = document.getElementById('notesGrid');
+            
+            // Clear existing placeholder notes
+            notesGrid.innerHTML = '';
+            
+            notes.forEach(note => {
+                const noteCard = document.createElement('div');
+                noteCard.className = 'note-card';
+                noteCard.innerHTML = `
+                    <div class="note-header">
+                        <div class="note-subject">${note.subject}</div>
+                    </div>
+                    <h3 class="note-title">${note.title}</h3>
+                    <p class="note-description">${note.description}</p>
+                    <div class="note-footer">
+                        <span class="note-author">By: ${note.studentName}</span>
+                        <button class="download-note-btn" onclick="downloadNote('${note.fileUrl}', '${note.fileName}')">
+                            📥 Download
+                        </button>
+                    </div>
+                `;
+                notesGrid.appendChild(noteCard);
+            });
+        }
+        
+        function downloadNote(fileUrl, fileName) {
+            const link = document.createElement('a');
+            link.href = fileUrl;
+            link.download = fileName;
+            link.target = '_blank';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // ========================================================================
+        // INITIALIZE
+        // ========================================================================
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            checkFormValidity();
+            
+            // Load approved notes if script URL is configured
+            if (GOOGLE_APPS_SCRIPT_URL && GOOGLE_APPS_SCRIPT_URL !== 'YOUR_DEPLOYED_SCRIPT_URL_HERE') {
+                loadApprovedNotes();
+            }
+        });
+        
+        // Check if Google Apps Script URL is configured
+        if (GOOGLE_APPS_SCRIPT_URL === 'YOUR_DEPLOYED_SCRIPT_URL_HERE') {
+            showMessage('⚠️ Admin setup required: Please configure the Google Apps Script URL to enable uploads.', 'info');
+        }
+    </script>
+</body>
+</html>
                     <div class="stat-info">
                         <div class="stat-number">250+</div>
                         <div class="stat-label">Total Notes</div>
