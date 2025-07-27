@@ -326,27 +326,6 @@ class NotesManager {
                     <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 20px;">
                         The notes system is currently running in offline mode. Firebase services are not available.
                     </p>
-                    <div style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 10px; margin: 20px 0;">
-                        <h4 style="color: #4fc3f7; margin-bottom: 15px;">📚 Sample Notes Categories</h4>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                            <div style="background: rgba(76, 175, 80, 0.1); padding: 15px; border-radius: 8px; border: 1px solid rgba(76, 175, 80, 0.2);">
-                                <strong style="color: #4caf50;">Complete Notes</strong><br>
-                                <small style="color: rgba(255, 255, 255, 0.7);">Full course materials</small>
-                            </div>
-                            <div style="background: rgba(33, 150, 243, 0.1); padding: 15px; border-radius: 8px; border: 1px solid rgba(33, 150, 243, 0.2);">
-                                <strong style="color: #2196f3;">Chapter Summary</strong><br>
-                                <small style="color: rgba(255, 255, 255, 0.7);">Key points & concepts</small>
-                            </div>
-                            <div style="background: rgba(156, 39, 176, 0.1); padding: 15px; border-radius: 8px; border: 1px solid rgba(156, 39, 176, 0.2);">
-                                <strong style="color: #9c27b0;">Exam Preparation</strong><br>
-                                <small style="color: rgba(255, 255, 255, 0.7);">Study guides & tips</small>
-                            </div>
-                            <div style="background: rgba(255, 152, 0, 0.1); padding: 15px; border-radius: 8px; border: 1px solid rgba(255, 152, 0, 0.2);">
-                                <strong style="color: #ff9800;">Quick Reference</strong><br>
-                                <small style="color: rgba(255, 255, 255, 0.7);">Formulas & shortcuts</small>
-                            </div>
-                        </div>
-                    </div>
                     <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9em;">
                         <strong>To enable full functionality:</strong><br>
                         • Check your internet connection<br>
