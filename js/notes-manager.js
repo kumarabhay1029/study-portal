@@ -144,19 +144,21 @@ class NotesManager {
         const form = document.getElementById('notesUploadForm');
         if (form) {
             form.reset();
-            
+
             // Clear file info
             const fileInfo = document.getElementById('fileInfo');
-            // moved inside method body if needed
             if (fileInfo) fileInfo.style.display = 'none';
+
+            // Clear upload placeholder
+            const uploadPlaceholder = document.querySelector('.upload-placeholder');
             if (uploadPlaceholder) uploadPlaceholder.style.display = 'block';
-            
+
             // Clear character count
-            // moved inside method body if needed
+            const charCount = document.getElementById('descCharCount');
             if (charCount) charCount.textContent = '0';
-            
+
             // Clear any field errors
-            // moved inside method body if needed
+            const errors = form.querySelectorAll('.field-error');
             errors.forEach(error => error.remove());
         }
     }
