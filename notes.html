@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Notes - Study Portal</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/sections.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📋</text></svg>">
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <div class="main-bar">
+        <div class="main-bar-content">
+            <div class="logo-section">
+                <button class="back-btn" onclick="goBack()" title="Go back to main portal">
+                    ← Back to Portal
+                </button>
+                <h1>📋 Study Notes</h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notes Content Container -->
+    <div class="content-area">
+        <!-- Notes Section -->
+        <div id="notes-section" class="section-container">
+            <div class="notes-header">
+                <div class="section-header-content">
+                    <div>
+                        <h2 class="section-title">📋 Study Notes Hub</h2>
+                        <p class="section-description">Access comprehensive study notes, quick references, and summaries for all BCA subjects. Created by experts and fellow students to help you excel in your studies.</p>
+                    </div>
+                    <button class="upload-material-btn" onclick="showUploadForm()" title="Share your study notes">
+                        <span class="btn-icon">📤</span>
+                        <span class="btn-text">Upload Notes</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Notes Statistics -->
+            <div class="notes-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">📚</div>
+                    <div class="stat-info">
+                        <div class="stat-number">250+</div>
+                        <div class="stat-label">Total Notes</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📖</div>
+                    <div class="stat-info">
+                        <div class="stat-number">18</div>
+                        <div class="stat-label">Subjects</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-info">
+                        <div class="stat-number">6</div>
+                        <div class="stat-label">Semesters</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-info">
+                        <div class="stat-number">95%</div>
+                        <div class="stat-label">Accuracy</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subject-wise Notes Organization -->
+            <div class="notes-organization">
+                <h3 class="section-subtitle">📚 Subject-wise Notes Collection</h3>
+                <div class="subject-notes-grid">
+                    <!-- Programming Notes -->
+                    <div class="subject-note-card programming">
+                        <div class="note-card-header">
+                            <span class="subject-icon">💻</span>
+                            <h4>Programming</h4>
+                        </div>
+                        <div class="note-topics">
+                            <div class="topic-item">
+                                <span class="topic-title">C Programming</span>
+                                <span class="note-count">15 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">Python Programming</span>
+                                <span class="note-count">18 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">C++ Programming</span>
+                                <span class="note-count">12 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">Java Programming</span>
+                                <span class="note-count">20 notes</span>
+                            </div>
+                        </div>
+                        <button class="view-notes-btn">📖 View All Programming Notes</button>
+                    </div>
+
+                    <!-- Data Structures & Algorithms -->
+                    <div class="subject-note-card algorithms">
+                        <div class="note-card-header">
+                            <span class="subject-icon">🔗</span>
+                            <h4>Data Structures & Algorithms</h4>
+                        </div>
+                        <div class="note-topics">
+                            <div class="topic-item">
+                                <span class="topic-title">Arrays & Linked Lists</span>
+                                <span class="note-count">10 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">Stacks & Queues</span>
+                                <span class="note-count">8 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">Trees & Graphs</span>
+                                <span class="note-count">14 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">Sorting & Searching</span>
+                                <span class="note-count">12 notes</span>
+                            </div>
+                        </div>
+                        <button class="view-notes-btn">🔍 View DSA Notes</button>
+                    </div>
+
+                    <!-- Database Management -->
+                    <div class="subject-note-card database">
+                        <div class="note-card-header">
+                            <span class="subject-icon">🗄️</span>
+                            <h4>Database Management</h4>
+                        </div>
+                        <div class="note-topics">
+                            <div class="topic-item">
+                                <span class="topic-title">SQL Fundamentals</span>
+                                <span class="note-count">16 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">Database Design</span>
+                                <span class="note-count">12 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">Normalization</span>
+                                <span class="note-count">8 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">Advanced Queries</span>
+                                <span class="note-count">10 notes</span>
+                            </div>
+                        </div>
+                        <button class="view-notes-btn">🗃️ View Database Notes</button>
+                    </div>
+
+                    <!-- Web Technologies -->
+                    <div class="subject-note-card web">
+                        <div class="note-card-header">
+                            <span class="subject-icon">🌐</span>
+                            <h4>Web Technologies</h4>
+                        </div>
+                        <div class="note-topics">
+                            <div class="topic-item">
+                                <span class="topic-title">HTML5 & CSS3</span>
+                                <span class="note-count">14 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">JavaScript</span>
+                                <span class="note-count">18 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">PHP & MySQL</span>
+                                <span class="note-count">12 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">Web Frameworks</span>
+                                <span class="note-count">9 notes</span>
+                            </div>
+                        </div>
+                        <button class="view-notes-btn">🌍 View Web Notes</button>
+                    </div>
+
+                    <!-- Mathematics -->
+                    <div class="subject-note-card mathematics">
+                        <div class="note-card-header">
+                            <span class="subject-icon">📊</span>
+                            <h4>Mathematics</h4>
+                        </div>
+                        <div class="note-topics">
+                            <div class="topic-item">
+                                <span class="topic-title">Discrete Mathematics</span>
+                                <span class="note-count">20 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">Statistics</span>
+                                <span class="note-count">15 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">Linear Algebra</span>
+                                <span class="note-count">12 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">Probability</span>
+                                <span class="note-count">10 notes</span>
+                            </div>
+                        </div>
+                        <button class="view-notes-btn">📈 View Math Notes</button>
+                    </div>
+
+                    <!-- Computer Networks -->
+                    <div class="subject-note-card networks">
+                        <div class="note-card-header">
+                            <span class="subject-icon">🌐</span>
+                            <h4>Computer Networks</h4>
+                        </div>
+                        <div class="note-topics">
+                            <div class="topic-item">
+                                <span class="topic-title">Network Fundamentals</span>
+                                <span class="note-count">12 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">TCP/IP Protocol</span>
+                                <span class="note-count">8 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">Network Security</span>
+                                <span class="note-count">10 notes</span>
+                            </div>
+                            <div class="topic-item">
+                                <span class="topic-title">Wireless Networks</span>
+                                <span class="note-count">6 notes</span>
+                            </div>
+                        </div>
+                        <button class="view-notes-btn">🔗 View Network Notes</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Updates & Quick Access -->
+            <div class="notes-updates">
+                <h3 class="section-subtitle">🆕 Recent Updates & Quick Access</h3>
+                <div class="updates-grid">
+                    <div class="update-card new">
+                        <div class="update-header">
+                            <span class="update-icon">🆕</span>
+                            <h4>New Notes Added</h4>
+                        </div>
+                        <div class="update-list">
+                            <div class="update-item">MCS-208: Advanced Tree Algorithms</div>
+                            <div class="update-item">BCS-053: Modern CSS Techniques</div>
+                            <div class="update-item">MCS-207: Database Optimization</div>
+                            <div class="update-item">BCS-042: Dynamic Programming</div>
+                        </div>
+                        <span class="update-time">Added this week</span>
+                    </div>
+
+                    <div class="update-card popular">
+                        <div class="update-header">
+                            <span class="update-icon">🔥</span>
+                            <h4>Most Downloaded</h4>
+                        </div>
+                        <div class="update-list">
+                            <div class="update-item">Java Programming Basics</div>
+                            <div class="update-item">SQL Query Examples</div>
+                            <div class="update-item">Data Structures Cheat Sheet</div>
+                            <div class="update-item">Web Development Guide</div>
+                        </div>
+                        <span class="update-time">This month's favorites</span>
+                    </div>
+
+                    <div class="update-card tools">
+                        <div class="update-header">
+                            <span class="update-icon">🛠️</span>
+                            <h4>Study Tools</h4>
+                        </div>
+                        <div class="tools-list">
+                            <button class="tool-btn">📋 Create Notes</button>
+                            <button class="tool-btn">🔍 Search Notes</button>
+                            <button class="tool-btn">📥 Download All</button>
+                            <button class="tool-btn">📤 Share Notes</button>
+                        </div>
+                        <span class="update-time">Access powerful tools</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes Access Panel -->
+            <div class="notes-access-panel">
+                <h3 class="section-subtitle">🎯 Quick Actions</h3>
+                <div class="access-buttons">
+                    <button class="access-btn primary" onclick="alert('Notes browser will open here!')">
+                        <span class="btn-icon">📖</span>
+                        <span class="btn-text">Browse All Notes</span>
+                    </button>
+                    <button class="access-btn secondary" onclick="alert('Advanced search feature will open!')">
+                        <span class="btn-icon">🔍</span>
+                        <span class="btn-text">Search Notes</span>
+                    </button>
+                    <button class="access-btn secondary" onclick="alert('Upload notes feature coming soon!')">
+                        <span class="btn-icon">📤</span>
+                        <span class="btn-text">Upload Notes</span>
+                    </button>
+                    <button class="access-btn secondary" onclick="alert('Favorites and bookmarks!')">
+                        <span class="btn-icon">⭐</span>
+                        <span class="btn-text">My Favorites</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/study-portal-bundle.js"></script>
+    <script>
+        // Go back to main portal function
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        // Open submission form function for notes
+        function openSubmissionForm(type) {
+            // You can implement this to open a modal or redirect to submission form
+            alert('Submission form for ' + type + ' will open here!');
+            // Example: window.location.href = 'submission-form.html?type=' + type;
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📋 Notes page loaded successfully');
+            
+            // Add any notes-specific initialization here
+            initializeNotesPage();
+        });
+
+        function initializeNotesPage() {
+            // Add click handlers for view notes buttons
+            const viewBtns = document.querySelectorAll('.view-notes-btn');
+            viewBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const subject = this.closest('.subject-note-card').querySelector('h4').textContent;
+                    alert('Opening notes for: ' + subject);
+                    // Here you can implement actual notes viewing functionality
+                });
+            });
+
+            // Add click handlers for tool buttons
+            const toolBtns = document.querySelectorAll('.tool-btn');
+            toolBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const action = this.textContent.trim();
+                    alert('Action: ' + action + ' - Coming soon!');
+                    // Implement actual tool functionality here
+                });
+            });
+        }
+
+        // Upload Form Functions
+        function showUploadForm() {
+            document.getElementById('upload-modal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideUploadForm() {
+            document.getElementById('upload-modal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            resetForm();
+        }
+
+        function resetForm() {
+            document.getElementById('upload-form').reset();
+            document.getElementById('privacy-consent').checked = false;
+            document.getElementById('terms-consent').checked = false;
+            document.getElementById('file-info').style.display = 'none';
+            updateSubmitButton();
+        }
+
+        function updateSubmitButton() {
+            const privacyChecked = document.getElementById('privacy-consent').checked;
+            const termsChecked = document.getElementById('terms-consent').checked;
+            const fileSelected = document.getElementById('notes-file').files.length > 0;
+            const submitBtn = document.getElementById('submit-btn');
+            
+            if (privacyChecked && termsChecked && fileSelected) {
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+                submitBtn.style.cursor = 'pointer';
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.5';
+                submitBtn.style.cursor = 'not-allowed';
+            }
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            const fileInfo = document.getElementById('file-info');
+            
+            if (file) {
+                document.getElementById('file-name').textContent = file.name;
+                document.getElementById('file-size').textContent = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
+                document.getElementById('file-type').textContent = file.type || 'Unknown';
+                fileInfo.style.display = 'block';
+            } else {
+                fileInfo.style.display = 'none';
+            }
+            updateSubmitButton();
+        }
+
+        async function submitNotes(event) {
+            event.preventDefault();
+            
+            const submitBtn = document.getElementById('submit-btn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '📤 Uploading...';
+            submitBtn.disabled = true;
+
+            try {
+                const formData = new FormData();
+                
+                // Add form fields
+                formData.append('studentName', document.getElementById('student-name').value);
+                formData.append('studentEmail', document.getElementById('student-email').value);
+                formData.append('semester', document.getElementById('semester').value);
+                formData.append('subject', document.getElementById('subject').value);
+                formData.append('notesTitle', document.getElementById('notes-title').value);
+                formData.append('description', document.getElementById('description').value);
+                formData.append('notesFile', document.getElementById('notes-file').files[0]);
+                formData.append('privacyConsent', 'yes');
+                formData.append('termsConsent', 'yes');
+                formData.append('submissionDate', new Date().toISOString());
+
+                // Submit to Google Apps Script
+                const response = await fetch('https://script.google.com/macros/s/YOUR_ACTUAL_SCRIPT_ID_HERE/exec', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showSuccessMessage();
+                    hideUploadForm();
+                } else {
+                    throw new Error(result.error || 'Upload failed');
+                }
+
+            } catch (error) {
+                console.error('Upload error:', error);
+                alert('Upload failed: ' + error.message + '\nPlease try again or contact support.');
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+
+        function showSuccessMessage() {
+            const message = document.createElement('div');
+            message.className = 'success-message';
+            message.innerHTML = `
+                <div class="success-content">
+                    <span class="success-icon">✅</span>
+                    <h3>Notes Uploaded Successfully!</h3>
+                    <p>Your notes have been submitted for review. You'll receive an email notification once they're approved.</p>
+                </div>
+            `;
+            document.body.appendChild(message);
+            
+            setTimeout(() => {
+                message.remove();
+            }, 5000);
+        }
+
+        function showPrivacyPolicy() {
+            window.open('privacy-policy.html', '_blank');
+        }
+
+        function showTermsOfUse() {
+            window.open('terms-of-use.html', '_blank');
+        }
+    </script>
+
+    <!-- Upload Modal -->
+    <div id="upload-modal" class="upload-modal">
+        <div class="upload-modal-content">
+            <div class="upload-header">
+                <h2>📤 Upload Study Notes</h2>
+                <button class="close-btn" onclick="hideUploadForm()">&times;</button>
+            </div>
+            
+            <form id="upload-form" onsubmit="submitNotes(event)">
+                <div class="form-section">
+                    <h3>📝 Student Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="student-name">Full Name *</label>
+                            <input type="text" id="student-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="student-email">Email Address *</label>
+                            <input type="email" id="student-email" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>📚 Notes Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="semester">Semester *</label>
+                            <select id="semester" required>
+                                <option value="">Select Semester</option>
+                                <option value="1">Semester 1</option>
+                                <option value="2">Semester 2</option>
+                                <option value="3">Semester 3</option>
+                                <option value="4">Semester 4</option>
+                                <option value="5">Semester 5</option>
+                                <option value="6">Semester 6</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Subject *</label>
+                            <select id="subject" required>
+                                <option value="">Select Subject</option>
+                                <option value="Programming in C">Programming in C</option>
+                                <option value="Python Programming">Python Programming</option>
+                                <option value="Data Structures">Data Structures</option>
+                                <option value="Database Management">Database Management</option>
+                                <option value="Web Development">Web Development</option>
+                                <option value="Software Engineering">Software Engineering</option>
+                                <option value="Computer Networks">Computer Networks</option>
+                                <option value="Operating Systems">Operating Systems</option>
+                                <option value="Mathematics">Mathematics</option>
+                                <option value="Statistics">Statistics</option>
+                                <option value="English">English</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="notes-title">Notes Title *</label>
+                        <input type="text" id="notes-title" placeholder="e.g., Complete C Programming Guide" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" rows="3" placeholder="Brief description of the notes content..."></textarea>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>📎 File Upload</h3>
+                    <div class="file-upload-area">
+                        <input type="file" id="notes-file" accept=".pdf,.doc,.docx,.txt,.ppt,.pptx" required onchange="handleFileSelect(event)">
+                        <label for="notes-file" class="file-upload-label">
+                            <span class="upload-icon">📁</span>
+                            <span class="upload-text">Choose File</span>
+                            <span class="upload-hint">PDF, DOC, DOCX, TXT, PPT, PPTX (Max 10MB)</span>
+                        </label>
+                    </div>
+                    
+                    <div id="file-info" class="file-info" style="display: none;">
+                        <div class="file-details">
+                            <span class="file-icon">📄</span>
+                            <div class="file-meta">
+                                <div class="file-name" id="file-name"></div>
+                                <div class="file-stats">
+                                    <span id="file-size"></span> • <span id="file-type"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>📋 Terms & Consent</h3>
+                    <div class="consent-section">
+                        <div class="consent-item">
+                            <input type="checkbox" id="privacy-consent" onchange="updateSubmitButton()" required>
+                            <label for="privacy-consent">
+                                I have read and agree to the 
+                                <a href="#" onclick="showPrivacyPolicy()">Privacy Policy</a>
+                                and consent to the processing of my personal data. *
+                            </label>
+                        </div>
+                        <div class="consent-item">
+                            <input type="checkbox" id="terms-consent" onchange="updateSubmitButton()" required>
+                            <label for="terms-consent">
+                                I accept the 
+                                <a href="#" onclick="showTermsOfUse()">Terms of Use</a>
+                                and confirm that I have the right to share these notes. *
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn" onclick="hideUploadForm()">Cancel</button>
+                    <button type="submit" id="submit-btn" class="submit-btn" disabled>
+                        📤 Upload Notes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Message Styles -->
+    <style>
+        .upload-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .upload-modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .upload-header {
+            background: linear-gradient(135deg, #4fc3f7, #29b6f6);
+            color: white;
+            padding: 25px;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .upload-header h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: background 0.3s;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .form-section {
+            padding: 25px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .form-section:last-child {
+            border-bottom: none;
+        }
+
+        .form-section h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4fc3f7;
+            box-shadow: 0 0 0 3px rgba(79, 195, 247, 0.1);
+        }
+
+        .file-upload-area {
+            position: relative;
+            border: 3px dashed #4fc3f7;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+
+        .file-upload-area:hover {
+            border-color: #29b6f6;
+            background: #f0f8ff;
+        }
+
+        .file-upload-area input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-upload-label {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+        }
+
+        .upload-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #4fc3f7;
+        }
+
+        .upload-hint {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .file-info {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e1e5e9;
+        }
+
+        .file-details {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .file-icon {
+            font-size: 24px;
+        }
+
+        .file-meta {
+            flex: 1;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .file-stats {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .consent-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e1e5e9;
+        }
+
+        .consent-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .consent-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .consent-item input[type="checkbox"] {
+            margin-top: 2px;
+            width: 18px;
+            height: 18px;
+        }
+
+        .consent-item label {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #333;
+        }
+
+        .consent-item a {
+            color: #4fc3f7;
+            text-decoration: none;
+        }
+
+        .consent-item a:hover {
+            text-decoration: underline;
+        }
+
+        .form-actions {
+            padding: 25px;
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+
+        .cancel-btn,
+        .submit-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .cancel-btn {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .cancel-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #4fc3f7, #29b6f6);
+            color: white;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 195, 247, 0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .success-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 11000;
+            animation: slideIn 0.3s ease;
+        }
+
+        .success-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .success-icon {
+            font-size: 24px;
+        }
+
+        .success-content h3 {
+            color: #27ae60;
+            margin: 0 0 5px 0;
+            font-size: 16px;
+        }
+
+        .success-content p {
+            color: #666;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .upload-modal-content {
+                width: 95%;
+                margin: 10px;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .cancel-btn,
+            .submit-btn {
+                width: 100%;
+            }
+        }
+    </style>
+    </script>
+</body>
+</html>

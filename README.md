@@ -17,18 +17,25 @@ A modern, professional study portal with Firebase authentication, designed for a
 ## 📁 Project Structure
 
 ```
-d:\Project-site-git-pg\
-├── index.html                 # Main HTML entry point
+d:\study-portal\
+├── index.html                 # Main portal entry point
+├── notes.html                 # Dedicated notes section (modular)
+├── books.html                 # Study books and materials
+├── admin-panel.html          # Admin management interface
+├── submission-form.html      # Content submission forms
 ├── css/
 │   ├── main.css              # Main stylesheet with core styles
-│   └── auth.css              # Authentication modal styles
+│   ├── auth.css              # Authentication modal styles
+│   ├── sections.css          # Section-specific styles
+│   ├── mobile.css            # Mobile responsive styles
+│   └── books.css             # Books section specific styles
 ├── js/
-│   ├── app.js                # Main application logic and navigation
-│   ├── auth.js               # Firebase authentication system
-│   └── firebase-config.js    # Firebase configuration
-└── assets/
-    ├── icons/                # Icon assets (placeholder)
-    └── images/               # Image assets (placeholder)
+│   ├── study-portal-bundle.js # Main application logic bundle
+│   ├── firebase-config.js    # Firebase configuration
+│   ├── edge-compatibility.js # Cross-browser compatibility
+│   ├── notes-manager.js      # Notes management system
+│   └── books.js              # Books section functionality
+└── google-apps-script.js     # Backend Google Apps Script
 ```
 
 ## 🛠️ Setup Instructions

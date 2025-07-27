@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes Admin Panel - Study Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .admin-header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .admin-header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .admin-header p {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submissions-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .submissions-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 20px;
+        }
+
+        .submissions-header h2 {
+            color: #2c3e50;
+            font-size: 24px;
+        }
+
+        .refresh-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            background: #2980b9;
+        }
+
+        .submission-item {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .submission-item:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .submission-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .submission-id {
+            font-weight: bold;
+            color: #3498db;
+            font-size: 14px;
+        }
+
+        .submission-date {
+            color: #7f8c8d;
+            font-size: 12px;
+        }
+
+        .submission-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .detail-group h4 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .detail-group p {
+            color: #7f8c8d;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .submission-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .action-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .approve-btn {
+            background: #27ae60;
+            color: white;
+        }
+
+        .approve-btn:hover {
+            background: #229954;
+        }
+
+        .reject-btn {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .reject-btn:hover {
+            background: #c0392b;
+        }
+
+        .view-btn {
+            background: #f39c12;
+            color: white;
+        }
+
+        .view-btn:hover {
+            background: #e67e22;
+        }
+
+        .admin-notes {
+            width: 100%;
+            margin-top: 15px;
+            padding: 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+        }
+
+        .error {
+            background: #e74c3c;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .success {
+            background: #27ae60;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .login-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .login-form {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .login-form input {
+            padding: 12px 20px;
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            font-size: 14px;
+            min-width: 200px;
+        }
+
+        .login-form input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+
+        @media (max-width: 768px) {
+            .submission-details {
+                grid-template-columns: 1fr;
+            }
+
+            .submission-actions {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                width: 100%;
+            }
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        .submissions-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #4fc3f7, #29b6f6);
+            color: white;
+            padding: 25px;
+        }
+
+        .section-header h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .filters {
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: #495057;
+            font-size: 14px;
+        }
+
+        .filter-group select {
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .refresh-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .refresh-btn:hover {
+            background: #218838;
+        }
+
+        .submissions-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .submissions-table th,
+        .submissions-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .submissions-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .submissions-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-approve {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-approve:hover {
+            background: #218838;
+        }
+
+        .btn-reject {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-reject:hover {
+            background: #c82333;
+        }
+
+        .btn-view {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-view:hover {
+            background: #0056b3;
+        }
+
+        .btn-download {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-download:hover {
+            background: #545b62;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #4fc3f7, #29b6f6);
+            color: white;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            width: 140px;
+            color: #495057;
+        }
+
+        .detail-value {
+            flex: 1;
+            color: #212529;
+        }
+
+        @media (max-width: 768px) {
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-group {
+                justify-content: space-between;
+            }
+
+            .submissions-table {
+                font-size: 12px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-container">
+        <!-- Header -->
+        <div class="admin-header">
+            <h1>📋 Notes Admin Panel</h1>
+            <p>Manage and approve student note submissions</p>
+        </div>
+
+        <!-- Login Section -->
+        <div class="login-section" id="login-section" style="display: none;">
+            <h2>🔐 Admin Login</h2>
+            <p>Please enter the admin password to access the admin panel</p>
+            <div class="login-form">
+                <input type="password" id="admin-password" placeholder="Enter admin password" onkeypress="if(event.key==='Enter') login()">
+                <button class="btn-primary" onclick="login()">Login</button>
+            </div>
+        </div>
+
+        <!-- Admin Content (hidden until login) -->
+        <div id="admin-content" style="display: none;">
+        
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">⏳</div>
+                <div class="stat-number" id="pending-count">-</div>
+                <div class="stat-label">Pending Review</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-number" id="approved-count">-</div>
+                <div class="stat-label">Approved</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">❌</div>
+                <div class="stat-number" id="rejected-count">-</div>
+                <div class="stat-label">Rejected</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-number" id="total-count">-</div>
+                <div class="stat-label">Total Submissions</div>
+            </div>
+        </div>
+
+        <!-- Logout Button -->
+        <div style="text-align: right; margin-bottom: 20px;">
+            <button class="btn-primary" onclick="logout()" style="background: #e74c3c;">🚪 Logout</button>
+        </div>
+
+        <!-- Submissions Container -->
+        <div id="submissions-container">
+            <!-- Submissions will be loaded here -->
+        </div>
+
+        </div> <!-- End admin-content -->
+
+        </div> <!-- End admin-content -->
+    </div> <!-- End admin-container -->
+
+    <!-- Detail Modal -->
+    <div class="modal" id="detail-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📋 Submission Details</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================================================
+        // CONFIGURATION - Update this with your Google Apps Script URL
+        // ==========================================================================
+        const SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+        
+        // Global variables
+        let allSubmissions = [];
+        let adminPassword = '';
+        let isLoggedIn = false;
+
+        // ==========================================================================
+        // INITIALIZATION
+        // ==========================================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginStatus();
+        });
+
+        function checkLoginStatus() {
+            // Check if admin is already logged in (session storage)
+            const savedPassword = sessionStorage.getItem('adminPassword');
+            if (savedPassword) {
+                adminPassword = savedPassword;
+                isLoggedIn = true;
+                showAdminPanel();
+                loadPendingSubmissions();
+            } else {
+                showLoginForm();
+            }
+        }
+
+        // ==========================================================================
+        // LOGIN FUNCTIONS
+        // ==========================================================================
+        function showLoginForm() {
+            document.getElementById('login-section').style.display = 'block';
+            document.getElementById('admin-content').style.display = 'none';
+        }
+
+        function showAdminPanel() {
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('admin-content').style.display = 'block';
+        }
+
+        async function login() {
+            const password = document.getElementById('admin-password').value;
+            
+            if (!password) {
+                showMessage('Please enter the admin password', 'error');
+                return;
+            }
+
+            // Test the password by making a request to the backend
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'testPassword',
+                        adminPassword: password
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    adminPassword = password;
+                    sessionStorage.setItem('adminPassword', password);
+                    isLoggedIn = true;
+                    showAdminPanel();
+                    loadPendingSubmissions();
+                    showMessage('Login successful!', 'success');
+                } else {
+                    showMessage('Invalid password. Please try again.', 'error');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showMessage('Login failed. Please check your connection and try again.', 'error');
+            }
+        }
+
+        function logout() {
+            sessionStorage.removeItem('adminPassword');
+            adminPassword = '';
+            isLoggedIn = false;
+            allSubmissions = [];
+            showLoginForm();
+            showMessage('Logged out successfully', 'success');
+        }
+
+        // ==========================================================================
+        // DATA LOADING FUNCTIONS
+        // ==========================================================================
+        async function loadPendingSubmissions() {
+            if (!isLoggedIn) {
+                showMessage('Please login first', 'error');
+                return;
+            }
+
+            showLoading();
+
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getPendingSubmissions`);
+                const result = await response.json();
+
+                if (result.success) {
+                    allSubmissions = result.data || [];
+                    updateStatistics();
+                    displaySubmissions();
+                    hideLoading();
+                } else {
+                    throw new Error(result.error || 'Failed to load submissions');
+                }
+            } catch (error) {
+                console.error('Error loading submissions:', error);
+                showMessage('Failed to load submissions: ' + error.message, 'error');
+                hideLoading();
+            }
+        }
+
+        function loadSubmissions() {
+            loadPendingSubmissions();
+        }
+
+        async function loadAllSubmissions() {
+            if (!isLoggedIn) return;
+
+            showLoading();
+
+            try {
+                // Load both pending and approved content
+                const [pendingResponse, approvedResponse] = await Promise.all([
+                    fetch(`${SCRIPT_URL}?action=getPendingSubmissions`),
+                    fetch(`${SCRIPT_URL}?action=getApprovedContent`)
+                ]);
+
+                const pendingResult = await pendingResponse.json();
+                const approvedResult = await approvedResponse.json();
+
+                allSubmissions = [];
+                
+                if (pendingResult.success) {
+                    allSubmissions = allSubmissions.concat(pendingResult.data || []);
+                }
+                
+                if (approvedResult.success) {
+                    // Mark approved submissions
+                    const approvedData = (approvedResult.data || []).map(item => ({
+                        ...item,
+                        status: 'approved'
+                    }));
+                    allSubmissions = allSubmissions.concat(approvedData);
+                }
+
+                updateStatistics();
+                displaySubmissions();
+                hideLoading();
+            } catch (error) {
+                console.error('Error loading all submissions:', error);
+                showMessage('Failed to load submissions: ' + error.message, 'error');
+                hideLoading();
+            }
+        }
+
+        // ==========================================================================
+        // DISPLAY FUNCTIONS
+        // ==========================================================================
+        function updateStatistics() {
+            const pending = allSubmissions.filter(s => s.status === 'pending').length;
+            const approved = allSubmissions.filter(s => s.status === 'approved').length;
+            const rejected = allSubmissions.filter(s => s.status === 'rejected').length;
+            const total = allSubmissions.length;
+
+            document.getElementById('pending-count').textContent = pending;
+            document.getElementById('approved-count').textContent = approved;
+            document.getElementById('rejected-count').textContent = rejected;
+            document.getElementById('total-count').textContent = total;
+        }
+
+        function filterSubmissions() {
+            const statusFilter = document.getElementById('status-filter').value;
+            const semesterFilter = document.getElementById('semester-filter').value;
+            const subjectFilter = document.getElementById('subject-filter').value;
+
+            let filteredSubmissions = allSubmissions;
+
+            if (statusFilter !== 'all') {
+                filteredSubmissions = filteredSubmissions.filter(s => 
+                    (s.status || 'pending').toLowerCase() === statusFilter.toLowerCase()
+                );
+            }
+
+            if (semesterFilter !== 'all') {
+                filteredSubmissions = filteredSubmissions.filter(s => 
+                    s.semester === semesterFilter
+                );
+            }
+
+            if (subjectFilter !== 'all') {
+                filteredSubmissions = filteredSubmissions.filter(s => 
+                    s.subject === subjectFilter
+                );
+            }
+
+            renderSubmissions(filteredSubmissions);
+        }
+
+        function displaySubmissions() {
+            renderSubmissions(allSubmissions);
+        }
+
+        function renderSubmissions(submissions = allSubmissions) {
+            const tbody = document.getElementById('submissions-tbody');
+            
+            if (submissions.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 40px; color: #7f8c8d;">
+                            📭 No submissions found
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = submissions.map(submission => `
+                <tr>
+                    <td>${submission.submissionId || submission.id}</td>
+                    <td>${new Date(submission.timestamp || submission.date).toLocaleDateString()}</td>
+                    <td>${submission.studentName}</td>
+                    <td>${submission.semester || 'N/A'}</td>
+                    <td>${submission.subject}</td>
+                    <td>${submission.title}</td>
+                    <td><span class="status-badge status-${(submission.status || 'pending').toLowerCase()}">${(submission.status || 'pending')}</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-view" onclick="viewDetails('${submission.submissionId || submission.id}')">👁️ View</button>
+                            ${(submission.status || 'pending') === 'pending' ? `
+                                <button class="btn btn-approve" onclick="approveSubmission('${submission.submissionId || submission.id}')">✅ Approve</button>
+                                <button class="btn btn-reject" onclick="rejectSubmission('${submission.submissionId || submission.id}')">❌ Reject</button>
+                            ` : ''}
+                            ${submission.fileUrl ? `
+                                <button class="btn btn-download" onclick="window.open('${submission.fileUrl}', '_blank')">📥 View File</button>
+                            ` : ''}
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // ==========================================================================
+        // ADMIN ACTIONS
+        // ==========================================================================
+        async function approveSubmission(submissionId) {
+            if (!confirm('Are you sure you want to approve this submission?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'approve',
+                        submissionId: submissionId,
+                        adminPassword: adminPassword,
+                        adminNotes: `Approved on ${new Date().toLocaleDateString()}`
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showMessage('Submission approved successfully!', 'success');
+                    loadPendingSubmissions(); // Refresh the list
+                } else {
+                    throw new Error(result.error || 'Failed to approve submission');
+                }
+            } catch (error) {
+                console.error('Error approving submission:', error);
+                showMessage('Failed to approve submission: ' + error.message, 'error');
+            }
+        }
+
+        async function rejectSubmission(submissionId) {
+            const reason = prompt('Please provide a reason for rejection (optional):');
+            
+            if (!confirm('Are you sure you want to reject this submission?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'reject',
+                        submissionId: submissionId,
+                        adminPassword: adminPassword,
+                        adminNotes: reason || `Rejected on ${new Date().toLocaleDateString()}`
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showMessage('Submission rejected successfully!', 'success');
+                    loadPendingSubmissions(); // Refresh the list
+                } else {
+                    throw new Error(result.error || 'Failed to reject submission');
+                }
+            } catch (error) {
+                console.error('Error rejecting submission:', error);
+                showMessage('Failed to reject submission: ' + error.message, 'error');
+            }
+        }
+
+        // ==========================================================================
+        // MODAL FUNCTIONS
+        // ==========================================================================
+        function viewDetails(submissionId) {
+            const submission = allSubmissions.find(s => (s.submissionId || s.id) === submissionId);
+            if (!submission) return;
+
+            const modalBody = document.getElementById('modal-body');
+            modalBody.innerHTML = `
+                <div class="detail-row">
+                    <div class="detail-label">Submission ID:</div>
+                    <div class="detail-value">${submission.submissionId || submission.id}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Date:</div>
+                    <div class="detail-value">${new Date(submission.timestamp || submission.date).toLocaleString()}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Student Name:</div>
+                    <div class="detail-value">${submission.studentName}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Student ID:</div>
+                    <div class="detail-value">${submission.studentId || 'N/A'}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Material Type:</div>
+                    <div class="detail-value">${submission.materialType || 'N/A'}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Subject:</div>
+                    <div class="detail-value">${submission.subject}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Title:</div>
+                    <div class="detail-value">${submission.title}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Description:</div>
+                    <div class="detail-value">${submission.description || 'No description provided'}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">File:</div>
+                    <div class="detail-value">${submission.fileName || 'No file'} ${submission.fileSize ? `(${formatFileSize(submission.fileSize)})` : ''}</div>
+                </div>
+                ${submission.githubLink ? `
+                <div class="detail-row">
+                    <div class="detail-label">GitHub Link:</div>
+                    <div class="detail-value"><a href="${submission.githubLink}" target="_blank">${submission.githubLink}</a></div>
+                </div>
+                ` : ''}
+                <div class="detail-row">
+                    <div class="detail-label">Status:</div>
+                    <div class="detail-value">
+                        <span class="status-badge status-${(submission.status || 'pending').toLowerCase()}">${submission.status || 'pending'}</span>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('detail-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('detail-modal').style.display = 'none';
+        }
+
+        // ==========================================================================
+        // UTILITY FUNCTIONS
+        // ==========================================================================
+        function showLoading() {
+            const tbody = document.getElementById('submissions-tbody');
+            tbody.innerHTML = '<tr><td colspan="8" class="loading">🔄 Loading submissions...</td></tr>';
+        }
+
+        function hideLoading() {
+            // Loading will be hidden when renderSubmissions() is called
+        }
+
+        function showMessage(message, type) {
+            // Remove existing messages
+            const existingMessages = document.querySelectorAll('.message');
+            existingMessages.forEach(msg => msg.remove());
+
+            // Create new message
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = message;
+            messageDiv.style.cssText = `
+                padding: 15px; 
+                margin: 20px 0; 
+                border-radius: 8px; 
+                ${type === 'error' ? 'background: #e74c3c; color: white;' : 'background: #27ae60; color: white;'}
+            `;
+
+            // Insert at the top of admin content or login section
+            const targetContainer = isLoggedIn ? 
+                document.querySelector('.admin-container') : 
+                document.querySelector('.login-section');
+            
+            if (targetContainer) {
+                targetContainer.insertBefore(messageDiv, targetContainer.firstChild);
+            }
+
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('detail-modal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // ==========================================================================
+        // KEYBOARD SHORTCUTS
+        // ==========================================================================
+        document.addEventListener('keydown', function(e) {
+            // Ctrl+R or F5 to refresh
+            if ((e.ctrlKey && e.key === 'r') || e.key === 'F5') {
+                e.preventDefault();
+                if (isLoggedIn) {
+                    loadPendingSubmissions();
+                }
+            }
+            
+            // Escape to logout
+            if (e.key === 'Escape' && isLoggedIn) {
+                if (confirm('Do you want to logout?')) {
+                    logout();
+                }
+            }
+        });
+    </script>
+    </script>
+</body>
+</html>
