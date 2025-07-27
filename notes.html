@@ -8,119 +8,7 @@
     <!-- Stylesheets -->
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/auth.css">
-    <link rel="stylesheet" href="css/sections.css">
-    <link rel="stylesheet" href="css/mobile.css">
-    
-    <!-- Favicon -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📋</text></svg>">
-    
-    <style>
-        /* CSS Variables */
-        :root {
-            --primary-color: #667eea;
-            --primary-dark: #5a6fd8;
-            --secondary-color: #764ba2;
-            --success-color: #10b981;
-            --warning-color: #f59e0b;
-            --error-color: #ef4444;
-            --text-primary: #1f2937;
-            --text-secondary: #6b7280;
-            --background-light: #f8fafc;
-            --border-color: #e5e7eb;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-        }
 
-        /* Base Styles */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            direction: ltr;
-            text-align: left;
-        }
-
-        /* Navigation */
-        .main-navigation {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .nav-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 24px;
-        }
-
-        .nav-left {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .back-to-portal {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .back-to-portal:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .page-title {
-            color: var(--text-primary);
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .upload-notes-btn {
-            background: linear-gradient(135deg, var(--success-color), #059669);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
             gap: 8px;
             box-shadow: var(--shadow-sm);
         }
@@ -1311,7 +1199,7 @@
         
         async function loadApprovedNotes() {
             try {
-                console.log('Loading approved notes from Google Apps Script...');
+                // Loading approved notes from Google Apps Script
                 
                 // Show loading state
                 const notesGrid = document.getElementById('notesGrid');
@@ -1326,8 +1214,7 @@
                 
                 // Check if script URL is configured
                 if (GOOGLE_APPS_SCRIPT_URL === 'YOUR_DEPLOYED_SCRIPT_URL_HERE') {
-                    console.log('Google Apps Script URL not configured. Showing sample notes.');
-                    displaySampleNotes();
+                    displayEmptyState();
                     return;
                 }
                 
@@ -1362,9 +1249,9 @@
                 console.error('Error loading approved notes:', error);
                 displayErrorState();
                 
-                // Fallback to sample notes if API fails
+                // Fallback to empty state if API fails
                 setTimeout(() => {
-                    displaySampleNotes();
+                    displayEmptyState();
                 }, 2000);
             }
         }
@@ -1509,46 +1396,7 @@
             `;
         }
         
-        function displaySampleNotes() {
-            // Fallback sample notes if API fails
-            const sampleNotes = [
-                {
-                    submissionId: 'sample-1',
-                    subject: 'programming',
-                    title: 'C++ Complete Reference Guide',
-                    description: 'Comprehensive notes covering all C++ concepts including OOP, pointers, templates, and STL. Perfect for exam preparation.',
-                    studentName: 'Sample Student',
-                    timestamp: '2025-01-01',
-                    fileName: 'cpp-guide.pdf',
-                    fileUrl: '#'
-                },
-                {
-                    submissionId: 'sample-2',
-                    subject: 'database',
-                    title: 'SQL Query Examples & Practice',
-                    description: 'Collection of SQL queries with examples, covering joins, subqueries, and database design principles.',
-                    studentName: 'Demo User',
-                    timestamp: '2024-12-15',
-                    fileName: 'sql-guide.pdf',
-                    fileUrl: '#'
-                },
-                {
-                    submissionId: 'sample-3',
-                    subject: 'data-structures',
-                    title: 'Trees and Graphs - Complete Guide',
-                    description: 'Detailed explanation of tree and graph data structures with implementation examples and algorithms.',
-                    studentName: 'Demo Author',
-                    timestamp: '2025-01-10',
-                    fileName: 'trees-graphs.pdf',
-                    fileUrl: '#'
-                }
-            ];
-            
-            approvedNotes = sampleNotes;
-            filteredNotes = [...sampleNotes];
-            displayNotes(sampleNotes);
-            updateStatistics();
-        }
+
         
         function updateStatistics() {
             // Update statistics based on loaded notes
