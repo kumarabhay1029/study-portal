@@ -37,6 +37,7 @@
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/auth.css">
     <link rel="stylesheet" href="css/sections.css">
+    <link rel="stylesheet" href="css/notes.css">
     
     <!-- Mobile and Desktop responsive CSS -->
     <link rel="stylesheet" href="css/mobile.css">
@@ -84,7 +85,7 @@
         <button class="nav-link" onclick="showSection('assignments')" data-section="assignments" aria-label="Go to Assignments section">
             <span>📝 Assignments</span>
         </button>
-        <button class="nav-link" onclick="window.location.href='notes.html'" aria-label="Go to Notes section">
+        <button class="nav-link" onclick="showSection('notes')" data-section="notes" aria-label="Go to Notes section">
             <span>📋 Notes</span>
         </button>
         <button class="nav-link" onclick="showSection('projects')" data-section="projects" aria-label="Go to Projects section">
@@ -119,7 +120,7 @@
             <button class="nav-btn" onclick="showSection('dashboard')" data-section="dashboard">📊 Dashboard</button>
             <button class="nav-btn" onclick="showSection('books')" data-section="books">📚 Books</button>
             <button class="nav-btn" onclick="showSection('assignments')" data-section="assignments">📝 Assignments</button>
-            <button class="nav-btn" onclick="window.location.href='notes.html'">📋 Notes</button>
+            <button class="nav-btn" onclick="showSection('notes')" data-section="notes">📋 Notes</button>
             <button class="nav-btn" onclick="showSection('projects')" data-section="projects">🚀 Projects</button>
             <button class="nav-btn" onclick="showSection('research')" data-section="research">📄 Research</button>
         </nav>
@@ -250,6 +251,134 @@
         </div>
 
         <!-- Books Section -->
+        <!-- Notes Section -->
+        <div id="notes-section" class="section-container">
+            <div class="notes-header">
+                <div class="section-header-content">
+                    <div>
+                        <h2 class="section-title">📋 Notes Hub</h2>
+                        <p class="section-description">Create, manage, and share study notes. Upload your notes to help fellow students and access community contributions.</p>
+                    </div>
+                    <button class="upload-material-btn" onclick="toggleNotesUploadForm()" title="Upload a new note">
+                        <span class="btn-icon">📤</span>
+                        <span class="btn-text">Upload Note</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Notes Upload Form (Initially Hidden) -->
+            <div id="notesUploadForm" class="notes-upload-form" style="display: none;">
+                <div class="upload-form-container">
+                    <h3>📝 Upload New Note</h3>
+                    <form id="noteUploadForm" onsubmit="uploadNote(event)">
+                        <div class="form-row">
+                            <div class="input-group">
+                                <label for="noteTitle">📌 Note Title</label>
+                                <input type="text" id="noteTitle" placeholder="Enter note title" required class="auth-input">
+                            </div>
+                            <div class="input-group">
+                                <label for="noteSubject">📚 Subject</label>
+                                <select id="noteSubject" required class="auth-input">
+                                    <option value="">Select Subject</option>
+                                    <option value="Programming">Programming</option>
+                                    <option value="Database">Database Management</option>
+                                    <option value="Data Structures">Data Structures</option>
+                                    <option value="Algorithms">Algorithms</option>
+                                    <option value="Web Development">Web Development</option>
+                                    <option value="Mathematics">Mathematics</option>
+                                    <option value="Operating Systems">Operating Systems</option>
+                                    <option value="Networks">Computer Networks</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="noteContent">📄 Note Content</label>
+                            <textarea id="noteContent" placeholder="Write your note content here..." required class="auth-input" rows="6"></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="input-group">
+                                <label for="noteFile">📁 Upload File (Optional)</label>
+                                <input type="file" id="noteFile" accept=".pdf,.doc,.docx,.txt" class="auth-input">
+                                <small>Supported: PDF, DOC, DOCX, TXT (Max 5MB)</small>
+                            </div>
+                            <div class="input-group">
+                                <label for="noteTags">🏷️ Tags</label>
+                                <input type="text" id="noteTags" placeholder="Enter tags separated by commas" class="auth-input">
+                                <small>e.g., programming, java, loops</small>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="auth-btn primary">💾 Upload Note</button>
+                            <button type="button" class="auth-btn secondary" onclick="toggleNotesUploadForm()">❌ Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Notes Filter and Search -->
+            <div class="notes-controls">
+                <div class="search-filter-row">
+                    <div class="search-box">
+                        <input type="text" id="notesSearch" placeholder="🔍 Search notes..." onkeyup="filterNotes()">
+                    </div>
+                    <div class="filter-controls">
+                        <select id="subjectFilter" onchange="filterNotes()">
+                            <option value="">All Subjects</option>
+                            <option value="Programming">Programming</option>
+                            <option value="Database">Database</option>
+                            <option value="Data Structures">Data Structures</option>
+                            <option value="Algorithms">Algorithms</option>
+                            <option value="Web Development">Web Development</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="Operating Systems">Operating Systems</option>
+                            <option value="Networks">Networks</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <select id="sortFilter" onchange="filterNotes()">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="title">Title A-Z</option>
+                            <option value="subject">Subject</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Notes Section -->
+            <div class="my-notes-section">
+                <h3>� My Notes</h3>
+                <div id="myNotesList" class="notes-grid">
+                    <!-- User's personal notes will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Community Notes Section -->
+            <div class="community-notes-section">
+                <h3>🌟 Community Notes</h3>
+                <div id="communityNotesList" class="notes-grid">
+                    <!-- Community notes will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Admin Panel (Only visible to admins) -->
+            <div id="notesAdminPanel" class="admin-panel" style="display: none;">
+                <h3>🔧 Admin Controls</h3>
+                <div class="admin-actions">
+                    <button class="auth-btn secondary" onclick="togglePendingNotes()">📋 Pending Approvals</button>
+                    <button class="auth-btn secondary" onclick="exportNotes()">📊 Export All Notes</button>
+                    <button class="auth-btn secondary" onclick="showNotesAnalytics()">📈 Analytics</button>
+                </div>
+                
+                <!-- Pending Notes for Approval -->
+                <div id="pendingNotes" class="pending-notes" style="display: none;">
+                    <h4>⏳ Pending Approval</h4>
+                    <div id="pendingNotesList" class="notes-grid">
+                        <!-- Pending notes will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="books-section" class="section-container">
             <h2 class="section-title">📚 BCA Study Materials & Books</h2>
             

@@ -1,3 +1,388 @@
+// ENHANCED NOTES SYSTEM WITH UPLOAD AND ADMIN CONTROLS
+document.addEventListener('DOMContentLoaded', function() {
+    // Only run if notes section exists
+    if (!document.getElementById('notes-section')) return;
+
+    // Initialize notes system
+    initializeNotesSystem();
+
+    function initializeNotesSystem() {
+        loadMyNotes();
+        loadCommunityNotes();
+        checkAdminStatus();
+        
+        // Set up file upload validation
+        const fileInput = document.getElementById('noteFile');
+        if (fileInput) {
+            fileInput.addEventListener('change', validateFileUpload);
+        }
+    }
+
+    // Load user's personal notes
+    function loadMyNotes() {
+        const myNotes = JSON.parse(localStorage.getItem('myNotes') || '[]');
+        const myNotesList = document.getElementById('myNotesList');
+        
+        if (myNotes.length === 0) {
+            myNotesList.innerHTML = '<div class="no-notes">📝 You haven\'t created any notes yet. Click "Upload Note" to get started!</div>';
+            return;
+        }
+        
+        myNotesList.innerHTML = myNotes.map((note, idx) => createNoteCard(note, idx, true)).join('');
+    }
+
+    // Load community notes (approved notes from other users)
+    function loadCommunityNotes() {
+        const communityNotes = JSON.parse(localStorage.getItem('communityNotes') || '[]');
+        const communityNotesList = document.getElementById('communityNotesList');
+        
+        if (communityNotes.length === 0) {
+            communityNotesList.innerHTML = '<div class="no-notes">🌟 No community notes available yet. Be the first to contribute!</div>';
+            return;
+        }
+        
+        communityNotesList.innerHTML = communityNotes.map((note, idx) => createNoteCard(note, idx, false)).join('');
+    }
+
+    // Create note card HTML
+    function createNoteCard(note, idx, isMyNote) {
+        const statusBadge = note.status === 'pending' ? '<span class="status-badge pending">⏳ Pending</span>' : 
+                           note.status === 'approved' ? '<span class="status-badge approved">✅ Approved</span>' : '';
+        
+        const actionButtons = isMyNote ? 
+            `<button class="note-action-btn edit" onclick="editNote(${idx})">✏️ Edit</button>
+             <button class="note-action-btn delete" onclick="deleteNote(${idx})">🗑️ Delete</button>` :
+            `<button class="note-action-btn download" onclick="downloadNote(${idx})">📥 Download</button>
+             <button class="note-action-btn like" onclick="likeNote(${idx})">👍 ${note.likes || 0}</button>`;
+
+        return `
+            <div class="note-card" data-subject="${note.subject}" data-title="${note.title.toLowerCase()}">
+                <div class="note-header">
+                    <h4 class="note-title">${note.title}</h4>
+                    ${statusBadge}
+                </div>
+                <div class="note-meta">
+                    <span class="note-subject">📚 ${note.subject}</span>
+                    <span class="note-date">📅 ${new Date(note.date).toLocaleDateString()}</span>
+                    ${note.author ? `<span class="note-author">👤 ${note.author}</span>` : ''}
+                </div>
+                <div class="note-content">
+                    <p>${note.content.substring(0, 150)}${note.content.length > 150 ? '...' : ''}</p>
+                </div>
+                ${note.tags ? `<div class="note-tags">${note.tags.split(',').map(tag => `<span class="tag">#${tag.trim()}</span>`).join('')}</div>` : ''}
+                ${note.fileName ? `<div class="note-file">📁 ${note.fileName}</div>` : ''}
+                <div class="note-actions">
+                    ${actionButtons}
+                    <button class="note-action-btn view" onclick="viewNoteDetails(${idx}, ${isMyNote})">👁️ View</button>
+                </div>
+            </div>
+        `;
+    }
+
+    // Toggle upload form visibility
+    window.toggleNotesUploadForm = function() {
+        const form = document.getElementById('notesUploadForm');
+        if (form.style.display === 'none') {
+            form.style.display = 'block';
+            document.getElementById('noteTitle').focus();
+        } else {
+            form.style.display = 'none';
+            document.getElementById('noteUploadForm').reset();
+        }
+    }
+
+    // Validate file upload
+    function validateFileUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain'];
+
+        if (file.size > maxSize) {
+            alert('File size must be less than 5MB');
+            event.target.value = '';
+            return;
+        }
+
+        if (!allowedTypes.includes(file.type)) {
+            alert('Only PDF, DOC, DOCX, and TXT files are allowed');
+            event.target.value = '';
+            return;
+        }
+    }
+
+    // Upload note handler
+    window.uploadNote = function(event) {
+        event.preventDefault();
+        
+        const title = document.getElementById('noteTitle').value.trim();
+        const subject = document.getElementById('noteSubject').value;
+        const content = document.getElementById('noteContent').value.trim();
+        const tags = document.getElementById('noteTags').value.trim();
+        const fileInput = document.getElementById('noteFile');
+        const file = fileInput.files[0];
+
+        if (!title || !subject || !content) {
+            alert('Please fill in all required fields');
+            return;
+        }
+
+        const note = {
+            id: Date.now(),
+            title,
+            subject,
+            content,
+            tags,
+            fileName: file ? file.name : null,
+            fileData: null, // In a real app, you'd upload to server
+            author: getCurrentUser(),
+            date: Date.now(),
+            status: 'pending', // Notes need approval before showing in community
+            likes: 0
+        };
+
+        // Save to user's personal notes
+        const myNotes = JSON.parse(localStorage.getItem('myNotes') || '[]');
+        myNotes.unshift(note);
+        localStorage.setItem('myNotes', JSON.stringify(myNotes));
+
+        // Add to pending approval queue
+        const pendingNotes = JSON.parse(localStorage.getItem('pendingNotes') || '[]');
+        pendingNotes.unshift(note);
+        localStorage.setItem('pendingNotes', JSON.stringify(pendingNotes));
+
+        // Reset form and reload
+        document.getElementById('noteUploadForm').reset();
+        toggleNotesUploadForm();
+        loadMyNotes();
+        
+        showMessage('Note uploaded successfully! It will appear in community notes after admin approval.', 'success');
+    }
+
+    // Filter notes
+    window.filterNotes = function() {
+        const searchTerm = document.getElementById('notesSearch').value.toLowerCase();
+        const subjectFilter = document.getElementById('subjectFilter').value;
+        const sortOption = document.getElementById('sortFilter').value;
+
+        // Filter my notes
+        filterNotesList('myNotesList', searchTerm, subjectFilter, sortOption);
+        
+        // Filter community notes
+        filterNotesList('communityNotesList', searchTerm, subjectFilter, sortOption);
+    }
+
+    function filterNotesList(listId, searchTerm, subjectFilter, sortOption) {
+        const notesList = document.getElementById(listId);
+        const notes = Array.from(notesList.querySelectorAll('.note-card'));
+
+        notes.forEach(note => {
+            const title = note.dataset.title;
+            const subject = note.dataset.subject;
+            
+            const matchesSearch = !searchTerm || title.includes(searchTerm);
+            const matchesSubject = !subjectFilter || subject === subjectFilter;
+            
+            note.style.display = matchesSearch && matchesSubject ? 'block' : 'none';
+        });
+
+        // Sort visible notes
+        const visibleNotes = notes.filter(note => note.style.display !== 'none');
+        sortNotes(visibleNotes, sortOption);
+        
+        // Re-append sorted notes
+        visibleNotes.forEach(note => notesList.appendChild(note));
+    }
+
+    function sortNotes(notes, sortOption) {
+        notes.sort((a, b) => {
+            switch (sortOption) {
+                case 'title':
+                    return a.dataset.title.localeCompare(b.dataset.title);
+                case 'subject':
+                    return a.dataset.subject.localeCompare(b.dataset.subject);
+                case 'oldest':
+                    return parseInt(a.dataset.date) - parseInt(b.dataset.date);
+                case 'newest':
+                default:
+                    return parseInt(b.dataset.date) - parseInt(a.dataset.date);
+            }
+        });
+    }
+
+    // Admin functions
+    function checkAdminStatus() {
+        const user = getCurrentUser();
+        if (user && isAdmin(user)) {
+            document.getElementById('notesAdminPanel').style.display = 'block';
+            loadPendingNotes();
+        }
+    }
+
+    function isAdmin(user) {
+        // In a real app, check user roles from server
+        const adminUsers = ['admin@studyportal.com', 'moderator@studyportal.com'];
+        return adminUsers.includes(user);
+    }
+
+    function getCurrentUser() {
+        // In a real app, get from authentication system
+        return localStorage.getItem('currentUser') || 'guest@studyportal.com';
+    }
+
+    function loadPendingNotes() {
+        const pendingNotes = JSON.parse(localStorage.getItem('pendingNotes') || '[]');
+        const pendingList = document.getElementById('pendingNotesList');
+        
+        if (pendingNotes.length === 0) {
+            pendingList.innerHTML = '<div class="no-notes">✅ No notes pending approval</div>';
+            return;
+        }
+        
+        pendingList.innerHTML = pendingNotes.map((note, idx) => createPendingNoteCard(note, idx)).join('');
+    }
+
+    function createPendingNoteCard(note, idx) {
+        return `
+            <div class="note-card pending">
+                <div class="note-header">
+                    <h4 class="note-title">${note.title}</h4>
+                    <span class="status-badge pending">⏳ Pending</span>
+                </div>
+                <div class="note-meta">
+                    <span class="note-subject">📚 ${note.subject}</span>
+                    <span class="note-author">👤 ${note.author}</span>
+                    <span class="note-date">📅 ${new Date(note.date).toLocaleDateString()}</span>
+                </div>
+                <div class="note-content">
+                    <p>${note.content.substring(0, 200)}...</p>
+                </div>
+                <div class="admin-actions">
+                    <button class="auth-btn primary" onclick="approveNote(${idx})">✅ Approve</button>
+                    <button class="auth-btn secondary" onclick="rejectNote(${idx})">❌ Reject</button>
+                    <button class="note-action-btn view" onclick="viewPendingNote(${idx})">👁️ View Full</button>
+                </div>
+            </div>
+        `;
+    }
+
+    // Admin action functions
+    window.togglePendingNotes = function() {
+        const pendingSection = document.getElementById('pendingNotes');
+        pendingSection.style.display = pendingSection.style.display === 'none' ? 'block' : 'none';
+    }
+
+    window.approveNote = function(idx) {
+        const pendingNotes = JSON.parse(localStorage.getItem('pendingNotes') || '[]');
+        const note = pendingNotes[idx];
+        
+        if (note) {
+            note.status = 'approved';
+            
+            // Add to community notes
+            const communityNotes = JSON.parse(localStorage.getItem('communityNotes') || '[]');
+            communityNotes.unshift(note);
+            localStorage.setItem('communityNotes', JSON.stringify(communityNotes));
+            
+            // Remove from pending
+            pendingNotes.splice(idx, 1);
+            localStorage.setItem('pendingNotes', JSON.stringify(pendingNotes));
+            
+            loadPendingNotes();
+            loadCommunityNotes();
+            showMessage('Note approved and added to community notes!', 'success');
+        }
+    }
+
+    window.rejectNote = function(idx) {
+        const pendingNotes = JSON.parse(localStorage.getItem('pendingNotes') || '[]');
+        pendingNotes.splice(idx, 1);
+        localStorage.setItem('pendingNotes', JSON.stringify(pendingNotes));
+        
+        loadPendingNotes();
+        showMessage('Note rejected and removed from queue.', 'info');
+    }
+
+    // Utility functions
+    window.editNote = function(idx) {
+        // Implementation for editing notes
+        alert('Edit functionality will be implemented soon!');
+    }
+
+    window.deleteNote = function(idx) {
+        if (confirm('Are you sure you want to delete this note?')) {
+            const myNotes = JSON.parse(localStorage.getItem('myNotes') || '[]');
+            myNotes.splice(idx, 1);
+            localStorage.setItem('myNotes', JSON.stringify(myNotes));
+            loadMyNotes();
+            showMessage('Note deleted successfully!', 'success');
+        }
+    }
+
+    window.downloadNote = function(idx) {
+        alert('Download functionality will be implemented soon!');
+    }
+
+    window.likeNote = function(idx) {
+        const communityNotes = JSON.parse(localStorage.getItem('communityNotes') || '[]');
+        if (communityNotes[idx]) {
+            communityNotes[idx].likes = (communityNotes[idx].likes || 0) + 1;
+            localStorage.setItem('communityNotes', JSON.stringify(communityNotes));
+            loadCommunityNotes();
+        }
+    }
+
+    window.viewNoteDetails = function(idx, isMyNote) {
+        const notes = isMyNote ? 
+            JSON.parse(localStorage.getItem('myNotes') || '[]') : 
+            JSON.parse(localStorage.getItem('communityNotes') || '[]');
+        
+        const note = notes[idx];
+        if (note) {
+            alert(`Title: ${note.title}\n\nContent: ${note.content}\n\nSubject: ${note.subject}\n\nAuthor: ${note.author}\n\nDate: ${new Date(note.date).toLocaleString()}`);
+        }
+    }
+
+    window.exportNotes = function() {
+        alert('Export functionality will be implemented soon!');
+    }
+
+    window.showNotesAnalytics = function() {
+        alert('Analytics functionality will be implemented soon!');
+    }
+
+    // Enhanced showSection function for notes
+    const originalShowSection = window.showSection;
+    window.showSection = function(section) {
+        // Hide all sections
+        document.querySelectorAll('.section-container').forEach(s => {
+            s.classList.remove('active');
+            s.style.display = 'none';
+        });
+        
+        // Show selected section
+        const el = document.getElementById(section + '-section');
+        if (el) {
+            el.classList.add('active');
+            el.style.display = 'block';
+        }
+        
+        // Special handling for notes section
+        if (section === 'notes') {
+            setTimeout(() => {
+                loadMyNotes();
+                loadCommunityNotes();
+                checkAdminStatus();
+            }, 100);
+        }
+    }
+
+    // Initialize on load
+    loadMyNotes();
+    loadCommunityNotes();
+    checkAdminStatus();
+});
 /**
  * 🚀 STUDY PORTAL - OPTIMIZED BUNDLE
  * Single bundled script combining:
