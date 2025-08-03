@@ -1,4 +1,4 @@
-// ENHANCED NOTES SYSTEM WITH UPLOAD AND ADMIN CONTROLS
+// SIMPLE NOTES SYSTEM - FORM SUBMISSION BASED
 document.addEventListener('DOMContentLoaded', function() {
     // Only run if notes section exists
     if (!document.getElementById('notes-section')) return;
@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function initializeNotesSystem() {
         loadMyNotes();
         loadCommunityNotes();
-        checkAdminStatus();
         
         // Set up file upload validation
         const fileInput = document.getElementById('noteFile');
@@ -46,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Create note card HTML
     function createNoteCard(note, idx, isMyNote) {
-        const statusBadge = note.status === 'pending' ? '<span class="status-badge pending">⏳ Pending</span>' : 
+        const statusBadge = note.status === 'submitted' ? '<span class="status-badge pending">📤 Submitted</span>' : 
                            note.status === 'approved' ? '<span class="status-badge approved">✅ Approved</span>' : '';
         
         const actionButtons = isMyNote ? 
@@ -113,6 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Upload note handler
+    // Upload note function - simplified for form submission
     window.uploadNote = function(event) {
         event.preventDefault();
         
@@ -135,29 +135,23 @@ document.addEventListener('DOMContentLoaded', function() {
             content,
             tags,
             fileName: file ? file.name : null,
-            fileData: null, // In a real app, you'd upload to server
             author: getCurrentUser(),
             date: Date.now(),
-            status: 'pending', // Notes need approval before showing in community
+            status: 'submitted', // Notes are submitted for approval
             likes: 0
         };
 
-        // Save to user's personal notes
+        // Save to user's personal notes for their reference
         const myNotes = JSON.parse(localStorage.getItem('myNotes') || '[]');
         myNotes.unshift(note);
         localStorage.setItem('myNotes', JSON.stringify(myNotes));
-
-        // Add to pending approval queue
-        const pendingNotes = JSON.parse(localStorage.getItem('pendingNotes') || '[]');
-        pendingNotes.unshift(note);
-        localStorage.setItem('pendingNotes', JSON.stringify(pendingNotes));
 
         // Reset form and reload
         document.getElementById('noteUploadForm').reset();
         toggleNotesUploadForm();
         loadMyNotes();
         
-        showMessage('Note uploaded successfully! It will appear in community notes after admin approval.', 'success');
+        showMessage('Note submitted successfully! It will be reviewed and added to community notes after approval.', 'success');
     }
 
     // Filter notes
@@ -211,97 +205,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Admin functions
-    function checkAdminStatus() {
-        const user = getCurrentUser();
-        if (user && isAdmin(user)) {
-            document.getElementById('notesAdminPanel').style.display = 'block';
-            loadPendingNotes();
-        }
-    }
-
-    function isAdmin(user) {
-        // In a real app, check user roles from server
-        const adminUsers = ['admin@studyportal.com', 'moderator@studyportal.com'];
-        return adminUsers.includes(user);
-    }
-
+    // Simple user function
     function getCurrentUser() {
         // In a real app, get from authentication system
         return localStorage.getItem('currentUser') || 'guest@studyportal.com';
-    }
-
-    function loadPendingNotes() {
-        const pendingNotes = JSON.parse(localStorage.getItem('pendingNotes') || '[]');
-        const pendingList = document.getElementById('pendingNotesList');
-        
-        if (pendingNotes.length === 0) {
-            pendingList.innerHTML = '<div class="no-notes">✅ No notes pending approval</div>';
-            return;
-        }
-        
-        pendingList.innerHTML = pendingNotes.map((note, idx) => createPendingNoteCard(note, idx)).join('');
-    }
-
-    function createPendingNoteCard(note, idx) {
-        return `
-            <div class="note-card pending">
-                <div class="note-header">
-                    <h4 class="note-title">${note.title}</h4>
-                    <span class="status-badge pending">⏳ Pending</span>
-                </div>
-                <div class="note-meta">
-                    <span class="note-subject">📚 ${note.subject}</span>
-                    <span class="note-author">👤 ${note.author}</span>
-                    <span class="note-date">📅 ${new Date(note.date).toLocaleDateString()}</span>
-                </div>
-                <div class="note-content">
-                    <p>${note.content.substring(0, 200)}...</p>
-                </div>
-                <div class="admin-actions">
-                    <button class="auth-btn primary" onclick="approveNote(${idx})">✅ Approve</button>
-                    <button class="auth-btn secondary" onclick="rejectNote(${idx})">❌ Reject</button>
-                    <button class="note-action-btn view" onclick="viewPendingNote(${idx})">👁️ View Full</button>
-                </div>
-            </div>
-        `;
-    }
-
-    // Admin action functions
-    window.togglePendingNotes = function() {
-        const pendingSection = document.getElementById('pendingNotes');
-        pendingSection.style.display = pendingSection.style.display === 'none' ? 'block' : 'none';
-    }
-
-    window.approveNote = function(idx) {
-        const pendingNotes = JSON.parse(localStorage.getItem('pendingNotes') || '[]');
-        const note = pendingNotes[idx];
-        
-        if (note) {
-            note.status = 'approved';
-            
-            // Add to community notes
-            const communityNotes = JSON.parse(localStorage.getItem('communityNotes') || '[]');
-            communityNotes.unshift(note);
-            localStorage.setItem('communityNotes', JSON.stringify(communityNotes));
-            
-            // Remove from pending
-            pendingNotes.splice(idx, 1);
-            localStorage.setItem('pendingNotes', JSON.stringify(pendingNotes));
-            
-            loadPendingNotes();
-            loadCommunityNotes();
-            showMessage('Note approved and added to community notes!', 'success');
-        }
-    }
-
-    window.rejectNote = function(idx) {
-        const pendingNotes = JSON.parse(localStorage.getItem('pendingNotes') || '[]');
-        pendingNotes.splice(idx, 1);
-        localStorage.setItem('pendingNotes', JSON.stringify(pendingNotes));
-        
-        loadPendingNotes();
-        showMessage('Note rejected and removed from queue.', 'info');
     }
 
     // Utility functions

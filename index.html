@@ -361,22 +361,10 @@
                 </div>
             </div>
 
-            <!-- Admin Panel (Only visible to admins) -->
+            <!-- Admin Panel (Hidden - Will be managed via spreadsheet) -->
             <div id="notesAdminPanel" class="admin-panel" style="display: none;">
                 <h3>🔧 Admin Controls</h3>
-                <div class="admin-actions">
-                    <button class="auth-btn secondary" onclick="togglePendingNotes()">📋 Pending Approvals</button>
-                    <button class="auth-btn secondary" onclick="exportNotes()">📊 Export All Notes</button>
-                    <button class="auth-btn secondary" onclick="showNotesAnalytics()">📈 Analytics</button>
-                </div>
-                
-                <!-- Pending Notes for Approval -->
-                <div id="pendingNotes" class="pending-notes" style="display: none;">
-                    <h4>⏳ Pending Approval</h4>
-                    <div id="pendingNotesList" class="notes-grid">
-                        <!-- Pending notes will be loaded here -->
-                    </div>
-                </div>
+                <p>📊 Notes will be approved via spreadsheet system</p>
             </div>
         </div>
         <div id="books-section" class="section-container">
